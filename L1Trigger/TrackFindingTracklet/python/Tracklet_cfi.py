@@ -33,3 +33,7 @@ TTTracksFromExtendedTrackletEmulation = TTTracksFromTrackletEmulation.clone(
                                                TrackQualityPSet = cms.PSet(TrackQualityParams)
     )
 
+# this is to run Tracklet pattern reco with new KF
+TrackletTracksFromTrackletEmulation = TTTracksFromTrackletEmulation.clone(
+                                               Fakefit = cms.bool(True)
+    )
