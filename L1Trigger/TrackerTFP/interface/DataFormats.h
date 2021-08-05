@@ -460,6 +460,8 @@ namespace trackerTFP {
     StubZHT(const StubMHT& stub);
     //
     StubZHT(const StubZHT& stub, double zT, double cot, int id);
+    //
+    StubZHT(const StubZHT& stub, int cot, int zT);
     ~StubZHT(){}
     // stub radius wrt chonseRofPhi
     double r() const { return std::get<0>(data_); }
@@ -483,9 +485,12 @@ namespace trackerTFP {
     int cot() const { return std::get<9>(data_); }
     double cotf() const { return cot_; }
     double ztf() const { return zT_; }
+    double chi() const { return chi_; }
   private:
     // fills track id
     void fillTrackId();
+    double r_;
+    double chi_;
     double cot_;
     double zT_;
   };

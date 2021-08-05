@@ -14,9 +14,9 @@ process.GlobalTag = GlobalTag( process.GlobalTag, 'auto:phase2_realistic', '' )
 # load code that produces DTCStubs
 process.load( 'L1Trigger.TrackerDTC.ProducerED_cff' )
 # cosutmize TT algorithm
-from L1Trigger.TrackerDTC.Customize_cff import *
-producerUseTMTT(process)
-analyzerUseTMTT(process)
+#from L1Trigger.TrackerDTC.Customize_cff import *
+#producerUseTMTT(process)
+#analyzerUseTMTT(process)
 #--- Load code that produces tfp Stubs
 process.load( 'L1Trigger.TrackerTFP.Producer_cff' )
 #--- Load code that demonstrates tfp Stubs

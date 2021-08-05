@@ -246,7 +246,7 @@ namespace trackerTFP {
     log_ << "number of stubs       per TFP = " << setw(wNums) << numStubs << " +- " << setw(wErrs) << errStubs << endl;
     log_ << "number of tracks      per TFP = " << setw(wNums) << numTracks << " +- " << setw(wErrs) << errTracks << endl;
     log_ << "number of lost tracks per TFP = " << setw(wNums) << numTracksLost << " +- " << setw(wErrs) << errTracksLost << endl;
-    log_ << "          tracking efficiency = " << setw(wNums) << eff << " +- " << setw(wErrs) << errEff << endl;
+    log_ << "     max  tracking efficiency = " << setw(wNums) << eff << " +- " << setw(wErrs) << errEff << endl;
     log_ << "     lost tracking efficiency = " << setw(wNums) << effLoss << " +- " << setw(wErrs) << errEffLoss << endl;
     log_ << "                    fake rate = " << setw(wNums) << fracFake << endl;
     log_ << "               duplicate rate = " << setw(wNums) << fracDup << endl;

@@ -47,12 +47,6 @@ namespace trackerTFP {
         }
         stubs.push_back(stub);
       }
-      /*if (stubs.empty())
-        continue;
-      cout << region_ << " " << setw(2) << channel << " | ";
-      for (StubZHT* stub : stubs)
-        cout << (stub ? stub->trackId() : 0) << " ";
-      cout << endl;*/
     }
   }
 
@@ -76,14 +70,6 @@ namespace trackerTFP {
         slb(tmp, streams[channel], lost[channel]);
       }
     }
-    /*for (int channel = 0; channel < dataFormats_->numChannel(Process::mht); channel++) {
-      if (streams[channel].empty())
-        continue;
-      cout << region_ << " " << setw(2) << channel << " | ";
-      for (StubZHT* stub : streams[channel])
-        cout << (stub ? stub->trackId() : 0) << " ";
-      cout << endl;
-    }*/
     // fill output product
     for (int channel = 0; channel < dataFormats_->numChannel(Process::mht); channel++) {
       deque<StubZHT*>& stubs = streams[channel];
@@ -121,7 +107,7 @@ namespace trackerTFP {
       // fill finer track candidates stub container
       for (auto stub = start; stub != it; stub++) {
         const double r = (*stub)->r() + setup_->chosenRofPhi() - setup_->chosenRofZ();
-        const double chi = (*stub)->z();
+        const double chi = (*stub)->chi();
         const double dChi = setup_->dZ((*stub)->ttStubRef(), cotGlobal);
         // identify finer track candidates for this stub
         // 0 and 1 belong to the ZHT cells with smaller cot; 0 and 2 belong to those with smaller zT
@@ -244,28 +230,43 @@ namespace trackerTFP {
   //
   void ZHoughTransform::merge(deque<StubZHT*>& stubs, StreamStub& stream) const {
     stubs.erase(remove(stubs.begin(), stubs.end(), nullptr), stubs.end());
-    set<int> candidates;
+    /*stream.reserve(stubs.size());
+    transform(stubs.begin(), stubs.end(), back_inserter(stream), [](StubZHT* stub){ return stub->frame(); });
+    return;*/
+    map<int, set<pair<int, int>>> candidates;
     const int weight = setup_->zhtNumCells() * pow(2, setup_->zhtNumStages());
     for (const StubZHT* stub : stubs)
-      candidates.insert(stub->trackId() / weight);
-    vector<deque<StubZHT*>> tracks(candidates.size());
+      candidates[stub->trackId() / weight].emplace(stub->cot(), stub->zT());
+    vector<deque<FrameStub>> tracks(candidates.size());
     for (auto it = stubs.begin(); it != stubs.end();) {
       const auto start = it;
       const int id = (*it)->trackId();
       const int candId = id / weight;
-      const int pos = distance(candidates.begin(), find(candidates.begin(), candidates.end(), candId));
-      deque<StubZHT*>& track = tracks[pos];
+      const auto m = candidates.find(candId);
+      pair<int, int> cotp(9e9, -9e9);
+      pair<int, int> zTp(9e9, -9e9);
+      for (const pair<int, int>& para : m->second) {
+        cotp = {min(cotp.first, para.first), max(cotp.second, para.first)};
+        zTp = {min(zTp.first, para.second), max(zTp.second, para.second)};
+      }
+      const int cot = (cotp.first + cotp.second) / 2;
+      const int zT = (cotp.first + cotp.second) / 2;
+      const int pos = distance(candidates.begin(), m);
+      deque<FrameStub>& track = tracks[pos];
       auto different = [id](const StubZHT* stub){ return id != stub->trackId(); };
       it = find_if(it, stubs.end(), different);
-      for (auto s = start; s != it; s++)
-        if (find_if(track.begin(), track.end(), [s](const StubZHT* stub){ return (*s)->ttStubRef() == stub->ttStubRef(); }) == track.end())
-          track.push_back(*s);
+      for (auto s = start; s != it; s++) {
+        if (find_if(track.begin(), track.end(), [s](const FrameStub& stub){ return (*s)->ttStubRef() == stub.first; }) != track.end())
+          continue;
+        const StubZHT stub(**s, cot, zT);
+        track.push_back(stub.frame());
+      }
     }
-    const int size = accumulate(tracks.begin(), tracks.end(), 0, [](int& sum, const deque<StubZHT*>& stubs){ return sum += (int)stubs.size(); });
+    const int size = accumulate(tracks.begin(), tracks.end(), 0, [](int& sum, const deque<FrameStub>& stubs){ return sum += (int)stubs.size(); });
     stream.reserve(size);
-    for (deque<StubZHT*>& track : tracks)
-      for (const StubZHT* stub : track)
-        stream.push_back(stub->frame());
+    for (deque<FrameStub>& track : tracks)
+      for (const FrameStub& stub : track)
+        stream.push_back(stub);
   }
 
   // remove and return first element of deque, returns nullptr if empty

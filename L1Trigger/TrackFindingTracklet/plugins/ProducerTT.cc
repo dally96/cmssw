@@ -23,15 +23,15 @@ using namespace tt;
 
 namespace trackFindingTracklet {
 
-  /*! \class  trackFindingTracklet::ProducerKFout
+  /*! \class  trackFindingTracklet::ProducerTT
    *  \brief  Converts KF output into TTTracks
    *  \author Thomas Schuh
-   *  \date   2020, Oct
+   *  \date   2021, Aug
    */
-  class ProducerKFout : public stream::EDProducer<> {
+  class ProducerTT : public stream::EDProducer<> {
   public:
-    explicit ProducerKFout(const ParameterSet&);
-    ~ProducerKFout() override {}
+    explicit ProducerTT(const ParameterSet&);
+    ~ProducerTT() override {}
 
   private:
     void beginRun(const Run&, const EventSetup&) override;
@@ -56,7 +56,7 @@ namespace trackFindingTracklet {
     const DataFormats* dataFormats_;
   };
 
-  ProducerKFout::ProducerKFout(const ParameterSet& iConfig) :
+  ProducerTT::ProducerTT(const ParameterSet& iConfig) :
     iConfig_(iConfig)
   {
     const string& label = iConfig.getParameter<string>("LabelKF");
@@ -74,7 +74,7 @@ namespace trackFindingTracklet {
     dataFormats_ = nullptr;
   }
 
-  void ProducerKFout::beginRun(const Run& iRun, const EventSetup& iSetup) {
+  void ProducerTT::beginRun(const Run& iRun, const EventSetup& iSetup) {
     // helper class to store configurations
     setup_ = &iSetup.getData(esGetTokenSetup_);
     if (!setup_->configurationSupported())
@@ -86,7 +86,7 @@ namespace trackFindingTracklet {
     dataFormats_ = &iSetup.getData(esGetTokenDataFormats_);
   }
 
-  void ProducerKFout::produce(Event& iEvent, const EventSetup& iSetup) {
+  void ProducerTT::produce(Event& iEvent, const EventSetup& iSetup) {
     // empty KFout product
     TTTracks ttTracks;
     // read in KF Product and produce KFout product
@@ -131,4 +131,4 @@ namespace trackFindingTracklet {
 
 } // namespace trackFindingTracklet
 
-DEFINE_FWK_MODULE(trackFindingTracklet::ProducerKFout);
+DEFINE_FWK_MODULE(trackFindingTracklet::ProducerTT);

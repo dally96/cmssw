@@ -7,8 +7,9 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process( "Demo" )
-process.load('Configuration.Geometry.GeometryExtended2026D76Reco_cff') 
-process.load('Configuration.Geometry.GeometryExtended2026D76_cff')
+process.load( 'FWCore.MessageService.MessageLogger_cfi' )
+process.load( 'Configuration.Geometry.GeometryExtended2026D76Reco_cff' ) 
+process.load( 'Configuration.Geometry.GeometryExtended2026D76_cff' )
 process.load( 'Configuration.StandardSequences.MagneticField_cff' )
 process.load( 'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff' )
 process.load( 'Configuration.StandardSequences.L1TrackTrigger_cff' )
@@ -48,7 +49,7 @@ process.schedule = cms.Schedule( process.tt )
 import FWCore.ParameterSet.VarParsing as VarParsing
 options = VarParsing.VarParsing( 'analysis' )
 # specify input MC
-Samples = {
+Samples = [
   #'/store/relval/CMSSW_11_3_0_pre6/RelValSingleMuFlatPt2To100/GEN-SIM-DIGI-RAW/113X_mcRun4_realistic_v6_2026D76noPU-v1/10000/05f802b7-b0b3-4cca-8b70-754682c3bb4c.root'
   #'/store/relval/CMSSW_11_3_0_pre6/RelValDisplacedMuPt2To100Dxy100/GEN-SIM-DIGI-RAW/113X_mcRun4_realistic_v6_2026D76noPU-v1/00000/011da61a-9524-4a96-b91f-03e8690af3bd.root'
   '/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/00026541-6200-4eed-b6f8-d3a1fd720e9c.root',
@@ -61,7 +62,7 @@ Samples = {
   '/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/16760a5c-9cd2-41c3-82e5-399bb962d537.root',
   '/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1752640f-2001-4d14-9276-063ec07cea92.root',
   '/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/180712c9-31a5-4f2a-bf92-a7fbee4dabad.root'
-}
+]
 options.register( 'inputMC', Samples, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, "Files to be processed" )
 # specify number of events to process.
 options.register( 'Events',100,VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, "Number of Events to analyze" )
@@ -73,8 +74,10 @@ process.source = cms.Source(
   "PoolSource",
   fileNames = cms.untracked.vstring( options.inputMC ),
   #skipEvents = cms.untracked.uint32( 3 + 8 ),
+  noEventSort = cms.untracked.bool( True ),
   secondaryFileNames = cms.untracked.vstring(),
   duplicateCheckMode = cms.untracked.string( 'noDuplicateCheck' )
 )
-process.Timing = cms.Service( "Timing", summaryOnly = cms.untracked.bool( True ) )
+#process.Timing = cms.Service( "Timing", summaryOnly = cms.untracked.bool( True ) )
+process.MessageLogger.cerr.enableStatistics = False
 process.TFileService = cms.Service( "TFileService", fileName = cms.string( "Hist.root" ) )

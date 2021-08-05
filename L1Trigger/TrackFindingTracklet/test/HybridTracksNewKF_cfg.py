@@ -7,8 +7,8 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process( "Demo" )
-process.load('Configuration.Geometry.GeometryExtended2026D76Reco_cff') 
-process.load('Configuration.Geometry.GeometryExtended2026D76_cff')
+process.load( 'Configuration.Geometry.GeometryExtended2026D76Reco_cff' ) 
+process.load( 'Configuration.Geometry.GeometryExtended2026D76_cff' )
 process.load( 'Configuration.StandardSequences.MagneticField_cff' )
 process.load( 'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff' )
 process.load( 'Configuration.StandardSequences.L1TrackTrigger_cff' )
@@ -35,7 +35,7 @@ process.dtc = cms.Sequence( process.TrackerDTCProducer + process.TrackerDTCAnaly
 process.tracklet = cms.Sequence( process.L1TrackletTracks + process.TrackFindingTrackletAnalyzerTracklet )
 process.interIn = cms.Sequence( process.TrackFindingTrackletProducerKFin + process.TrackFindingTrackletAnalyzerKFin )
 process.kf = cms.Sequence( process.TrackFindingTrackletProducerKF + process.TrackFindingTrackletAnalyzerKF )
-process.interOut = cms.Sequence( process.TrackFindingTrackletProducerKFout + process.TrackFindingTrackletProducerAS + process.TrackFindingTrackletAnalyzerTT )
+process.interOut = cms.Sequence( process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS + process.TrackFindingTrackletAnalyzerTT )
 process.tt = cms.Path( process.mc + process.dtc + process.tracklet + process.interIn + process.kf + process.interOut )
 process.schedule = cms.Schedule( process.tt )
 

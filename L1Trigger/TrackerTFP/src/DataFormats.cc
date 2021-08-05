@@ -283,10 +283,12 @@ namespace trackerTFP {
 
   // construct StubZHT from StubMHT
   StubZHT::StubZHT(const StubMHT& stub) :
-    Stub(stub, stub.r(), stub.phi(), 0., stub.layer(), stub.sectorPhi(), stub.sectorEta(), stub.phiT(), stub.inv2R(), 0., 0.)
+    Stub(stub, stub.r(), stub.phi(), stub.z(), stub.layer(), stub.sectorPhi(), stub.sectorEta(), stub.phiT(), stub.inv2R(), 0, 0)
   {
     cot_ = 0.;
     zT_ = 0.;
+    r_ = format(Variable::r).digi(this->r() + dataFormats_->chosenRofPhi() - dataFormats_->setup()->chosenRofZ());
+    chi_ = stub.z();
     trackId_ = stub.trackId();
   }
 
@@ -294,15 +296,24 @@ namespace trackerTFP {
   StubZHT::StubZHT(const StubZHT& stub, double zT, double cot, int id) :
     Stub(stub.frame().first, stub.dataFormats(), Process::zht, stub.r(), stub.phi(), stub.z(), stub.layer(), stub.sectorPhi(), stub.sectorEta(), stub.phiT(), stub.inv2R(), stub.zT(), stub.cot())
   {
-    const Setup* setup = dataFormats_->setup();
     // update track (zT, cot), and phi residuals w.r.t. track, to reflect ZHT cell assignment.
+    r_ = stub.r_;
     cot_ = stub.cotf() + cot;
     zT_ = stub.ztf() + zT;
+    chi_ = stub.z() - zT_ + r_ * cot_;
     get<8>(data_) = format(Variable::zT).integer(zT_);
     get<9>(data_) = format(Variable::cot).integer(cot_);
-    get<2>(data_) -= (zT - (this->r() + dataFormats_->chosenRofPhi() - setup->chosenRofZ()) * cot);
     dataFormats_->convertStub(p_, data_, frame_.second);
     trackId_ = stub.trackId() * 4 + id;
+  }
+
+  //
+  StubZHT::StubZHT(const StubZHT& stub, int cot, int zT) :
+    Stub(stub.frame().first, stub.dataFormats(), Process::zht, stub.r(), stub.phi(), 0., stub.layer(), stub.sectorPhi(), stub.sectorEta(), stub.phiT(), stub.inv2R(), zT, cot)
+  {
+    get<2>(data_) = format(Variable::z).digi(stub.z() - (format(Variable::zT).floating(zT) - stub.r_ * format(Variable::cot).floating(cot)));
+    dataFormats_->convertStub(p_, data_, frame_.second);
+    fillTrackId();
   }
 
   // fills track id
@@ -660,7 +671,7 @@ namespace trackerTFP {
 
   template<>
   Format<Variable::z, Process::zht>::Format(const ParameterSet& iConfig, const Setup* setup) : DataFormat(true) {
-    const Format<Variable::zT, Process::zht> zT(iConfig, setup);
+    /*const Format<Variable::zT, Process::zht> zT(iConfig, setup);
     const Format<Variable::cot, Process::zht> cot(iConfig, setup);
     const double rangeR = 2. * max(abs(setup->outerRadius() - setup->chosenRofZ()), abs(setup->innerRadius() - setup->chosenRofZ()));
     range_ = zT.base() + cot.base() * rangeR + setup->maxdZ();
@@ -668,7 +679,11 @@ namespace trackerTFP {
     base_ = dtc.base();
     if (iConfig.getParameter<bool>("UseHybrid"))
       range_ *= 2;
-    width_ = ceil(log2(range_ / base_));
+    width_ = ceil(log2(range_ / base_));*/
+    const Format<Variable::z, Process::gp> z(iConfig, setup);
+    width_ = z.width();
+    range_ = z.range();
+    base_ = z.base();
   }
 
   template<>
