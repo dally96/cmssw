@@ -363,6 +363,8 @@ namespace tt {
     int tfpWidthCot() const { return tfpWidthCot_; }
     // number of bist used for z0
     int tfpWidthZ0() const { return tfpWidthZ0_; }
+    // number of output links
+    int tfpNumChannel() const { return tfpNumChannel_; }
 
     // Parameter specifying GeometricProcessor
 
@@ -731,6 +733,8 @@ namespace tt {
     int tfpWidthCot_;
     // number of bist used for z0
     int tfpWidthZ0_;
+    // number of output links
+    int tfpNumChannel_;
 
     // Parameter specifying GeometricProcessor
     edm::ParameterSet pSetGP_;

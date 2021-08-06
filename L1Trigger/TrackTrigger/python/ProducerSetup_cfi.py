@@ -142,7 +142,8 @@ TrackTrigger_params = cms.PSet (
     WidthPhi0  = cms.int32( 12 ), # number of bist used for phi0
     WidthInv2R = cms.int32( 15 ), # number of bist used for inv2R
     WidthCot   = cms.int32( 16 ), # number of bist used for cot(theta)
-    WidthZ0    = cms.int32( 12 )  # number of bist used for z0
+    WidthZ0    = cms.int32( 12 ), # number of bist used for z0
+    NumChannel = cms.int32(  2 )  # number of output links
   ),
 
   # Parmeter specifying GeometricProcessor

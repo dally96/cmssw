@@ -11,4 +11,5 @@ from L1Trigger.TrackFindingTracklet.ProducerKF_cfi import TrackFindingTrackletPr
 TrackFindingTrackletProducerKFin = cms.EDProducer( 'trackFindingTracklet::ProducerKFin', TrackFindingTrackletProducerKF_params )
 TrackFindingTrackletProducerKF = cms.EDProducer( 'trackerTFP::ProducerKF', TrackFindingTrackletProducerKF_params )
 TrackFindingTrackletProducerTT = cms.EDProducer( 'trackFindingTracklet::ProducerTT', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerAS = cms.EDProducer( 'trackerTFP::ProducerAS', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerAS = cms.EDProducer( 'trackFindingTracklet::ProducerAS', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerKFout = cms.EDProducer( 'trackFindingTracklet::ProducerKFout', TrackFindingTrackletProducerKF_params )

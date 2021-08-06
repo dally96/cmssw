@@ -151,6 +151,7 @@ namespace tt {
         tfpWidthInv2R_(pSetTFP_.getParameter<int>("WidthInv2R")),
         tfpWidthCot_(pSetTFP_.getParameter<int>("WidthCot")),
         tfpWidthZ0_(pSetTFP_.getParameter<int>("WidthZ0")),
+        tfpNumChannel_(pSetTFP_.getParameter<int>("NumChannel")),
         // Parmeter specifying GeometricProcessor
         pSetGP_(iConfig.getParameter<ParameterSet>("GeometricProcessor")),
         numSectorsPhi_(pSetGP_.getParameter<int>("NumSectorsPhi")),
