@@ -1,5 +1,5 @@
 #include "L1Trigger/TrackerTFP/interface/LayerEncoding.h"
-#include "L1Trigger/TrackerDTC/interface/SensorModule.h"
+#include "L1Trigger/TrackTrigger/interface/SensorModule.h"
 
 #include <vector>
 #include <set>
