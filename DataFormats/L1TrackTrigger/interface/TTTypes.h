@@ -39,11 +39,11 @@ using TTTrackPtrT = edm::Ptr<TTTrack<T> >;
 /// Specialized aliases
 typedef edm::Ref<edm::DetSetVector<Phase2TrackerDigi>, Phase2TrackerDigi> Ref_Phase2TrackerDigi_;
 
-typedef edmNew::DetSetVector<TTCluster<Ref_Phase2TrackerDigi_> > TTClusterDetSetVec;
-typedef edmNew::DetSetVector<TTStub<Ref_Phase2TrackerDigi_> > TTStubDetSetVec;
+typedef TTClusterDetSetVecT<Ref_Phase2TrackerDigi_> TTClusterDetSetVec;
+typedef TTStubDetSetVecT<Ref_Phase2TrackerDigi_> TTStubDetSetVec;
 
-typedef edm::Ref<TTStubDetSetVec, TTStub<Ref_Phase2TrackerDigi_> > TTStubRef;
-typedef edm::Ref<TTClusterDetSetVec, TTCluster<Ref_Phase2TrackerDigi_> > TTClusterRef;
+typedef TTClusterRefT<Ref_Phase2TrackerDigi_> TTClusterRef;
+typedef TTStubRefT<Ref_Phase2TrackerDigi_> TTStubRef;
 
 typedef edmNew::DetSet<TTStub<Ref_Phase2TrackerDigi_> > TTStubDetSet;
 typedef edmNew::DetSet<TTCluster<Ref_Phase2TrackerDigi_> > TTClusterDetSet;
