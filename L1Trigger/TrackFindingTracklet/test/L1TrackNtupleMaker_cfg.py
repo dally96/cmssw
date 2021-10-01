@@ -108,11 +108,16 @@ process.load('L1Trigger.TrackTrigger.TrackTrigger_cff')
 
 
 # DTC emulation
-process.load('L1Trigger.TrackerDTC.ProducerES_cff')
 process.load('L1Trigger.TrackerDTC.ProducerED_cff')
+
+# KF emulation
+process.load('L1Trigger.TrackFindingTracklet.ProducerKF_cff')
 
 # load code that analyzes DTCStubs
 #process.load('L1Trigger.TrackerDTC.Analyzer_cff')
+
+# load code that analyzes KF tracks
+#process.load('L1Trigger.TrackFindingTracklet.Analyzer_cff')
 
 # modify default cuts
 #process.TrackTriggerSetup.FrontEnd.BendCut = 5.0
