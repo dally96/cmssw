@@ -246,6 +246,8 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
   settings.setMemoryModulesFile(memoryModulesFile.fullPath());
   settings.setWiresFile(wiresFile.fullPath());
 
+  settings.setFakefit(iConfig.getParameter<bool>("Fakefit"));
+
   if (extended_) {
     settings.setTableTEDFile(tableTEDFile.fullPath());
     settings.setTableTREFile(tableTREFile.fullPath());
