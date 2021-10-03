@@ -8,6 +8,7 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process( "Demo" )
 process.load( 'FWCore.MessageService.MessageLogger_cfi' )
+process.load( 'Configuration.EventContent.EventContent_cff' )
 process.load( 'Configuration.Geometry.GeometryExtended2026D76Reco_cff' ) 
 process.load( 'Configuration.Geometry.GeometryExtended2026D76_cff' )
 process.load( 'Configuration.StandardSequences.MagneticField_cff' )
@@ -30,13 +31,17 @@ process.load( 'L1Trigger.TrackFindingTracklet.Analyzer_cff' )
 # load code that fits hybrid tracks
 process.load( 'L1Trigger.TrackFindingTracklet.ProducerKF_cff' )
 
+# load and configure TrackTriggerAssociation
+process.load( 'SimTracker.TrackTriggerAssociation.TrackTriggerAssociator_cff' )
+process.TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag( cms.InputTag( "TrackFindingTrackletProducerTT", "TrackAccepted" ) )
+
 # build schedule
 process.mc = cms.Sequence( process.StubAssociator )
 process.dtc = cms.Sequence( process.TrackerDTCProducer + process.TrackerDTCAnalyzer )
 process.tracklet = cms.Sequence( process.L1TrackletTracks + process.TrackFindingTrackletAnalyzerTracklet )
 process.interIn = cms.Sequence( process.TrackFindingTrackletProducerKFin + process.TrackFindingTrackletAnalyzerKFin )
 process.kf = cms.Sequence( process.TrackFindingTrackletProducerKF + process.TrackFindingTrackletAnalyzerKF )
-process.TTTracks = cms.Sequence( process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS )
+process.TTTracks = cms.Sequence( process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS + process.TrackTriggerAssociatorTracks )
 process.interOut = cms.Sequence( process.TrackFindingTrackletProducerKFout + process.TrackFindingTrackletAnalyzerKFout )
 process.tt = cms.Path( process.mc + process.dtc + process.tracklet + process.interIn + process.kf + process.TTTracks + process.interOut )
 process.schedule = cms.Schedule( process.tt )
