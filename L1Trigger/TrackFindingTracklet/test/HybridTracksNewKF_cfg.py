@@ -33,7 +33,10 @@ process.load( 'L1Trigger.TrackFindingTracklet.ProducerKF_cff' )
 
 # load and configure TrackTriggerAssociation
 process.load( 'SimTracker.TrackTriggerAssociation.TrackTriggerAssociator_cff' )
-process.TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag( cms.InputTag( "TrackFindingTrackletProducerTT", "TrackAccepted" ) )
+process.TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag( cms.InputTag(
+  process.TrackFindingTrackletProducerKF_params.LabelTT.value(),
+  process.TrackFindingTrackletProducerKF_params.BranchAcceptedTracks.value()
+) )
 
 # build schedule
 process.mc = cms.Sequence( process.StubAssociator )
