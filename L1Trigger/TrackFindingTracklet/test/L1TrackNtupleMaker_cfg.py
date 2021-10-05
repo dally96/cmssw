@@ -14,6 +14,7 @@ process = cms.Process("L1TrackNtuple")
 GEOMETRY = "D76"
 # Set L1 tracking algorithm: 
 # 'HYBRID' (baseline, 4par fit) or 'HYBRID_DISPLACED' (extended, 5par fit). 
+# 'HYBRID_NEWKF' (baseline, 4par fit, with bit-accurate KF emulation).
 # (Or legacy algos 'TMTT' or 'TRACKLET').
 L1TRKALGO = 'HYBRID'  
 
@@ -110,14 +111,8 @@ process.load('L1Trigger.TrackTrigger.TrackTrigger_cff')
 # DTC emulation
 process.load('L1Trigger.TrackerDTC.ProducerED_cff')
 
-# KF emulation
-process.load('L1Trigger.TrackFindingTracklet.ProducerKF_cff')
-
 # load code that analyzes DTCStubs
 #process.load('L1Trigger.TrackerDTC.Analyzer_cff')
-
-# load code that analyzes KF tracks
-#process.load('L1Trigger.TrackFindingTracklet.Analyzer_cff')
 
 # modify default cuts
 #process.TrackTriggerSetup.FrontEnd.BendCut = 5.0
@@ -149,7 +144,23 @@ elif (L1TRKALGO == 'HYBRID_DISPLACED'):
     L1TRK_NAME  = "TTTracksFromExtendedTrackletEmulation"
     L1TRK_LABEL = "Level1TTTracks"
     L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisExtended"
-    
+
+# HYBRID_NEWKF: prompt tracking
+if (L1TRKALGO == 'HYBRID_NEWKF'):
+    process.load( 'L1Trigger.TrackFindingTracklet.ProducerKF_cff' )
+    NHELIXPAR = 4
+    L1TRK_NAME  = process.TrackFindingTrackletProducerKF_params.LabelTT.value()
+    L1TRK_LABEL = process.TrackFindingTrackletProducerKF_params.BranchAcceptedTracks.value()
+    L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigis"
+    process.TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag( cms.InputTag(L1TRK_NAME, L1TRK_LABEL) )
+    process.HybridNewKF = cms.Sequence(process.L1TrackletTracks + process.TrackFindingTrackletProducerKFin + process.TrackFindingTrackletProducerKF + process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS + process.TrackFindingTrackletProducerKFout)
+    process.TTTracksEmulation = cms.Path(process.HybridNewKF)
+    #process.TTTracksEmulationWithTruth = cms.Path(process.HybridNewKF +  process.TrackTriggerAssociatorTracks)
+    # Optionally include code producing performance plots & end-of-job summary.
+    process.load( 'SimTracker.TrackTriggerAssociation.StubAssociator_cff' )
+    process.load( 'L1Trigger.TrackFindingTracklet.Analyzer_cff' )
+    process.TTTracksEmulationWithTruth = cms.Path(process.HybridNewKF +  process.TrackTriggerAssociatorTracks + process.StubAssociator +  process.TrackFindingTrackletAnalyzerTracklet + process.TrackFindingTrackletAnalyzerKFin + process.TrackFindingTrackletAnalyzerKF + process.TrackFindingTrackletAnalyzerKFout)
+
 # LEGACY ALGORITHM (EXPERTS ONLY): TRACKLET  
 elif (L1TRKALGO == 'TRACKLET'):
     print("\n WARNING: This is not the baseline algorithm! Prefer HYBRID or HYBRID_DISPLACED!")
@@ -181,7 +192,6 @@ elif (L1TRKALGO == 'TMTT'):
 else:
     print("ERROR: Unknown L1TRKALGO option")
     exit(1)
-
 
 ############################################################
 # Define the track ntuple process, MyProcess is the (unsigned) PDGID corresponding to the process which is run
