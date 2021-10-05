@@ -89,18 +89,12 @@ process.Timing = cms.Service( "Timing", summaryOnly = cms.untracked.bool( True )
 process.MessageLogger.cerr.enableStatistics = False
 process.TFileService = cms.Service( "TFileService", fileName = cms.string( "Hist.root" ) )
 
-if (False):
-  process.writeDataset = cms.OutputModule("PoolOutputModule",
-      splitLevel = cms.untracked.int32(0),
-      eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
-      outputCommands = process.RAWSIMEventContent.outputCommands,
-      fileName = cms.untracked.string('output_dataset.root'), ## ADAPT IT ##
-      dataset = cms.untracked.PSet(
-          filterName = cms.untracked.string(''),
-          dataTier = cms.untracked.string('GEN-SIM')
-      )
+if ( False ):
+  process.out = cms.OutputModule (
+    "PoolOutputModule",
+    fileName = cms.untracked.string("L1Tracks.root"),
+    fastCloning = cms.untracked.bool( False ),
+    outputCommands = cms.untracked.vstring('drop *', 'keep *_TTTrack*_*_*', 'keep *_TTStub*_*_*' )
   )
-  process.writeDataset.outputCommands.append('keep  *TTTrack*_*_*_*')
-  process.writeDataset.outputCommands.append('keep  *TTStub*_*_*_*')
-  process.pd = cms.EndPath(process.writeDataset)
-  process.schedule.append(process.pd)
+  process.FEVToutput_step = cms.EndPath( process.out )
+  process.schedule.append( process.FEVToutput_step )

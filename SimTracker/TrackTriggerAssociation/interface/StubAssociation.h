@@ -10,7 +10,9 @@
 namespace tt {
 
   /*! \class  tt::StubAssociation
-   *  \brief  Class to store the MC truth of L1 Track Trigger stubs
+   *  \brief  Class to associate reconstrucable TrackingParticles with TTStubs and vice versa.
+   *          It may associate multiple TPs with a TTStub and can therefore be used to associate
+   *          TTTracks with TrackingParticles.
    *  \author Thomas Schuh
    *  \date   2020, Apr
    */
