@@ -146,7 +146,7 @@ elif (L1TRKALGO == 'HYBRID_DISPLACED'):
     L1TRUTH_NAME = "TTTrackAssociatorFromPixelDigisExtended"
 
 # HYBRID_NEWKF: prompt tracking
-if (L1TRKALGO == 'HYBRID_NEWKF'):
+elif (L1TRKALGO == 'HYBRID_NEWKF'):
     process.load( 'L1Trigger.TrackFindingTracklet.ProducerKF_cff' )
     NHELIXPAR = 4
     L1TRK_NAME  = process.TrackFindingTrackletProducerKF_params.LabelTT.value()
