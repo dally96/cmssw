@@ -10,9 +10,9 @@ TrackTriggerDemonstrator_params = cms.PSet (
   #RunTime  = cms.double( 6.0 )                                # runtime in us
 
   # hybrid
-  LabelIn  = cms.string( "TrackFindingTrackletProducerKFin"    ), #
+  LabelIn  = cms.string( "TrackFindingTrackletProducerKF"    ), #
   LabelOut = cms.string( "TrackFindingTrackletProducerKF"      ), #
-  DirIPBB  = cms.string( "/heplnw039/tschuh/work/proj/hybrid/" ), # path to ipbb proj area
+  DirIPBB  = cms.string( "/heplnw039/tschuh/work/proj/kfout/" ), # path to ipbb proj area
   RunTime  = cms.double( 6.0 )                                    # runtime in us
 
 )

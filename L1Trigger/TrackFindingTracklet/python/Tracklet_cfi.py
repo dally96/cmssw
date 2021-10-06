@@ -19,7 +19,8 @@ TTTracksFromTrackletEmulation = cms.EDProducer("L1FPGATrackProducer",
                                                wiresFile = cms.FileInPath('L1Trigger/TrackFindingTracklet/data/wires_hourglassExtended.dat'),
                                                # Quality Flag and Quality params
                                                TrackQuality = cms.bool(True),
-                                               TrackQualityPSet = cms.PSet(TrackQualityParams)
+                                               TrackQualityPSet = cms.PSet(TrackQualityParams),
+                                               Fakefit = cms.bool(False)
     )
 
 TTTracksFromExtendedTrackletEmulation = TTTracksFromTrackletEmulation.clone(

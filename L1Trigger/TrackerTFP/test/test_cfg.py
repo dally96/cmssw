@@ -31,6 +31,8 @@ producerUseTMTT( process )
 analyzerUseTMTT( process )
 #--- Load code that produces tfp Stubs
 process.load( 'L1Trigger.TrackerTFP.Producer_cff' )
+from L1Trigger.TrackerTFP.Customize_cff import *
+setupUseTMTT( process )
 #--- Load code that analyzes tfp Stubs
 process.load( 'L1Trigger.TrackerTFP.Analyzer_cff' )
 
