@@ -695,17 +695,24 @@ namespace trackerTFP {
     range_ = phiT.base() + inv2R.base() * rangeR + setup->maxdPhi();
     const Format<Variable::phi, Process::dtc> dtc(iConfig, setup);
     base_ = dtc.base();
-    if (iConfig.getParameter<bool>("UseHybrid"))
-      range_ *= 4;
     width_ = ceil(log2(range_ / base_));
   }
 
   template<>
   Format<Variable::z, Process::kf>::Format(const ParameterSet& iConfig, const Setup* setup) : DataFormat(true) {
-    const Format<Variable::z, Process::zht> z(iConfig, setup);
+    /*const Format<Variable::z, Process::zht> z(iConfig, setup);
     const double rangeFactor = iConfig.getParameter<ParameterSet>("KalmanFilter").getParameter<double>("RangeFactor");
     range_ = rangeFactor * z.range();
     base_ = z.base();
+    width_ = ceil(log2(range_ / base_));*/
+    const Format<Variable::zT, Process::zht> zT(iConfig, setup);
+    const Format<Variable::cot, Process::zht> cot(iConfig, setup);
+    const double rangeR = 2. * max(abs(setup->outerRadius() - setup->chosenRofZ()), abs(setup->innerRadius() - setup->chosenRofZ()));
+    range_ = zT.base() + cot.base() * rangeR + setup->maxdZ();
+    const Format<Variable::z, Process::dtc> dtc(iConfig, setup);
+    base_ = dtc.base();
+    const double rangeFactor = iConfig.getParameter<ParameterSet>("KalmanFilter").getParameter<double>("RangeFactor");
+    range_ *= rangeFactor;
     width_ = ceil(log2(range_ / base_));
   }
 
