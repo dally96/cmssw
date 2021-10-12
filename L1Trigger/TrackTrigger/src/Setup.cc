@@ -92,6 +92,8 @@ namespace tt {
         tpMaxD0_(pSetTP_.getParameter<double>("MaxD0")),
         tpMinLayers_(pSetTP_.getParameter<int>("MinLayers")),
         tpMinLayersPS_(pSetTP_.getParameter<int>("MinLayersPS")),
+        tpMaxBadStubs2S_(pSetTP_.getParameter<int>("MaxBadStubs2S")),
+        tpMaxBadStubsPS_(pSetTP_.getParameter<int>("MaxBadStubsPS")),
         // Fimrware specific Parameter
         pSetFW_(iConfig.getParameter<ParameterSet>("Firmware")),
         widthDSPa_(pSetFW_.getParameter<int>("WidthDSPa")),

@@ -248,24 +248,11 @@ namespace trackFindingTracklet {
   // gets all TPs associated too any of the tracks & number of tracks matching at least one TP
   void AnalyzerTracklet::associate(const vector<vector<TTStubRef>>& tracks, const StubAssociation* ass, set<TPPtr>& tps, int& nMatchTrk, bool perfect) const {
     for (const vector<TTStubRef>& ttStubRefs : tracks) {
-      const vector<TPPtr>& tpPtrs = ass->associate(ttStubRefs);
+      const vector<TPPtr>& tpPtrs = perfect ? ass->associateFinal(ttStubRefs) : ass->associate(ttStubRefs);
       if (tpPtrs.empty())
         continue;
-      if (perfect) {
-        for (const TPPtr& tpPtr : tpPtrs) {
-          int wrong2S(0);
-          int wrongPS(0);
-          const vector<TTStubRef>& ttStubRefsTP = ass->findTTStubRefs(tpPtr);
-          for (const TTStubRef& ttStubRef : ttStubRefs)
-            if (find(ttStubRefsTP.begin(), ttStubRefsTP.end(), ttStubRef) == ttStubRefsTP.end())
-              setup_->psModule(ttStubRef) ? wrongPS++ : wrong2S++;
-          if (wrong2S <= 0 && wrong2S <= 1)
-            tps.insert(tpPtr);
-        }
-      } else {
-        nMatchTrk++;
-        copy(tpPtrs.begin(), tpPtrs.end(), inserter(tps, tps.begin()));
-      }
+      nMatchTrk++;
+      copy(tpPtrs.begin(), tpPtrs.end(), inserter(tps, tps.begin()));
     }
   }
 

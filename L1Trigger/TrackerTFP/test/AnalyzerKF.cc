@@ -329,7 +329,7 @@ namespace trackerTFP {
   void AnalyzerKF::associate(const TTTracks& ttTracks, const StubAssociation* ass, set<TPPtr>& tps, int& sum, const vector<TH1F*>& his, TProfile* prof) const {
     for (const TTTrack<Ref_Phase2TrackerDigi_>& ttTrack : ttTracks) {
       const vector<TTStubRef>& ttStubRefs = ttTrack.getStubRefs();
-      const vector<TPPtr>& tpPtrs = ass->associate(ttStubRefs);
+      const vector<TPPtr>& tpPtrs = ass->associateFinal(ttStubRefs);
       if (tpPtrs.empty())
         continue;
       sum++;

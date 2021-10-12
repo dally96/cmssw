@@ -175,6 +175,10 @@ namespace tt {
     int tpMinLayers() const { return tpMinLayers_; }
     // required number of associated ps layers to a TP to consider it reconstruct-able
     int tpMinLayersPS() const { return tpMinLayersPS_; }
+    // max number of unassociated 2S stubs allowed to still associate TTTrack with TP
+    int tpMaxBadStubs2S() const { return tpMaxBadStubs2S_; }
+    // max number of unassociated PS stubs allowed to still associate TTTrack with TP
+    int tpMaxBadStubsPS() const { return tpMaxBadStubsPS_; }
     // BField used in fw in T
     double bField() const { return bField_; }
 
@@ -605,6 +609,10 @@ namespace tt {
     int tpMinLayers_;
     // required number of associated ps layers to a TP to consider it reconstruct-able
     int tpMinLayersPS_;
+    // max number of unassociated 2S stubs allowed to still associate TTTrack with TP
+    int tpMaxBadStubs2S_;
+    // max number of unassociated PS stubs allowed to still associate TTTrack with TP
+    int tpMaxBadStubsPS_;
 
     // Fimrware specific Parameter
     edm::ParameterSet pSetFW_;

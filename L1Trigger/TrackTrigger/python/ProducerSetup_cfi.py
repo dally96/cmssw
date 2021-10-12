@@ -67,13 +67,15 @@ TrackTrigger_params = cms.PSet (
 
   # Parameter specifying TrackingParticle used for Efficiency measurements
   TrackingParticle = cms.PSet (
-    MinPt       = cms.double(  2.  ), # pt cut in GeV
-    MaxEta      = cms.double(  2.4 ), # eta cut
-    MaxVertR    = cms.double(  1.  ), # cut on vertex pos r in cm
-    MaxVertZ    = cms.double( 30.  ), # cut on vertex pos z in cm
-    MaxD0       = cms.double(  5.  ), # cut on impact parameter in cm
-    MinLayers   = cms.int32 (  4   ), # required number of associated layers to a TP to consider it reconstruct-able
-    MinLayersPS = cms.int32 (  0   )  # required number of associated ps layers to a TP to consider it reconstruct-able
+    MinPt         = cms.double(  2.  ), # pt cut in GeV
+    MaxEta        = cms.double(  2.4 ), # eta cut
+    MaxVertR      = cms.double(  1.  ), # cut on vertex pos r in cm
+    MaxVertZ      = cms.double( 30.  ), # cut on vertex pos z in cm
+    MaxD0         = cms.double(  5.  ), # cut on impact parameter in cm
+    MinLayers     = cms.int32 (  4   ), # required number of associated layers to a TP to consider it reconstruct-able
+    MinLayersPS   = cms.int32 (  0   ), # required number of associated ps layers to a TP to consider it reconstruct-able
+    MaxBadStubs2S = cms.int32 (  1   ), # max number of unassociated 2S stubs allowed to still associate TTTrack with TP
+    MaxBadStubsPS = cms.int32 (  0   )  # max number of unassociated PS stubs allowed to still associate TTTrack with TP
   ),
 
   # Fimrware specific Parameter
