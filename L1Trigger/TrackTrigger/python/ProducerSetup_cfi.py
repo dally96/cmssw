@@ -67,7 +67,6 @@ TrackTrigger_params = cms.PSet (
 
   # Parameter specifying TrackingParticle used for Efficiency measurements
   TrackingParticle = cms.PSet (
-    #MinPt       = cms.double(  3.  ), # pt cut in GeV
     MinPt       = cms.double(  2.  ), # pt cut in GeV
     MaxEta      = cms.double(  2.4 ), # eta cut
     MaxVertR    = cms.double(  1.  ), # cut on vertex pos r in cm
@@ -100,7 +99,6 @@ TrackTrigger_params = cms.PSet (
     TiltApproxSlope     = cms.double(   0.886            ), # 
     TiltApproxIntercept = cms.double(   0.504            ), # 
     MindPhi             = cms.double(  0.0001            ), # minimum representable stub phi uncertainty
-    #MaxdPhi             = cms.double(  0.01              ), # maximum representable stub phi uncertainty
     MaxdPhi             = cms.double(  0.02              ), # maximum representable stub phi uncertainty
     MindZ               = cms.double(  0.1               ), # minimum representable stub z uncertainty
     MaxdZ               = cms.double( 30.                )  # maximum representable stub z uncertainty
