@@ -36,7 +36,7 @@ namespace trackerTFP {
 
     // ED input token of tt::TTTrackRefMap
     EDGetTokenT<tt::TTTrackRefMap> edGetTokenTTTrackMap_;
-    // ED input token of TTStubRef to selected TPPtr association
+    // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenStubAssociation_;
     // Setup token
     ESGetToken<Setup, SetupRcd> esGetTokenSetup_;

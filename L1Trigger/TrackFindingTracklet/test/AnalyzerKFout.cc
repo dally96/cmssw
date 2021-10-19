@@ -57,7 +57,7 @@ namespace trackFindingTracklet {
     EDGetTokenT<StreamsTrack> edGetTokenAccepted_;
     // ED input token of lost Tracks
     EDGetTokenT<StreamsTrack> edGetTokenLost_;
-    // ED input token of TTStubRef to selected TPPtr association
+    // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenSelection_;
     // ED input token of TTStubRef to recontructable TPPtr association
     EDGetTokenT<StubAssociation> edGetTokenReconstructable_;

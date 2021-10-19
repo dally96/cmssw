@@ -48,7 +48,7 @@ namespace trackerTFP {
     EDGetTokenT<StreamsStub> edGetTokenAccepted_;
     // ED input token of lost stubs
     EDGetTokenT<StreamsStub> edGetTokenLost_;
-    // ED input token of TTStubRef to selected TPPtr association
+    // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenAss_;
     // Setup token
     ESGetToken<Setup, SetupRcd> esGetToken_;

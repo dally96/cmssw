@@ -27,9 +27,11 @@ using namespace edm;
 namespace tt {
 
   /*! \class  tt::StubAssociator
-   *  \brief  Class to associate reconstrucable TrackingParticles with TTStubs and vice versa.
+   *  \brief  Class to associate reconstrucable TrackingParticles with TTStubs and vice versa
    *          It may associate multiple TPs with a TTStub and can therefore be used to associate
-   *          TTTracks with TrackingParticles.
+   *          TTTracks with TrackingParticles. This EDProducer creates two StubAssociation EDProducts,
+   *          one using only TP that are "reconstructable" (produce stubs in a min. number of layers)
+   *          and one using TP that are also "use for the tracking efficiency measurement".
    *  \author Thomas Schuh
    *  \date   2020, Apr
    */

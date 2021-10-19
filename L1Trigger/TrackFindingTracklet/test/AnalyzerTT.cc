@@ -41,7 +41,7 @@ namespace trackFindingTracklet {
 
     // ED input token of TTTrackRefMap
     EDGetTokenT<TTTrackRefMap> edGetTokenTTTrackMap_;
-    // ED input token of TTStubRef to selected TPPtr association
+    // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenStubAssociation_;
     // Setup token
     ESGetToken<Setup, SetupRcd> esGetTokenSetup_;

@@ -54,7 +54,7 @@ namespace trackFindingTracklet {
 
     // ED input token of tracks
     EDGetTokenT<TTTracks> edGetToken_;
-    // ED input token of TTStubRef to selected TPPtr association
+    // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenSelection_;
     // ED input token of TTStubRef to recontructable TPPtr association
     EDGetTokenT<StubAssociation> edGetTokenReconstructable_;
