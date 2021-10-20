@@ -87,7 +87,7 @@ namespace trackerTFP {
     layerMap_[layer] = distance(stubs.begin(), find(stubs.begin(), stubs.end(), stub_));
     // pick next stub (first stub in next layer with stub)
     stub_ = nullptr;
-    if (hitPattern_.count() == setup_->kfMaxLayers())
+    if (hitPattern_.count() == setup_->kfMinLayers())
       return;
     for (int nextLayer = layer + 1; nextLayer < setup_->numLayers(); nextLayer++) {
       if (track_->hitPattern(nextLayer)) {

@@ -116,7 +116,7 @@ namespace trackerTFP {
   }
 
   // fill output products
-  void KalmanFilter::produce(StreamsStub& acceptedStubs, StreamsTrack& acceptedTracks, StreamsStub& lostStubs, StreamsTrack& lostTracks) {
+  void KalmanFilter::produce(StreamsStub& acceptedStubs, StreamsTrack& acceptedTracks, StreamsStub& lostStubs, StreamsTrack& lostTracks, int& numAcceptedStates, int& numLostStates) {
     auto put = [this](const deque<State*>& states, StreamsStub& streamsStubs, StreamsTrack& streamsTracks, int channel) {
       const int streamId = region_ * dataFormats_->numChannel(Process::kf) + channel;
       const int offset = streamId * setup_->numLayers();
@@ -132,6 +132,9 @@ namespace trackerTFP {
         for (int layer : state->hitPattern().ids(false))
           streamsStubs[offset + layer].emplace_back(FrameStub());
       }
+    };
+    auto count = [this](int& sum, const State* state) {
+      return sum += state && state->hitPattern().count() >= setup_->kfMinLayers() ? 1 : 0;
     };
     for (int channel = 0; channel < dataFormats_->numChannel(Process::kf); channel++) {
       deque<State*> stream;
@@ -150,13 +153,16 @@ namespace trackerTFP {
       // Propagate state to each layer in turn, updating it with all viable stub combinations there, using KF maths
       for (layer_ = 0; layer_ < setup_->numLayers(); layer_++)
         addLayer(stream);
+      // calculate number of states before truncating
+      const int numUntruncatedStates = accumulate(stream.begin(), stream.end(), 0, count);
       // untruncated best state selection
       deque<State*> untruncatedStream = stream;
       accumulator(untruncatedStream);
       // apply truncation
       if (enableTruncation_ && (int)stream.size() > setup_->numFrames())
-      //if (enableTruncation_ && (int)stream.size() > setup_->numFramesIO())
         stream.resize(setup_->numFrames());
+      // calculate number of states after truncating
+      const int numTruncatedStates = accumulate(stream.begin(), stream.end(), 0, count);
       // best state per candidate selection
       accumulator(stream);
       deque<State*> truncatedStream = stream;
@@ -168,6 +174,10 @@ namespace trackerTFP {
       put(stream, acceptedStubs, acceptedTracks, channel);
       // store lost tracks
       put(lost, lostStubs, lostTracks, channel);
+      // store number of states which got taken into account
+      numAcceptedStates += numTruncatedStates;
+      // store number of states which got not taken into account due to truncation
+      numLostStates += numUntruncatedStates - numTruncatedStates;
     }
   }
 
@@ -190,8 +200,8 @@ namespace trackerTFP {
         state = pop_front(stack);
       streamOutput.push_back(state);
       // The remainder of the code in this loop deals with combinatoric states.
-      if (!state || !state->stub() || state->layer() != layer_)
-        state = nullptr;
+      //if (!state || !state->stub() || state->layer() != layer_)
+        //state = nullptr;
       if (state != nullptr)
         // Assign next combinatoric stub to state
         comb(state);
@@ -211,31 +221,38 @@ namespace trackerTFP {
 
   // Assign next combinatoric (i.e. not first in layer) stub to state
   void KalmanFilter::comb(State*& state) {
-    // Get next unused stub on this layer
-    StubKFin* stub = state->stub();
-    const int layer = stub->layer();
-    TrackKFin* track = state->track();
-    const vector<StubKFin*>& stubs = track->layerStubs(layer);
+    const TrackKFin* track = state->track();
+    const StubKFin* stub = state->stub();
+    const vector<StubKFin*>& stubs = track->layerStubs(layer_);
     const TTBV& hitPattern = state->hitPattern();
-    const int pos = distance(stubs.begin(), find(stubs.begin(), stubs.end(), stub)) + 1;
     StubKFin* stubNext = nullptr;
-    if (pos != (int)stubs.size())
-      stubNext = stubs[pos];
-    // picks next stub on different layer, nullifies state if skipping layer is not valid
-    else {
-      bool valid(true);
-      // having already maximum number of added layers
-      if (hitPattern.count() == setup_->kfMaxLayers())
-        valid = false;
-      // Impossible for this state to ever get enough layers to form valid track
-      if (hitPattern.count() + track->hitPattern().count(layer + 1, setup_->numLayers()) < setup_->kfMaxLayers())
-        valid = false;
-      if (valid) {
-        // pick next stub on next populated layer
-        for (int nextLayer = layer_ + 1; nextLayer < setup_->numLayers(); nextLayer++) {
-          if (track->hitPattern(nextLayer)) {
-            stubNext = track->layerStub(nextLayer);
-            break;
+    // Get first stub on this layer if state reached min layers
+    if (!stub) {
+      if (hitPattern.count() < setup_->kfMaxLayers() && track->hitPattern(layer_))
+        stubNext = track->layerStub(layer_);
+    } else if (stub->layer() == layer_) {
+      // Get next unused stub on this layer
+      const int pos = distance(stubs.begin(), find(stubs.begin(), stubs.end(), stub)) + 1;
+      if (pos != (int)stubs.size())
+        stubNext = stubs[pos];
+      // picks next stub on different layer, nullifies state if skipping layer is not valid
+      else {
+        bool valid(true);
+        // having already maximum number of added layers
+        if (hitPattern.count() == setup_->kfMaxLayers())
+          valid = false;
+        // Impossible for this state to ever get enough layers to form valid track
+        if (hitPattern.count() + track->hitPattern().count(stub->layer() + 1, setup_->numLayers()) < setup_->kfMinLayers())
+          valid = false;
+        if (layer_ == setup_->numLayers() - 1)
+          valid = false;
+        if (valid) {
+          // pick next stub on next populated layer
+          for (int nextLayer = layer_ + 1; nextLayer < setup_->numLayers(); nextLayer++) {
+            if (track->hitPattern(nextLayer)) {
+              stubNext = track->layerStub(nextLayer);
+              break;
+            }
           }
         }
       }
@@ -252,7 +269,7 @@ namespace trackerTFP {
   void KalmanFilter::accumulator(deque<State*>& stream) {
     // accumulator delivers contigious stream of best state per track
     // remove gaps and not final states
-    stream.erase(remove_if(stream.begin(), stream.end(), [this](State* state){ return !state || state->hitPattern().count() < setup_->kfMaxLayers(); }), stream.end());
+    stream.erase(remove_if(stream.begin(), stream.end(), [this](State* state){ return !state || state->hitPattern().count() < setup_->kfMinLayers(); }), stream.end());
     // Determine quality of completed state
     for (State* state : stream)
       state->finish();

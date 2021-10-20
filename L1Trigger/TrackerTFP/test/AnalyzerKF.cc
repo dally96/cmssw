@@ -61,6 +61,10 @@ namespace trackerTFP {
     EDGetTokenT<StreamsStub> edGetTokenLostStubs_;
     // ED input token of lost Tracks
     EDGetTokenT<StreamsTrack> edGetTokenLostTracks_;
+    // ED input token for number of accepted States
+    EDGetTokenT<int> edGetTokenNumAcceptedStates_;
+    // ED input token for number of lost States
+    EDGetTokenT<int> edGetTokenNumLostStates_;
     // ED input token of TTStubRef to TPPtr association for tracking efficiency
     EDGetTokenT<StubAssociation> edGetTokenSelection_;
     // ED input token of TTStubRef to recontructable TPPtr association
@@ -118,6 +122,8 @@ namespace trackerTFP {
     edGetTokenAcceptedTracks_ = consumes<StreamsTrack>(InputTag(label, branchAcceptedTracks));
     edGetTokenLostStubs_ = consumes<StreamsStub>(InputTag(label, branchLostStubs));
     edGetTokenLostTracks_ = consumes<StreamsTrack>(InputTag(label, branchLostTracks));
+    edGetTokenNumAcceptedStates_ = consumes<int>(InputTag(label, branchAcceptedTracks));;
+    edGetTokenNumLostStates_ = consumes<int>(InputTag(label, branchLostTracks));;
     if (useMCTruth_) {
       const auto& inputTagSelecttion = iConfig.getParameter<InputTag>("InputTagSelection");
       const auto& inputTagReconstructable = iConfig.getParameter<InputTag>("InputTagReconstructable");
@@ -146,7 +152,7 @@ namespace trackerTFP {
     Service<TFileService> fs;
     TFileDirectory dir;
     dir = fs->mkdir("KF");
-    prof_ = dir.make<TProfile>("Counts", ";", 9, 0.5, 9.5);
+    prof_ = dir.make<TProfile>("Counts", ";", 11, 0.5, 11.5);
     prof_->GetXaxis()->SetBinLabel(1, "Stubs");
     prof_->GetXaxis()->SetBinLabel(2, "Tracks");
     prof_->GetXaxis()->SetBinLabel(3, "Lost Tracks");
@@ -156,6 +162,8 @@ namespace trackerTFP {
     prof_->GetXaxis()->SetBinLabel(7, "Found selected TPs");
     prof_->GetXaxis()->SetBinLabel(8, "Lost TPs");
     prof_->GetXaxis()->SetBinLabel(9, "All TPs");
+    prof_->GetXaxis()->SetBinLabel(10, "states");
+    prof_->GetXaxis()->SetBinLabel(11, "lost states");
     // channel occupancy
     constexpr int maxOcc = 180;
     const int numChannels = dataFormats_->numChannel(Process::kf);
@@ -199,6 +207,10 @@ namespace trackerTFP {
     const StreamsStub& lostStubs = *handleLostStubs;
     Handle<StreamsTrack> handleLostTracks;
     iEvent.getByToken<StreamsTrack>(edGetTokenLostTracks_, handleLostTracks);
+    Handle<int> handleNumAcceptedStates;
+    iEvent.getByToken<int>(edGetTokenNumAcceptedStates_, handleNumAcceptedStates);
+    Handle<int> handleNumLostStates;
+    iEvent.getByToken<int>(edGetTokenNumLostStates_, handleNumLostStates);
     // read in MCTruth
     const StubAssociation* selection = nullptr;
     const StubAssociation* reconstructable = nullptr;
@@ -279,6 +291,8 @@ namespace trackerTFP {
     prof_->Fill(6, tpPtrs.size());
     prof_->Fill(7, tpPtrsSelection.size());
     prof_->Fill(8, tpPtrsRealLost.size());
+    prof_->Fill(10, *handleNumAcceptedStates);
+    prof_->Fill(11, *handleNumLostStates);
     nEvents_++;
   }
 
@@ -309,18 +323,22 @@ namespace trackerTFP {
     const double errEff = sqrt(eff * (1. - eff) / totalTPs / nEvents_);
     const double effLoss = numTPsLost / totalTPs;
     const double errEffLoss = sqrt(effLoss * (1. - effLoss) / totalTPs / nEvents_);
+    const int numStates = prof_->GetBinContent(10);
+    const int numStatesLost = prof_->GetBinContent(11);
+    const double fracSatest = numStates / (double)(numStates + numStatesLost);
     const vector<double> nums = {numStubs, numTracks, numTracksLost};
     const vector<double> errs = {errStubs, errTracks, errTracksLost};
     const int wNums = ceil(log10(*max_element(nums.begin(), nums.end()))) + 5;
     const int wErrs = ceil(log10(*max_element(errs.begin(), errs.end()))) + 5;
     log_ << "                         KF  SUMMARY                         " << endl;
-    //log_ << "number of stubs       per TFP = " << setw(wNums) << numStubs << " +- " << setw(wErrs) << errStubs << endl;
+    log_ << "number of stubs       per TFP = " << setw(wNums) << numStubs << " +- " << setw(wErrs) << errStubs << endl;
     log_ << "number of tracks      per TFP = " << setw(wNums) << numTracks << " +- " << setw(wErrs) << errTracks << endl;
     log_ << "number of lost tracks per TFP = " << setw(wNums) << numTracksLost << " +- " << setw(wErrs) << errTracksLost << endl;
     log_ << "          tracking efficiency = " << setw(wNums) << eff << " +- " << setw(wErrs) << errEff << endl;
     log_ << "     lost tracking efficiency = " << setw(wNums) << effLoss << " +- " << setw(wErrs) << errEffLoss << endl;
     log_ << "                    fake rate = " << setw(wNums) << fracFake << endl;
     log_ << "               duplicate rate = " << setw(wNums) << fracDup << endl;
+    log_ << "    state assessment fraction = " << setw(wNums) << fracSatest << endl;
     log_ << "=============================================================";
     LogPrint("L1Trigger/TrackerTFP") << log_.str();
   }

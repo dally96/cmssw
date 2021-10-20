@@ -50,6 +50,9 @@ namespace trackerTFP {
     // ED output token for lost stubs and tracks
     EDPutTokenT<StreamsStub> edPutTokenLostStubs_;
     EDPutTokenT<StreamsTrack> edPutTokenLostTracks_;
+    // ED output token for number of accepted and lost States
+    EDPutTokenT<int> edPutTokenNumAcceptedStates_;
+    EDPutTokenT<int> edPutTokenNumLostStates_;
     // Setup token
     ESGetToken<Setup, SetupRcd> esGetTokenSetup_;
     // DataFormats token
@@ -80,6 +83,8 @@ namespace trackerTFP {
     edPutTokenAcceptedTracks_ = produces<StreamsTrack>(branchAcceptedTracks);
     edPutTokenLostStubs_ = produces<StreamsStub>(branchLostStubs);
     edPutTokenLostTracks_ = produces<StreamsTrack>(branchLostTracks);
+    edPutTokenNumAcceptedStates_ = produces<int>(branchAcceptedTracks);
+    edPutTokenNumLostStates_ = produces<int>(branchLostTracks);
     // book ES products
     esGetTokenSetup_ = esConsumes<Setup, SetupRcd, Transition::BeginRun>();
     esGetTokenDataFormats_ = esConsumes<DataFormats, DataFormatsRcd, Transition::BeginRun>();
@@ -110,6 +115,8 @@ namespace trackerTFP {
     StreamsTrack acceptedTracks(dataFormats_->numStreamsTracks(Process::kf));
     StreamsStub lostStubs(dataFormats_->numStreamsStubs(Process::kf));
     StreamsTrack lostTracks(dataFormats_->numStreamsTracks(Process::kf));
+    int numAcceptedStates(0);
+    int numLostStates(0);
     // read in SF Product and produce KF product
     if (setup_->configurationSupported()) {
       Handle<StreamsStub> handleStubs;
@@ -124,7 +131,7 @@ namespace trackerTFP {
         // read in and organize input tracks and stubs
         kf.consume(tracks, stubs);
         // fill output products
-        kf.produce(acceptedStubs, acceptedTracks, lostStubs, lostTracks);
+        kf.produce(acceptedStubs, acceptedTracks, lostStubs, lostTracks, numAcceptedStates, numLostStates);
       }
     }
     // store products
@@ -132,6 +139,8 @@ namespace trackerTFP {
     iEvent.emplace(edPutTokenAcceptedTracks_, move(acceptedTracks));
     iEvent.emplace(edPutTokenLostStubs_, move(lostStubs));
     iEvent.emplace(edPutTokenLostTracks_, move(lostTracks));
+    iEvent.emplace(edPutTokenNumAcceptedStates_, move(numAcceptedStates));
+    iEvent.emplace(edPutTokenNumLostStates_, move(numLostStates));
   }
 
 } // namespace trackerTFP
