@@ -38,7 +38,7 @@ namespace tt {
         pSetIdGeometryConfiguration_(pSetIdGeometryConfiguration),
 
         // Parameter to check if configured Tracker Geometry is supported
-        pSetSG_(iConfig.getParameter<ParameterSet>("SupportedGeometry")),
+        pSetSG_(iConfig.getParameter<ParameterSet>("UnSupportedGeometry")),
         sgXMLLabel_(pSetSG_.getParameter<string>("XMLLabel")),
         sgXMLPath_(pSetSG_.getParameter<string>("XMLPath")),
         sgXMLFile_(pSetSG_.getParameter<string>("XMLFile")),
@@ -367,7 +367,7 @@ namespace tt {
       exception.addContext("tt::Setup::checkGeometry");
       throw exception;
     }
-    if (find(sgXMLVersions_.begin(), sgXMLVersions_.end(), version) == sgXMLVersions_.end()) {
+    if (find(sgXMLVersions_.begin(), sgXMLVersions_.end(), version) != sgXMLVersions_.end()) {
       configurationSupported_ = false;
       LogWarning("ConfigurationNotSupported")
           << "Geometry Configuration " << sgXMLPath_ << version << "/" << sgXMLFile_ << " is not supported. ";

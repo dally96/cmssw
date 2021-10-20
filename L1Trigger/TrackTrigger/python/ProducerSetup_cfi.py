@@ -4,11 +4,11 @@ TrackTrigger_params = cms.PSet (
 
   # Parameter to check if configured Tracker Geometry is supported
   # this refers to files included by Configuration/Geometry/python/GeometryExtended*_cff.py
-  SupportedGeometry = cms.PSet (
-    XMLLabel    = cms.string ("geomXMLFiles"                                    ), # label of ESProducer/ESSource
-    XMLPath     = cms.string ("Geometry/TrackerCommonData/data/PhaseII/"        ), # compared path
-    XMLFile     = cms.string ("tracker.xml"                                     ), # compared filen ame
-    XMLVersions = cms.vstring("TiltedTracker613", "TiltedTracker613_MB_2019_04", "OuterTracker800_2020_07")  # list of supported versions
+  UnSupportedGeometry = cms.PSet (
+    XMLLabel    = cms.string ("geomXMLFiles"                             ), # label of ESProducer/ESSource
+    XMLPath     = cms.string ("Geometry/TrackerCommonData/data/PhaseII/" ), # compared path
+    XMLFile     = cms.string ("tracker.xml"                              ), # compared filen ame
+    XMLVersions = cms.vstring()  # list of unsupported versions
   ),
 
   # Parameter to check if Process History is consistent with process configuration
@@ -188,7 +188,7 @@ TrackTrigger_params = cms.PSet (
     NumWorker   = cms.int32 ( 2   ), # number of kf worker
     RangeFactor = cms.double( 2.0 ), # search window of each track parameter in initial uncertainties
     MinLayers   = cms.int32 ( 4   ), # required number of stub layers to form a track
-    MaxLayers   = cms.int32 ( 7   )  # maximum number of  layers added to a track
+    MaxLayers   = cms.int32 ( 4   )  # maximum number of  layers added to a track
   ),
 
   # Parmeter specifying DuplicateRemoval
