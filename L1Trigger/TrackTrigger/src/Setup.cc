@@ -189,6 +189,14 @@ namespace tt {
         kfMinLayers_(pSetKF_.getParameter<int>("MinLayers")),
         kfMaxLayers_(pSetKF_.getParameter<int>("MaxLayers")),
         kfRangeFactor_(pSetKF_.getParameter<double>("RangeFactor")),
+        // Parmeter specifying KalmanFilter Output Formatter
+        pSetKFOut_(iConfig.getParameter<ParameterSet>("KalmanFilterOut")),
+        kfoutchi2rphiBins_(pSetKFOut_.getParameter<vector<double>>("chi2rphiBins")),
+        kfoutchi2rzBins_(pSetKFOut_.getParameter<vector<double>>("chi2rzBins")),
+        kfoutchi2rphiConv_(pSetKFOut_.getParameter<int>("chi2rphiConv")),
+        kfoutchi2rzConv_(pSetKFOut_.getParameter<int>("chi2rzConv")),
+        tttrackBits_(pSetKFOut_.getParameter<int>("TTTrackBits")),
+        weightBinFraction_(pSetKFOut_.getParameter<int>("WeightBinFraction")),
         // Parmeter specifying DuplicateRemoval
         pSetDR_(iConfig.getParameter<ParameterSet>("DuplicateRemoval")),
         drDepthMemory_(pSetDR_.getParameter<int>("DepthMemory")) {
