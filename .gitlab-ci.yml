@@ -10,7 +10,6 @@ setup_cmssw:
     - docker
     - cvmfs
   script:
-    - export TOPDIR=$PWD
     - export CMS_PATH=/cvmfs/cms.cern.ch/
     - source $CMS_PATH/cmsset_default.sh
     - export CMSSW_VERSION=CMSSW_12_0_0_pre4
@@ -21,7 +20,7 @@ setup_cmssw:
     - git config --global user.name "Boris Johnson"
     - git config --global user.github Boris
     - git config --global user.email "Boris@John.son"
-    - git cms-checkout-topic -u cms-L1TK:L1TK-dev-12_0_0_pre4
+    - git cms-checkout-topic -u cms-L1TK:L1TK-dev-$CMSSW_VERSION
   artifacts:
     expire_in: 1 day
     paths:
@@ -33,13 +32,11 @@ build_cmssw:
     - docker
     - cvmfs
   script:
-    - export TOPDIR=$PWD
-    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
-    - export SCRAM_ARCH=slc7_amd64_gcc900
+    - echo "HELLO $CMSSW_VERSION"
     - cd $CMSSW_VERSION/src/
     - eval `/cvmfs/cms.cern.ch/common/scram runtime -sh`
     - /cvmfs/cms.cern.ch/common/scram b -j8
   artifacts:
     expire_in: 1 day
     paths:
-      - CMSSW_12_0_0_pre4
+      - $CMSSW_VERSION
