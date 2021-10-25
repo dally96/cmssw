@@ -20,7 +20,7 @@ setup_cmssw:
     - git config --global user.name "Boris Johnson"
     - git config --global user.github Boris
     - git config --global user.email "Boris@John.son"
-    - git cms-checkout-topic -u cms-L1TK:L1TK-dev-$CMSSW_VERSION
+    - git cms-checkout-topic -u cms-L1TK:L1TK-dev-12_0_0_pre4
   artifacts:
     expire_in: 1 day
     paths:
