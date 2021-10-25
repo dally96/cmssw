@@ -24,7 +24,7 @@ setup_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - CMSSW_12_0_0_pre4
+      - $CMSSW_VERSION
 
 build_cmssw:
   stage: build_cmssw
@@ -32,7 +32,10 @@ build_cmssw:
     - docker
     - cvmfs
   script:
-    - echo "HELLO $CMSSW_VERSION"
+    - export CMS_PATH=/cvmfs/cms.cern.ch/
+    - source $CMS_PATH/cmsset_default.sh
+    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
+    - export SCRAM_ARCH=cc8_amd64_gcc9
     - cd $CMSSW_VERSION/src/
     - eval `/cvmfs/cms.cern.ch/common/scram runtime -sh`
     - /cvmfs/cms.cern.ch/common/scram b -j8
