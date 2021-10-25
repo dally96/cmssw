@@ -15,9 +15,8 @@ setup_cmssw:
     - export CMSSW_VERSION=CMSSW_12_0_0_pre4
     - export SCRAM_ARCH=cc8_amd64_gcc9
     - /cvmfs/cms.cern.ch/common/scram project  $CMSSW_VERSION
-    - echo "HELLO $PWD"
     - cd $CMSSW_VERSION/src/
-    - eval `/cvmfs/cms.cern.ch/common/scram runtime -sh`
+    - eval `scram runtime -sh`
     - git config --global user.name "Boris Johnson"
     - git config --global user.github Boris
     - git config --global user.email "Boris@John.son"
@@ -37,10 +36,8 @@ build_cmssw:
     - source $CMS_PATH/cmsset_default.sh
     - export CMSSW_VERSION=CMSSW_12_0_0_pre4
     - export SCRAM_ARCH=cc8_amd64_gcc9
-    - echo "BYE $PWD"
-    - ls -a
-    - cd $CMSSW_VERSION/src/
     - eval `/cvmfs/cms.cern.ch/common/scram runtime -sh`
+    - git branch -v
     - /cvmfs/cms.cern.ch/common/scram b -j8
   artifacts:
     expire_in: 1 day
