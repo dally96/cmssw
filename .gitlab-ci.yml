@@ -17,7 +17,7 @@ setup_cmssw:
     # Seems ianCI automatically checked out (including ECAL, Muon ...)
     - ls -la
     - git branch -v
-    - /cvmfs/cms.cern.ch/common/scram project  $CMSSW_VERSION
+    - scram project $CMSSW_VERSION
     - cd $CMSSW_VERSION/src/
     - eval `scram runtime -sh`
     - git config --global user.name "Boris Johnson"
@@ -39,9 +39,9 @@ build_cmssw:
     - source $CMS_PATH/cmsset_default.sh
     - export CMSSW_VERSION=CMSSW_12_0_0_pre4
     - cd $CMSSW_VERSION/src/
-    - eval `/cvmfs/cms.cern.ch/common/scram runtime -sh`
+    - eval `scram runtime -sh`
     - git branch -v
-    - /cvmfs/cms.cern.ch/common/scram b -j8
+    - scram b -j8
   artifacts:
     expire_in: 1 day
     paths:
