@@ -39,6 +39,6 @@ jobs:
         GITLAB_PROJECT_ID: "124554" # Visible at https://gitlab.cern.ch/tomalin/cmssw 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://help.github.com/en/articles/virtual-environments-for-github-actions#github_token-secret
         CHECKOUT_BRANCH: ${{ env.current_branch }} # New non-GITHUB variable to make push and PR work
-        REMOVE_BRANCH: "true"
-#        REBASE_MASTER: "true" # Causes rebase to master, which is nonsense for cms-L1TK
+        REMOVE_BRANCH: "true" # Forces refresh of branch on mirror
+#        REBASE_MASTER: "true" # Causes rebase to "master", which is nonsense for cms-L1TK
         REBASE_MASTER: "false"
