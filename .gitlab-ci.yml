@@ -26,7 +26,7 @@ setup_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - $CMSSW_VERSION
+      - CMSSW_12_0_0_pre4
 
 build_cmssw:
   stage: build_cmssw
@@ -45,4 +45,4 @@ build_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - $CMSSW_VERSION
+      - CMSSW_12_0_0_pre4
