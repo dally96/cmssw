@@ -199,14 +199,12 @@ namespace trackerTFP {
         for (int channel = 0; channel < dataFormats_->numChannel(Process::kf); channel++) {
           const int index = region * dataFormats_->numChannel(Process::kf) + channel;
           deque<FrameTrack>& tracks = dequesTracks[channel];
-          //const auto limitTracks = next(tracks.begin(), min((int)tracks.size(), enableTruncation_ ? setup_->numFrames() : 0));
-          const auto limitTracks = next(tracks.begin(), min((int)tracks.size(), enableTruncation_ ? setup_->numFramesIO() : 0));
+          const auto limitTracks = next(tracks.begin(), enableTruncation_ ? setup_->numFrames() : (int)tracks.size());
           streamAcceptedTracks[index] = StreamTrack(tracks.begin(), limitTracks);
           streamLostTracks[index] = StreamTrack(limitTracks, tracks.end());
           for (int l = 0; l < setup_->numLayers(); l++) {
             deque<FrameStub>& stubs = dequesStubs[channel * setup_->numLayers() + l];
-            //const auto limitStubs = next(stubs.begin(), min((int)stubs.size(), enableTruncation_ ? setup_->numFrames() : 0));
-            const auto limitStubs = next(stubs.begin(), min((int)stubs.size(), enableTruncation_ ? setup_->numFramesIO() : 0));
+            const auto limitStubs = next(stubs.begin(), enableTruncation_ ? setup_->numFrames() : (int)stubs.size());
             streamAcceptedStubs[index * setup_->numLayers() + l] = StreamStub(stubs.begin(), limitStubs);
             streamLostStubs[index * setup_->numLayers() + l] = StreamStub(limitStubs, stubs.end());
           }

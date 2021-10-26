@@ -256,15 +256,13 @@ namespace trackFindingTracklet {
           streamTracks.insert(streamTracks.end(), nGaps, FrameTrack());
         }
         // transform deques to vectors & emulate truncation
-        const auto limitTracks = next(streamTracks.begin(), min((int)streamTracks.size(), enableTruncation_ ? setup_->numFrames() : 0));
-        //const auto limitTracks = next(streamTracks.begin(), min((int)streamTracks.size(), enableTruncation_ ? setup_->numFramesIO() : 0));
+        const auto limitTracks = next(streamTracks.begin(), enableTruncation_ ? setup_->numFrames() : (int)streamTracks.size());
         streamAcceptedTracks[channelId] = StreamTrack(streamTracks.begin(), limitTracks);
         streamLostTracks[channelId] = StreamTrack(limitTracks, streamTracks.end());
         for (int layer = 0; layer < setup_->numLayers(); layer++) {
           const int index = channelId * setup_->numLayers() + layer;
           deque<FrameStub>& stubs = streamsStubs[layer];
-          const auto limitStubs = next(stubs.begin(), min((int)stubs.size(), enableTruncation_ ? setup_->numFrames() : 0));
-          //const auto limitStubs = next(stubs.begin(), min((int)stubs.size(), enableTruncation_ ? setup_->numFramesIO() : 0));
+          const auto limitStubs = next(stubs.begin(), enableTruncation_ ? setup_->numFrames() : (int)stubs.size());
           streamAcceptedStubs[index] = StreamStub(stubs.begin(), limitStubs);
           streamLostStubs[index] = StreamStub(limitStubs, stubs.end());
         }
