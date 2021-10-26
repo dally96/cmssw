@@ -3,9 +3,9 @@ name: Mirror and run GitLab CI
 on: # Controls when the action will run.
   workflow_dispatch:
   push: # Please add your branch down here if wanted. A build will be triggerd for each push.
-    branches: [ianCIZ]
+    branches: [ianCI]
   pull_request:
-    branches: [L1TK-dev-12_0_0_pre4, ianCIZ]
+    branches: [L1TK-dev-12_0_0_pre4, ianCI]
     
 env:
   current_branch: 'master' # fallback branch
