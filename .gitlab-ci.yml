@@ -10,7 +10,7 @@ workflow:
   rules:
 #    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
     - if: '$CI_COMMIT_BRANCH == "master"'    
-    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
+#    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
     - if: '$CI_COMMIT_BRANCH == "ianCItest"'    
 
 stages:
@@ -43,7 +43,7 @@ setup_cmssw:
     - eval `scram runtime -sh`
     - git config --global user.name "Boris Johnson"
     - git config --global user.github Boris
-    - git config --global user.email "Boris@John.son"
+    - git config --global user.email "Boris@uk.gov"
     - git cms-checkout-topic -u cms-L1TK:$BRANCH_UNDER_TEST
     - git branch -v
     - ls -la
