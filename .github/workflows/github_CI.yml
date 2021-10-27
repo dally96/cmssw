@@ -46,5 +46,6 @@ jobs:
         REMOVE_BRANCH: "true" # Forces refresh of branch on mirror, by deleting it.
         REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
     - name: print summary
-      echo 'See link "pipeline URL:" above for details of CMSSW compilation & run'
-      env
+      run: |
+        echo 'See link "pipeline URL:" above for details of CMSSW compilation & run'
+        env
