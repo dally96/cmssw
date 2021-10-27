@@ -9,14 +9,16 @@ variables:
 workflow:
   # Specify what triggers pipeline to run.
   rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
-#    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH' # Default branch in github, e.g. L1TK-dev-12_0_0_pre4.
-#    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
-#    - if: '$CI_COMMIT_BRANCH == "ianCItest"'   
+
 # Check if user name matches gitlab token name  https://gitlab.cern.ch/tomalin/cmssw/-/settings/access_tokens 
 # If so, mirror has just been updated by CI job running on github,
 # rather than in response to user pushing code to github.
     - if: '$GITLAB_USER_NAME == "ian_CI_access"'
+
+#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
+#    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH' # Default branch in github, e.g. L1TK-dev-12_0_0_pre4.
+#    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
+#    - if: '$CI_COMMIT_BRANCH == "ianCItest"'   
 
 stages:
   - setup_cmssw

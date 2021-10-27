@@ -2,10 +2,10 @@ name: Mirror and run GitLab CI
 
 on: # Controls when the action will run.
   workflow_dispatch:
-  push: # Please add your branch down here if wanted. A build will be triggerd for each push.
+  push: # Please add your branch down here if you want CI to run for each push to it.
     branches: [ianCI]
-  pull_request:
-    branches: [L1TK-dev-12_0_0_pre4, ianCI]
+  pull_request: # Run CI if someone makes a PR to default branch.
+    branches: [L1TK-dev-12_0_0_pre4]
     
 env:
   current_branch: 'master' # fallback branch
@@ -20,15 +20,19 @@ jobs:
       run: |
         echo "github.ref = ${{ github.ref }}"
     - name: Redefine branch on pull_request
+      echo "IAN_PULL_START $current_branch AND $GITHUB_ENV"
       if: github.event_name == 'pull_request'
       run: |
         echo "current_branch=$(echo ${{ github.head_ref }})" >> $GITHUB_ENV
+      echo "IAN_PULL_DONE $current_branch AND $GITHUB_ENV"
     - name: Redefine branch on push
+      echo "IAN_PUSH_START $current_branch AND $GITHUB_ENV"
       if: github.event_name == 'push'
       run: |
         echo "current_branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
+      echo "IAN_PUSH_DONE $current_branch AND $GITHUB_ENV"
     - name: Mirror + trigger CI
-      # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action . What did Alexx change?
+      # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
       uses: aperloff/gitlab-mirror-and-ci-action@master
       with:
         args: "https://gitlab.cern.ch/tomalin/cmssw"
@@ -39,6 +43,8 @@ jobs:
         GITLAB_PROJECT_ID: "124554" # ID visible at https://gitlab.cern.ch/tomalin/cmssw 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://help.github.com/en/articles/virtual-environments-for-github-actions#github_token-secret
         CHECKOUT_BRANCH: ${{ env.current_branch }} # New non-GITHUB variable to make push and PR work
-        REMOVE_BRANCH: "true" # Forces refresh of branch on mirror
-#        REBASE_MASTER: "true" # Causes rebase to "master", which is nonsense for cms-L1TK
-        REBASE_MASTER: "false"
+        REMOVE_BRANCH: "true" # Forces refresh of branch on mirror, by deleting it.
+        REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
+    - name: print summary
+      echo 'See link "pipeline URL:" above for details of CMSSW compilation & run'
+      env
