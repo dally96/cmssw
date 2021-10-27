@@ -1,5 +1,11 @@
 image: gitlab-registry.cern.ch/ci-tools/ci-worker:c8
 
+variables:
+  CMS_PATH: /cvmfs/cms.cern.ch/
+  CMSSW_VERSION: CMSSW_12_0_0_pre4
+  SCRAM_ARCH: cc8_amd64_gcc9
+  BRANCH_UNDER_TEST: $CI_COMMIT_REF_NAME
+
 stages:
   - setup_cmssw
   - build_cmssw
@@ -13,11 +19,11 @@ setup_cmssw:
     # https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
     - echo "CI variables $CI_JOB_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME-$CI_COMMIT_BRANCH"
 
-    - export CMS_PATH=/cvmfs/cms.cern.ch/
+#    - export CMS_PATH=/cvmfs/cms.cern.ch/
     - source $CMS_PATH/cmsset_default.sh
-    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
-    - export SCRAM_ARCH=cc8_amd64_gcc9
-    - export BRANCH_UNDER_TEST=$CI_COMMIT_REF_NAME
+#    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
+#    - export SCRAM_ARCH=cc8_amd64_gcc9
+#    - export BRANCH_UNDER_TEST=$CI_COMMIT_REF_NAME
 
     # Current branch automatically checked out via git clone (so  ECAL, Muon ...). Don't want this, so delete it. TO FIX: How stop it doing this?
     - pwd
@@ -44,9 +50,9 @@ build_cmssw:
     - docker
     - cvmfs
   script:
-    - export CMS_PATH=/cvmfs/cms.cern.ch/
+#    - export CMS_PATH=/cvmfs/cms.cern.ch/
     - source $CMS_PATH/cmsset_default.sh
-    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
+#    - export CMSSW_VERSION=CMSSW_12_0_0_pre4
     - cd $CMSSW_VERSION/src/
     - eval `scram runtime -sh`
     - git branch -v
