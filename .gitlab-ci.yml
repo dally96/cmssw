@@ -9,7 +9,7 @@ variables:
 workflow:
   # Specify what triggers pipeline to run.
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event_junk"' 
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
     - if: '$CI_COMMIT_BRANCH == "master"'    
 #    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
     - if: '$CI_COMMIT_BRANCH == "ianCItest"'    
@@ -68,4 +68,5 @@ build_cmssw:
 print_summary:
   stage: print_summary
   script:
-    - env
+    - echo "Detailed job output from CMSSW compilation & run"
+    - echo "at $CI_PIPELINE_URL"
