@@ -6,9 +6,16 @@ variables:
   SCRAM_ARCH: cc8_amd64_gcc9
   BRANCH_UNDER_TEST: $CI_COMMIT_REF_NAME
 
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
+    - if: '$CI_COMMIT_BRANCH == "master"'    
+    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
+
 stages:
   - setup_cmssw
   - build_cmssw
+  - print_summary
 
 setup_cmssw:
   stage: setup_cmssw
@@ -42,7 +49,7 @@ setup_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - CMSSW_12_0_0_pre4   # Can't use env variable for this.
+      - $CMSSW_VERSION   # Can't use env variable for this.
 
 build_cmssw:
   stage: build_cmssw
@@ -60,4 +67,9 @@ build_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - CMSSW_12_0_0_pre4
+      - $CMSSW_VERSION
+
+print_summary:
+  stage: print_summary
+  script:
+    - env
