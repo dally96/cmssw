@@ -16,7 +16,7 @@ workflow:
 # Check if user name matches gitlab token name  https://gitlab.cern.ch/tomalin/cmssw/-/settings/access_tokens 
 # If so, mirror has just been updated by CI job running on github,
 # rather than in response to user pushing code to github.
-    - if: '$GITLAB_USER_NAME == "ian_CI_access"
+    - if: '$GITLAB_USER_NAME == "ian_CI_access"'
 
 stages:
   - setup_cmssw
