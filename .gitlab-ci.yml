@@ -10,7 +10,8 @@ workflow:
   rules:
 #    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"' 
     - if: '$CI_COMMIT_BRANCH == "master"'    
-#    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
+    - if: '$CI_COMMIT_BRANCH == "ianCI"'    
+    - if: '$CI_COMMIT_BRANCH == "ianCItest"'    
 
 stages:
   - setup_cmssw
