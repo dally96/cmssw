@@ -30,7 +30,7 @@ jobs:
       run: |
         echo "IAN_PUSH_START $current_branch AND $GITHUB_ENV"
         echo "current_branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
-        echo "IAN_PUSH_DONE ${current_branch} PLUS ${env.current_branch} AND $GITHUB_ENV"
+        echo "IAN_PUSH_DONE ${current_branch} PLUS ${{ env.current_branch }} AND $GITHUB_ENV"
     - name: Mirror + trigger CI
       # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
       #uses: aperloff/gitlab-mirror-and-ci-action@master
