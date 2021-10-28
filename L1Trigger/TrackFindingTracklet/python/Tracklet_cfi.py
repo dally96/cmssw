@@ -11,7 +11,7 @@ TTTracksFromTrackletEmulation = cms.EDProducer("L1FPGATrackProducer",
                                                BeamSpotSource = cms.InputTag("offlineBeamSpot"),
                                                asciiFileName = cms.untracked.string(""),
                                                Extended = cms.bool(False),
-                                               Reduced = cms.bool(False),
+                                               Reduced = cms.bool(true),
                                                Hnpar = cms.uint32(4),
                                                # (if running on CRAB use "../../fitpattern.txt" etc instead)
                                                fitPatternFile = cms.FileInPath('L1Trigger/TrackFindingTracklet/data/fitpattern.txt'),
@@ -48,4 +48,9 @@ TTTracksFromReducedTrackletEmulation = TTTracksFromTrackletEmulation.clone(
 # this is to run Tracklet pattern reco with new KF
 TrackletTracksFromTrackletEmulation = TTTracksFromTrackletEmulation.clone(
                                                Fakefit = cms.bool(True)
+    )
+# this is to run Tracklet pattern reco with new KF in summer chain config
+TrackletTracksFromTrackletReduced = TTTracksFromTrackletEmulation.clone(
+                                               Fakefit = cms.bool(True),
+                                               Reduced = cms.bool(True),
     )

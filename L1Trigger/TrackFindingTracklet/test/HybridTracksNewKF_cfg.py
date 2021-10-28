@@ -41,7 +41,7 @@ process.TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag( cms.InputTag(
 # build schedule
 process.mc = cms.Sequence( process.StubAssociator )
 process.dtc = cms.Sequence( process.TrackerDTCProducer + process.TrackerDTCAnalyzer )
-process.tracklet = cms.Sequence( process.L1TrackletTracks + process.TrackFindingTrackletAnalyzerTracklet )
+process.tracklet = cms.Sequence( process.SummerChainTracks + process.TrackFindingTrackletAnalyzerTracklet )
 process.interIn = cms.Sequence( process.TrackFindingTrackletProducerKFin + process.TrackFindingTrackletAnalyzerKFin )
 process.kf = cms.Sequence( process.TrackFindingTrackletProducerKF + process.TrackFindingTrackletAnalyzerKF )
 process.TTTracks = cms.Sequence( process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS + process.TrackTriggerAssociatorTracks )

@@ -32,3 +32,4 @@ TTTrackAssociatorFromPixelDigisReduced = TTTrackAssociatorFromPixelDigis.clone(
 L1ReducedHybridTracks = cms.Sequence(offlineBeamSpot*TTTracksFromReducedTrackletEmulation)
 L1ReducedHybridTracksWithAssociators = cms.Sequence(offlineBeamSpot*TTTracksFromReducedTrackletEmulation*TTTrackAssociatorFromPixelDigisReduced)
 
+SummerChainTracks = cms.Sequence(offlineBeamSpot*TrackletTracksFromTrackletReduced)
