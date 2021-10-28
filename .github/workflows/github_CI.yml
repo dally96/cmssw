@@ -47,10 +47,12 @@ jobs:
         CHECKOUT_BRANCH: ${{ env.current_branch }} # New non-GITHUB variable to make push and PR work
         REMOVE_BRANCH: "true" # Forces refresh of branch on mirror, by deleting it.
         REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
-        RETURN_ARG: $ian_pipeline_url
+        RETURN_FILE: "pipeline_url.txt" # Output file with gitlab pipeline url
     - name: print summary
       run: |
         echo "IAN_SUMMARY ${current_branch} PLUS ${{ env.current_branch }}" 
         echo 'See link "Pipeline URL" in section "Mirror + trigger CI" above for details of CMSSW compilation & run'
-        echo "IAN URL:  $ian_pipeline_url"
-        cat $GUTHUB_ENV
+        echo "IAN URL:"
+        cat pipeline_url.txt
+        echo "IAN ENV:"
+        cat $GITHUB_ENV
