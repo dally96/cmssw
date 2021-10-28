@@ -53,7 +53,7 @@ setup_cmssw:
   artifacts:
     expire_in: 1 day
     paths:
-      - $CMSSW_VERSION   # Can't use env variable for this.
+      - $CMSSW_VERSION 
 
 build_cmssw:
   stage: build_cmssw
