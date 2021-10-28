@@ -9,6 +9,7 @@ on: # Controls when the action will run.
     
 env:
   current_branch: 'master' # fallback branch
+  mirror_pipeline_url: 'unknown'
 
 jobs:
   mirror_trig: # https://github.com/marketplace/actions/mirror-to-gitlab-and-run-gitlab-ci
@@ -46,6 +47,10 @@ jobs:
         CHECKOUT_BRANCH: ${{ env.current_branch }} # New non-GITHUB variable to make push and PR work
         REMOVE_BRANCH: "true" # Forces refresh of branch on mirror, by deleting it.
         REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
+        RETURN_ARG: $ian_pipeline_url
     - name: print summary
       run: |
+        echo "IAN_SUMMARY ${current_branch} PLUS ${{ env.current_branch }}" 
         echo 'See link "Pipeline URL" in section "Mirror + trigger CI" above for details of CMSSW compilation & run'
+        echo "IAN URL $ian_pipeline_url"
+        cat $GUTHUB_ENV
