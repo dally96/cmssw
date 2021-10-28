@@ -52,5 +52,5 @@ jobs:
       run: |
         echo "IAN_SUMMARY ${current_branch} PLUS ${{ env.current_branch }}" 
         echo 'See link "Pipeline URL" in section "Mirror + trigger CI" above for details of CMSSW compilation & run'
-        echo "IAN URL $ian_pipeline_url"
+        echo "IAN URL: $ian_pipeline_url"
         cat $GUTHUB_ENV
