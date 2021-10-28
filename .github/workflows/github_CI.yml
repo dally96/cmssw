@@ -36,7 +36,7 @@ jobs:
       #uses: aperloff/gitlab-mirror-and-ci-action@master
       uses: cms-L1TK/gitlab-mirror-and-ci-action@master
       with:
-        args: "https://gitlab.cern.ch/tomalin/cmssw"
+        args: "https://gitlab.cern.ch/tomalin/cmssw" # mirror repo
       env:
         GITLAB_HOSTNAME: "gitlab.cern.ch"
         GITLAB_USERNAME: "tomalin"
