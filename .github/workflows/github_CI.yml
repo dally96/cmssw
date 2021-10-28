@@ -33,7 +33,8 @@ jobs:
         echo "IAN_PUSH_DONE $current_branch AND $GITHUB_ENV"
     - name: Mirror + trigger CI
       # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
-      uses: aperloff/gitlab-mirror-and-ci-action@master
+      #uses: aperloff/gitlab-mirror-and-ci-action@master
+      uses: cms-L1TK/gitlab-mirror-and-ci-action@master
       with:
         args: "https://gitlab.cern.ch/tomalin/cmssw"
       env:
@@ -47,5 +48,4 @@ jobs:
         REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
     - name: print summary
       run: |
-        echo 'See link "pipeline URL:" above for details of CMSSW compilation & run'
-        env
+        echo 'See link "Pipeline URL" in section "Mirror + trigger CI" above for details of CMSSW compilation & run'
