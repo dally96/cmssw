@@ -8,7 +8,7 @@ on: # Controls when the action will run.
     branches: [L1TK-dev-12_0_0_pre4]
     
 env:
-  mirror_repo: "https://gitlab.cern.ch/cms-l1tk/cmssw" # gitlab mirror
+  mirror_repo: "https://gitlab.cern.ch/cms-l1tk/cmssw_CI" # gitlab mirror
   current_branch: "unitialized"
 
 jobs:
