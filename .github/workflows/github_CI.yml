@@ -30,6 +30,7 @@ jobs:
       run: |
         # Sets env. variable $current_branch
         echo "current_branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
+        ls -la
     - name: Mirror + trigger CI
       # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
       #uses: aperloff/gitlab-mirror-and-ci-action@master
