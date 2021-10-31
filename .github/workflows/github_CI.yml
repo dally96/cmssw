@@ -6,6 +6,7 @@
 # The tests themselves are delegated to a gitlab CI runner          #
 # controlled by the .gitlab-ci.yml file at                          #
 # https://gitlab.cern.ch/cms-l1tk/cmssw_CI .                        #
+# (Both this file & that must be updated if CMSSW version changes). #
 #                                                                   # 
 # Communication between the github & gitlab CIs is done via scripts #
 # at https://github.com/cms-L1TK/gitlab-mirror-and-ci-action        #
@@ -30,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Debug
+    - name: DebugPrint
       run: |
         echo "github.ref = ${{ github.ref }}"
 
@@ -47,8 +48,8 @@ jobs:
         echo "current_branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
 
     - name: Mirror + trigger CI
-      # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
-      #uses: aperloff/gitlab-mirror-and-ci-action@master
+      # Communicate between gitlab & github.
+      # (Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action).
       uses: cms-L1TK/gitlab-mirror-and-ci-action@master
       env:
         GITLAB_HOSTNAME: "gitlab.cern.ch"
