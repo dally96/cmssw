@@ -10,7 +10,7 @@
 # Communication between the github & gitlab CIs is done via scripts #
 # at https://github.com/cms-L1TK/gitlab-mirror-and-ci-action        #
 #####################################################################
- 
+
 name: Mirror and run GitLab CI
  
 on: # Controls when the action will run.
@@ -29,19 +29,23 @@ jobs:
     name: mirror_trig
     runs-on: ubuntu-latest
     steps:
+
     - name: Debug
       run: |
         echo "github.ref = ${{ github.ref }}"
+
     - name: Redefine branch on pull_request
       if: github.event_name == 'pull_request'
       run: |
         # Sets env. variable $current_branch
         echo "current_branch=$(echo ${{ github.head_ref }})" >> $GITHUB_ENV
+
     - name: Redefine branch on push
       if: github.event_name == 'push'
       run: |
         # Sets env. variable $current_branch
         echo "current_branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
+
     - name: Mirror + trigger CI
       # Forked from https://github.com/SvanBoxel/gitlab-mirror-and-ci-action .
       #uses: aperloff/gitlab-mirror-and-ci-action@master
@@ -58,9 +62,12 @@ jobs:
         REMOVE_BRANCH: "true" # Refreshes branch on mirror, which triggers CI run there.
         REBASE_MASTER: "false" # If true would rebase to "master", which isn't used in cms-L1TK.
         RETURN_FILE: "pipeline_url.txt" # Output file with gitlab pipeline url
+
     - name: print summary
+      if: always()
       run: |
+        echo ""
         echo "==========================================================="
-        echo "Detailed output from CMSSW compilation & run can be found"
-        echo "in the following gitlab CI url"
+        echo "DETAILED OUTPUT FROM CMSSW COMPILATION & RUN AVAILABLE "
+        echo "AT FOLLOWING GITLAB CI URL:"
         cat pipeline_url.txt
