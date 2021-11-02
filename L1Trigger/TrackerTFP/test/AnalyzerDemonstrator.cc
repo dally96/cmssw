@@ -72,8 +72,7 @@ namespace trackerTFP {
     if (labelIn == "TrackerTFPProducerKFin" || labelIn == "TrackerTFPProducerKF" ||
         labelIn == "TrackFindingTrackletProducerKFin" || labelIn == "TrackFindingTrackletProducerKF")
       edGetTokenTracksIn_ = consumes<StreamsTrack>(InputTag(labelIn, branchTracks));
-    if (labelOut == "TrackerTFPProducerKF" || labelOut == "TrackerTFPProducerDR" ||
-        labelOut == "TrackFindingTrackletProducerKF" || labelOut == "TrackFindingTrackletProducerKFout")
+    if (labelOut == "TrackerTFPProducerKF" || labelOut == "TrackerTFPProducerDR" || labelOut == "TrackFindingTrackletProducerKF" || labelOut == "TrackFindingTrackletProducerKFout" || labelOut == "TrackFindingTrackletProducerTBout")
       edGetTokenTracksOut_ = consumes<StreamsTrack>(InputTag(labelOut, branchTracks));
     // book ES products
     esGetTokenSetup_ = esConsumes<Setup, SetupRcd, Transition::BeginRun>();
@@ -95,7 +94,8 @@ namespace trackerTFP {
     vector<vector<Frame>> output;
     convert(iEvent, edGetTokenTracksIn_, edGetTokenStubsIn_, input);
     convert(iEvent, edGetTokenTracksOut_, edGetTokenStubsOut_, output);
-    demonstrator_->analyze(input, output);
+    if (!all_of(output.begin(), output.end(), [](const vector<Frame>& frames){ return frames.empty(); }))
+      demonstrator_->analyze(input, output);
   }
 
   //
@@ -121,15 +121,21 @@ namespace trackerTFP {
     numChannelStubs /= (setup_->numRegions() * (tracks ? numChannelTracks : 1));
     bits.reserve(numChannelTracks + numChannelStubs);
     for (int region = 0; region < setup_->numRegions(); region++) {
-      const int offsetTracks = region * numChannelTracks;
-      for (int channelTracks = 0; channelTracks < numChannelTracks; channelTracks++) {
-        const int offsetStubs = (region * numChannelTracks + channelTracks) * numChannelStubs;
-        if (tracks)
-          convert(handleTracks->at(offsetTracks + channelTracks), bits);
-        if (stubs) {
-          for (int channelStubs = 0; channelStubs < numChannelStubs; channelStubs++)
-            convert(handleStubs->at(offsetStubs + channelStubs), bits);
+      if (tracks) {
+        const int offsetTracks = region * numChannelTracks;
+        for (int channelTracks = 0; channelTracks < numChannelTracks; channelTracks++) {
+          const int offsetStubs = (region * numChannelTracks + channelTracks) * numChannelStubs;
+          if (tracks)
+            convert(handleTracks->at(offsetTracks + channelTracks), bits);
+          if (stubs){
+            for (int channelStubs = 0; channelStubs < numChannelStubs; channelStubs++)
+              convert(handleStubs->at(offsetStubs + channelStubs), bits);
+          }
         }
+      } else {
+        const int offsetStubs = region * numChannelStubs;
+        for (int channelStubs = 0; channelStubs < numChannelStubs; channelStubs++)
+          convert(handleStubs->at(offsetStubs + channelStubs), bits);
       }
     }
   }

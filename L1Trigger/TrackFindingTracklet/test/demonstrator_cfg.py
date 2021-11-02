@@ -18,6 +18,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:upgradePLS3', '')
 process.load( 'L1Trigger.TrackerDTC.ProducerED_cff' )
 # L1 tracking => hybrid emulation 
 process.load("L1Trigger.TrackFindingTracklet.L1HybridEmulationTracks_cff")
+from L1Trigger.TrackFindingTracklet.Customize_cff import *
+newKFConfig( process )
 # load code that fits hybrid tracks
 process.load( 'L1Trigger.TrackFindingTracklet.ProducerKF_cff' )
 #--- Load code that compares s/w with f/w
@@ -25,7 +27,7 @@ process.load( 'L1Trigger.TrackerTFP.Demonstrator_cff' )
 
 # build schedule
 process.tt = cms.Sequence (  process.TrackerDTCProducer
-                           + process.L1TrackletTracks
+                           + process.L1HybridTracks
                            + process.TrackFindingTrackletProducerKFin
                            + process.TrackFindingTrackletProducerKF
                            + process.TrackFindingTrackletProducerTT

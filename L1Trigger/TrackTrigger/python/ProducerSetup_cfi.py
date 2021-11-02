@@ -102,8 +102,8 @@ TrackTrigger_params = cms.PSet (
     TiltApproxIntercept = cms.double(   0.504            ), # 
     MindPhi             = cms.double(  0.0001            ), # minimum representable stub phi uncertainty
     MaxdPhi             = cms.double(  0.02              ), # maximum representable stub phi uncertainty
-    MindZ               = cms.double(  0.1               ), # minimum representable stub z uncertainty
-    MaxdZ               = cms.double( 30.                ), # maximum representable stub z uncertainty
+    MindZ               = cms.double(  0.01              ), # minimum representable stub z uncertainty
+    MaxdZ               = cms.double( 45.                ), # maximum representable stub z uncertainty
   ),
 
   # Parmeter specifying front-end
