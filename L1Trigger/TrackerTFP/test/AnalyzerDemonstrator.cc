@@ -72,7 +72,9 @@ namespace trackerTFP {
     if (labelIn == "TrackerTFPProducerKFin" || labelIn == "TrackerTFPProducerKF" ||
         labelIn == "TrackFindingTrackletProducerKFin" || labelIn == "TrackFindingTrackletProducerKF")
       edGetTokenTracksIn_ = consumes<StreamsTrack>(InputTag(labelIn, branchTracks));
-    if (labelOut == "TrackerTFPProducerKF" || labelOut == "TrackerTFPProducerDR" || labelOut == "TrackFindingTrackletProducerKF" || labelOut == "TrackFindingTrackletProducerKFout" || labelOut == "TrackFindingTrackletProducerTBout")
+    if (labelOut == "TrackerTFPProducerKF" || labelOut == "TrackerTFPProducerDR" ||
+        labelOut == "TrackFindingTrackletProducerKF" || labelOut == "TrackFindingTrackletProducerKFout" ||
+        labelOut == "TrackFindingTrackletProducerTBout")
       edGetTokenTracksOut_ = consumes<StreamsTrack>(InputTag(labelOut, branchTracks));
     // book ES products
     esGetTokenSetup_ = esConsumes<Setup, SetupRcd, Transition::BeginRun>();
@@ -94,7 +96,7 @@ namespace trackerTFP {
     vector<vector<Frame>> output;
     convert(iEvent, edGetTokenTracksIn_, edGetTokenStubsIn_, input);
     convert(iEvent, edGetTokenTracksOut_, edGetTokenStubsOut_, output);
-    if (!all_of(output.begin(), output.end(), [](const vector<Frame>& frames){ return frames.empty(); }))
+    if (!all_of(output.begin(), output.end(), [](const vector<Frame>& frames) { return frames.empty(); }))
       demonstrator_->analyze(input, output);
   }
 
@@ -127,7 +129,7 @@ namespace trackerTFP {
           const int offsetStubs = (region * numChannelTracks + channelTracks) * numChannelStubs;
           if (tracks)
             convert(handleTracks->at(offsetTracks + channelTracks), bits);
-          if (stubs){
+          if (stubs) {
             for (int channelStubs = 0; channelStubs < numChannelStubs; channelStubs++)
               convert(handleStubs->at(offsetStubs + channelStubs), bits);
           }
