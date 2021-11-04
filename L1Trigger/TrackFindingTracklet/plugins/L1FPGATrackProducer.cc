@@ -293,6 +293,8 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
 
   settings.setFakefit(iConfig.getParameter<bool>("Fakefit"));
   settings.setEmulateTB(iConfig.getParameter<bool>("EmulateTB"));
+  settings.setRemovalType(iConfig.getParameter<string>("RemovalType"));
+  settings.setDoMultipleMatches(iConfig.getParameter<bool>("DoMultipleMatches"));
 
   if (extended_) {
     settings.setTableTEDFile(tableTEDFile.fullPath());
