@@ -23,7 +23,9 @@ TTTracksFromTrackletEmulation = cms.EDProducer("L1FPGATrackProducer",
                                                TrackQuality = cms.bool(True),
                                                TrackQualityPSet = cms.PSet(TrackQualityParams),
                                                Fakefit = cms.bool(False),
-                                               EmulateTB = cms.bool(False)
+                                               EmulateTB = cms.bool(False),
+                                               RemovalType = cms.string("merge"),
+                                               DoMultipleMatches = cms.bool(True)
     )
 
 TTTracksFromExtendedTrackletEmulation = TTTracksFromTrackletEmulation.clone(
@@ -45,9 +47,4 @@ TTTracksFromReducedTrackletEmulation = TTTracksFromTrackletEmulation.clone(
                                                memoryModulesFile = cms.FileInPath('L1Trigger/TrackFindingTracklet/data/reduced_memorymodules.dat'),
                                                processingModulesFile = cms.FileInPath('L1Trigger/TrackFindingTracklet/data/reduced_processingmodules.dat'),
                                                wiresFile = cms.FileInPath('L1Trigger/TrackFindingTracklet/data/reduced_wires.dat'),
-    )
-
-# this is to run Tracklet pattern reco with new KF
-TrackletTracksFromTrackletEmulation = TTTracksFromTrackletEmulation.clone(
-                                               Fakefit = cms.bool(True)
     )
