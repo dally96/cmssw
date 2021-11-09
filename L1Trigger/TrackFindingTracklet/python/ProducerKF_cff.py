@@ -8,10 +8,10 @@ from L1Trigger.TrackerTFP.KalmanFilterFormats_cff import TrackTriggerKalmanFilte
 from L1Trigger.TrackFindingTracklet.ProducerTrackBuilderChannel_cff import TrackBuilderChannel
 from L1Trigger.TrackFindingTracklet.ProducerKF_cfi import TrackFindingTrackletProducerKF_params
 
-TrackFindingTrackletProducerIRin = cms.EDProducer( 'trackFindingTracklet::ProducerIRin', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerTBout = cms.EDProducer( 'trackFindingTracklet::ProducerTBout', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerKFin = cms.EDProducer( 'trackFindingTracklet::ProducerKFin', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerIRin = cms.EDProducer( 'trklet::ProducerIRin', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerTBout = cms.EDProducer( 'trklet::ProducerTBout', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerKFin = cms.EDProducer( 'trklet::ProducerKFin', TrackFindingTrackletProducerKF_params )
 TrackFindingTrackletProducerKF = cms.EDProducer( 'trackerTFP::ProducerKF', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerTT = cms.EDProducer( 'trackFindingTracklet::ProducerTT', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerAS = cms.EDProducer( 'trackFindingTracklet::ProducerAS', TrackFindingTrackletProducerKF_params )
-TrackFindingTrackletProducerKFout = cms.EDProducer( 'trackFindingTracklet::ProducerKFout', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerTT = cms.EDProducer( 'trklet::ProducerTT', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerAS = cms.EDProducer( 'trklet::ProducerAS', TrackFindingTrackletProducerKF_params )
+TrackFindingTrackletProducerKFout = cms.EDProducer( 'trklet::ProducerKFout', TrackFindingTrackletProducerKF_params )

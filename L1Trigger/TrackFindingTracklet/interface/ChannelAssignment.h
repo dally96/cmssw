@@ -6,10 +6,11 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 #include "L1Trigger/TrackTrigger/interface/Setup.h"
+#include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 
 #include <vector>
 
-namespace trackFindingTracklet {
+namespace trklet {
 
   /*! \class  trackFindingTracklet::ChannelAssignment
    *  \brief  Class to assign tracklet tracks ans stubs to output channel
@@ -23,11 +24,13 @@ namespace trackFindingTracklet {
     ChannelAssignment(const edm::ParameterSet& iConfig, const tt::Setup* setup);
     ~ChannelAssignment() {}
     // sets channelId of given TTTrackRef, return false if track outside pt range
-    bool channelId(const TTTrackRef& ttTrackRef, int& channelId);
+    bool channelId(const TTTrackRef& ttTrackRef, int& channelId) const;
     // number of used channels
     int numChannels() const { return numChannels_; }
+    // sets layerId of given TTStubRef and seedType, returns false if seeed stub
+    bool layerId(int seedType, const TTStubRef& ttStubRef, int& layerId) const;
     // sets layerId of given TTStubRef and TTTrackRef, returns false if seeed stub
-    bool layerId(const TTTrackRef& ttTrackRef, const TTStubRef& ttStubRef, int& layerId);
+    bool layerId(const TTTrackRef& ttTrackRef, const TTStubRef& ttStubRef, int& layerId) const;
     // max number layers a sedd type may project to
     int maxNumProjectionLayers() const { return maxNumProjectionLayers_; }
     // map of used DTC tfp channels in InputRouter
@@ -56,7 +59,7 @@ namespace trackFindingTracklet {
     std::vector<int> channelEncoding_;
   };
 
-}  // namespace trackFindingTracklet
+}  // namespace trklet
 
 EVENTSETUP_DATA_DEFAULT_RECORD(trackFindingTracklet::ChannelAssignment, trackFindingTracklet::ChannelAssignmentRcd);
 

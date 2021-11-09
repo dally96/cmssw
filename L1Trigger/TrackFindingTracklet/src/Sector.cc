@@ -42,6 +42,8 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "L1Trigger/TrackFindingTracklet/interface/TrackletLUT.h"
 
+#include <deque>
+
 using namespace std;
 using namespace trklet;
 
@@ -410,9 +412,17 @@ void Sector::executeMP() {
   }
 }
 
-void Sector::executeFT() {
+void Sector::executeFT(TrackBuilderChannel* trackBuilderChannel, tt::StreamsStub& streamsStub) {
+  int channelTrack(0);
   for (auto& i : FT_) {
-    i->execute(isector_);
+    vector<deque<tt::FrameStub>> streams(trackBuilderChannel->maxNumProjectionLayers());
+    i->execute(trackBuilderChannel, streams, isector_);
+    if (!settings_.emulateTB())
+      continue;
+    const int offest = (isector_ * trackBuilderChannel->numChannels() + channelTrack++) * trackBuilderChannel->maxNumProjectionLayers();
+    int channelStub(0);
+    for (deque<tt::FrameStub>& stream : streams)
+      streamsStub[offest + channelStub++] = tt::StreamStub(stream.begin(), stream.end());
   }
 }
 
