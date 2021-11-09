@@ -3,7 +3,11 @@
 #define L1Trigger_TrackFindingTracklet_interface_TrackletEventProcessor_h
 
 #include "L1Trigger/TrackFindingTracklet/interface/Timer.h"
+<<<<<<< HEAD
 #include "L1Trigger/TrackFindingTracklet/interface/ChannelAssignment.h"
+=======
+#include "L1Trigger/TrackFindingTracklet/interface/TrackBuilderChannel.h"
+>>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 
 #include <map>
 #include <memory>
