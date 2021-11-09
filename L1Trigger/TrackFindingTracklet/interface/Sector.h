@@ -4,7 +4,11 @@
 
 #include "L1Trigger/TrackFindingTracklet/interface/L1TStub.h"
 #include "L1Trigger/TrackFindingTracklet/interface/SLHCEvent.h"
+<<<<<<< HEAD
 #include "L1Trigger/TrackFindingTracklet/interface/ChannelAssignment.h"
+=======
+#include "L1Trigger/TrackFindingTracklet/interface/TrackBuilderChannel.h"
+>>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 
 #include <string>
 #include <map>

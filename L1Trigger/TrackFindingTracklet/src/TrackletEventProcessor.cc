@@ -24,6 +24,7 @@ TrackletEventProcessor::~TrackletEventProcessor() {
   }
 }
 
+<<<<<<< HEAD
 void TrackletEventProcessor::init(Settings const& theSettings, ChannelAssignment* channelAssignment) {
   settings_ = &theSettings;
   channelAssignment_ = channelAssignment;
@@ -32,6 +33,15 @@ void TrackletEventProcessor::init(Settings const& theSettings, ChannelAssignment
   // number of stub channel
   const int numStreamsStub = numStreamsTrack * channelAssignment_->maxNumProjectionLayers();
   streamsTrack_ = tt::Streams(numStreamsTrack);
+=======
+void TrackletEventProcessor::init(Settings const& theSettings, TrackBuilderChannel* trackBuilderChannel) {
+  settings_ = &theSettings;
+  trackBuilderChannel_ = trackBuilderChannel;
+  // number of track channel
+  const int numStreamsTrack = N_SECTOR * trackBuilderChannel_->numChannels();
+  // number of stub channel
+  const int numStreamsStub = numStreamsTrack * trackBuilderChannel_->maxNumProjectionLayers();
+>>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
   streamsStub_ = tt::StreamsStub(numStreamsStub);
 
   globals_ = make_unique<Globals>(*settings_);
@@ -184,6 +194,8 @@ void TrackletEventProcessor::event(SLHCEvent& ev) {
   globals_->event() = &ev;
 
   tracks_.clear();
+  for (tt::StreamStub& streamStub : streamsStub_)
+    streamStub.clear();
 
   eventnum_++;
   bool first = (eventnum_ == 1);
@@ -448,9 +460,12 @@ void TrackletEventProcessor::printSummary() {
                                << "PurgeDuplicate        " << setw(10) << PDTimer_.ntimes() << setw(20)
                                << setprecision(3) << PDTimer_.avgtime() * 1000.0 << setw(20) << setprecision(3)
                                << PDTimer_.tottime();
+<<<<<<< HEAD
 }
 
 void TrackletEventProcessor::produce(tt::Streams& streamsTrack, tt::StreamsStub& streamsStub) {
   swap(streamsTrack, streamsTrack_);
   swap(streamsStub, streamsStub_);
+=======
+>>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 }
