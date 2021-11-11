@@ -190,7 +190,6 @@ private:
   edm::EDGetTokenT<std::vector<TrackingParticle>> TrackingParticleToken_;
   edm::EDGetTokenT<TTDTC> tokenDTC_;
 
-<<<<<<< HEAD
   // ED output token for clock and bit accurate tracks
   EDPutTokenT<Streams> edPutTokenTracks_;
   // ED output token for clock and bit accurate stubs
@@ -199,14 +198,6 @@ private:
   ESGetToken<ChannelAssignment, ChannelAssignmentRcd> esGetTokenChannelAssignment_;
   // helper class to assign tracks to channel
   ChannelAssignment* channelAssignment_;
-=======
-  // ED output token for clock and bit accurate stubs
-  EDPutTokenT<StreamsStub> edPutTokenStubs_;
-  // TrackBuilderChannel token
-  ESGetToken<TrackBuilderChannel, TrackBuilderChannelRcd> esGetTokenTrackBuilderChannel_;
-  // helper class to assign tracks to channel
-  TrackBuilderChannel* trackBuilderChannel_;
->>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 
   // helper class to store DTC configuration
   tt::Setup setup_;
@@ -257,7 +248,6 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
     tableTREFile = iConfig.getParameter<edm::FileInPath>("tableTREFile");
   }
 
-<<<<<<< HEAD
   // book ED output token for clock and bit accurate tracks
   edPutTokenTracks_ = produces<Streams>("Level1TTTracks");
   // book ED output token for clock and bit accurate stubs
@@ -267,16 +257,6 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
   esGetToken_ = esConsumes<tt::Setup, tt::SetupRcd, edm::Transition::BeginRun>();
   // initial ES products
   channelAssignment_ = nullptr;
-=======
-
-  // book ED output token for clock and bit accurate stubs
-  edPutTokenStubs_ = produces<StreamsStub>("Level1TTTracks");
-  // book ES product
-  esGetTokenTrackBuilderChannel_ = esConsumes<TrackBuilderChannel, TrackBuilderChannelRcd, Transition::BeginRun>();
-  esGetToken_ = esConsumes<tt::Setup, tt::SetupRcd, edm::Transition::BeginRun>();
-  // initial ES products
-  trackBuilderChannel_ = nullptr;
->>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 
   // --------------------------------------------------------------------------------
   // set options in Settings based on inputs from configuration files
@@ -361,17 +341,10 @@ void L1FPGATrackProducer::beginRun(const edm::Run& run, const edm::EventSetup& i
   settings.setBfield(mMagneticFieldStrength);
 
   setup_ = iSetup.getData(esGetToken_);
-<<<<<<< HEAD
   channelAssignment_ = const_cast<ChannelAssignment*>(&iSetup.getData(esGetTokenChannelAssignment_));
 
   // initialize the tracklet event processing (this sets all the processing & memory modules, wiring, etc)
   eventProcessor.init(settings, channelAssignment_);
-=======
-  trackBuilderChannel_ = const_cast<TrackBuilderChannel*>(&iSetup.getData(esGetTokenTrackBuilderChannel_));
-
-  // initialize the tracklet event processing (this sets all the processing & memory modules, wiring, etc)
-  eventProcessor.init(settings, trackBuilderChannel_);
->>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 }
 
 //////////
@@ -706,7 +679,6 @@ void L1FPGATrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
 
   iEvent.put(std::move(L1TkTracksForOutput), "Level1TTTracks");
 
-<<<<<<< HEAD
   // produce clock and bit output tracks and stubs
   // number of track channel
   const int numStreamsTrack = N_SECTOR * channelAssignment_->numChannels();
@@ -716,10 +688,6 @@ void L1FPGATrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
   StreamsStub streamsStub(numStreamsStub);
   eventProcessor.produce(streamsTrack, streamsStub);
   iEvent.emplace(edPutTokenTracks_, move(streamsTrack));
-=======
-  // produce clock and bit output stubs
-  const StreamsStub& streamsStub = eventProcessor.produce();
->>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
   iEvent.emplace(edPutTokenStubs_, move(streamsStub));
 
 }  /// End of produce()

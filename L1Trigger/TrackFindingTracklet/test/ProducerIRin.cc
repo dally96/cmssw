@@ -11,6 +11,7 @@
 #include "DataFormats/Common/interface/Handle.h"
 
 #include "L1Trigger/TrackTrigger/interface/Setup.h"
+#include "L1Trigger/TrackFindingTracklet/interface/ChannelAssignment.h"
 
 #include <string>
 #include <vector>
@@ -45,10 +46,14 @@ namespace trklet {
     EDPutTokenT<StreamsStub> edPutTokenStubs_;
     // Setup token
     ESGetToken<Setup, SetupRcd> esGetTokenSetup_;
+    // ChannelAssignment token
+    ESGetToken<ChannelAssignment, ChannelAssignmentRcd> esGetTokenChannelAssignment_;
     // configuration
     ParameterSet iConfig_;
     // helper class to store configurations
     const Setup* setup_;
+    // helper class to assign stubs to channel
+    const ChannelAssignment* channelAssignment_;
     // reduce l1 tracking to summer chain configuration
     bool summerChain_;
     // map of used tfp channels in summer chain config
@@ -63,6 +68,7 @@ namespace trklet {
     edPutTokenStubs_ = produces<StreamsStub>(branchStubs);
     // book ES products
     esGetTokenSetup_ = esConsumes<Setup, SetupRcd, Transition::BeginRun>();
+    esGetTokenChannelAssignment_ = esConsumes<ChannelAssignment, ChannelAssignmentRcd, Transition::BeginRun>();
     // initial ES products
     setup_ = nullptr;
   }
@@ -75,10 +81,9 @@ namespace trklet {
     // check process history if desired
     if (iConfig_.getParameter<bool>("CheckHistory"))
       setup_->checkHistory(iRun.processHistory());
-    // reduce l1 tracking to summer chain configuration
-    summerChain_ = iConfig_.getParameter<bool>("SummerChain");
+    channelAssignment_ = const_cast<ChannelAssignment*>(&iSetup.getData(esGetTokenChannelAssignment_));
     // map of used tfp channels in summer chain config
-    channelEncoding_ = iConfig_.getParameter<vector<int>>("SummerChainChannels");
+    channelEncoding_ = channelAssignment_->channelEncoding();
   }
 
   void ProducerIRin::produce(Event& iEvent, const EventSetup& iSetup) {
