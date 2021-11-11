@@ -412,16 +412,16 @@ void Sector::executeMP() {
   }
 }
 
-void Sector::executeFT(TrackBuilderChannel* trackBuilderChannel, tt::Streams& streamsTrack, tt::StreamsStub& streamsStub) {
+void Sector::executeFT(ChannelAssignment* channelAssignment, tt::Streams& streamsTrack, tt::StreamsStub& streamsStub) {
   int channelTrack(0);
-  const int offsetTrack = isector_ * trackBuilderChannel->numChannels();
+  const int offsetTrack = isector_ * channelAssignment->numChannels();
   for (auto& i : FT_) {
     deque<tt::Frame> streamsTrackTmp;
-    vector<deque<tt::FrameStub>> streamsStubTmp(trackBuilderChannel->maxNumProjectionLayers());
-    i->execute(trackBuilderChannel, streamsTrackTmp, streamsStubTmp, isector_);
+    vector<deque<tt::FrameStub>> streamsStubTmp(channelAssignment->maxNumProjectionLayers());
+    i->execute(channelAssignment, streamsTrackTmp, streamsStubTmp, isector_);
     if (!settings_.emulateTB())
       continue;
-    const int offestStub = (offsetTrack + channelTrack) * trackBuilderChannel->maxNumProjectionLayers();
+    const int offestStub = (offsetTrack + channelTrack) * channelAssignment->maxNumProjectionLayers();
     streamsTrack[offsetTrack + channelTrack++] = tt::Stream(streamsTrackTmp.begin(), streamsTrackTmp.end());
     int channelStub(0);
     for (deque<tt::FrameStub>& stream : streamsStubTmp)
