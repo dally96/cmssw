@@ -5,11 +5,7 @@
 #include "L1Trigger/TrackFindingTracklet/interface/TrackletParametersMemory.h"
 #include "L1Trigger/TrackFindingTracklet/interface/FullMatchMemory.h"
 #include "L1Trigger/TrackFindingTracklet/interface/TrackFitMemory.h"
-<<<<<<< HEAD
 #include "L1Trigger/TrackFindingTracklet/interface/ChannelAssignment.h"
-=======
-#include "L1Trigger/TrackFindingTracklet/interface/TrackBuilderChannel.h"
->>>>>>> StreamsStub added as EDProduct of L1FPGATrackProducer
 
 #include <vector>
 #include <deque>
