@@ -10,6 +10,7 @@ def fwConfig(process):
   process.TTTracksFromTrackletEmulation.DoMultipleMatches = False
   process.TTTracksFromTrackletEmulation.EmulateTB = True
   process.ChannelAssignment.UseDuplicateRemoval = False
+  process.TrackTriggerSetup.KalmanFilter.NumWorker = 8
 
 def reducedConfig(process):
   fwConfig(process)

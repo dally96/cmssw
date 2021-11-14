@@ -27,7 +27,7 @@ process.load( 'L1Trigger.TrackerDTC.Analyzer_cff' )
 # L1 tracking => hybrid emulation 
 process.load("L1Trigger.TrackFindingTracklet.L1HybridEmulationTracks_cff")
 from L1Trigger.TrackFindingTracklet.Customize_cff import *
-newKFConfig( process )
+fwConfig( process )
 #--- Load code that analyzes hybrid emulation 
 process.load( 'L1Trigger.TrackFindingTracklet.Analyzer_cff' )
 # load code that fits hybrid tracks
@@ -48,7 +48,8 @@ process.interIn = cms.Sequence( process.TrackFindingTrackletProducerKFin + proce
 process.kf = cms.Sequence( process.TrackFindingTrackletProducerKF + process.TrackFindingTrackletAnalyzerKF )
 process.TTTracks = cms.Sequence( process.TrackFindingTrackletProducerTT + process.TrackFindingTrackletProducerAS + process.TrackTriggerAssociatorTracks )
 process.interOut = cms.Sequence( process.TrackFindingTrackletProducerKFout + process.TrackFindingTrackletAnalyzerKFout )
-process.tt = cms.Path( process.mc + process.dtc + process.tracklet + process.interIn + process.kf + process.TTTracks + process.interOut )
+process.TBout = cms.Sequence( process.TrackFindingTrackletProducerTBout + process.TrackFindingTrackletAnalyzerTBout )
+process.tt = cms.Path( process.mc + process.dtc + process.tracklet + process.TBout + process.interIn + process.kf + process.TTTracks + process.interOut )
 process.schedule = cms.Schedule( process.tt )
 
 # create options

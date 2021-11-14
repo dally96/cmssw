@@ -361,7 +361,7 @@ namespace trackerDTC {
       if (frame.first.isNull())
         continue;
       sum++;
-      const GlobalPoint& pos = setup_->stubPos(hybrid_, frame, region, channel);
+      const GlobalPoint& pos = setup_->stubPos(hybrid_, frame, region);
       const GlobalPoint& ttPos = setup_->stubPos(frame.first);
       const vector<double> resolutions = {
           ttPos.perp() - pos.perp(), deltaPhi(ttPos.phi() - pos.phi()), ttPos.z() - pos.z()};
