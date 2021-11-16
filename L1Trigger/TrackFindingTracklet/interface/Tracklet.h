@@ -135,6 +135,11 @@ namespace trklet {
     const FPGAWord& fpgat() const { return fpgapars_.t(); }
     const FPGAWord& fpgaz0() const { return fpgapars_.z0(); }
 
+
+    double ptinverse(Settings const& settings) const {
+      return (trackpars_.rinv()) / (settings.c() * settings.bfield() * 0.01); 
+    }
+
     double rinvfit() const { return fitpars_.rinv(); }
     double phi0fit() const { return fitpars_.phi0(); }
     double d0fit() const { return fitpars_.d0(); }
