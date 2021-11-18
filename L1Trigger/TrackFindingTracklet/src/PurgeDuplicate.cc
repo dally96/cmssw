@@ -180,8 +180,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         dupMap[itrk][jtrk] = false;
       }
     }
-    // Create 12 bins that will sort momentum
-    std::vector<double> pt_bin_edges_ = {-0.5, -0.41667, -0.33333, -0.25, -0.16667, -0.08333, 0.0, 0.08333, 0.16667, 0.25, 0.33333, 0.41667, 0.5};
     
     // Find duplicates; Fill dupMap by looping over all pairs of "tracks"
     // numStublists-1 since last track has no other to compare to
@@ -190,7 +188,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         //Get primary and secondary track
         Tracklet* track1 = inputtracklets_[itrk];
         Tracklet* track2 = inputtracklets_[jtrk];
-        if (findPtBin(track1,pt_bin_edges_) != findPtBin(track2,pt_bin_edges_)) continue;
+        if (findPtBin(track1,settings_.pt_bin_edges_) != findPtBin(track2,settings_.pt_bin_edges_)) continue;
 
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];

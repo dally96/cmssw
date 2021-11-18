@@ -423,6 +423,9 @@ namespace trklet {
       return iter->second;
     }
 
+    // Create 12 bins that will sort momentum
+    std::vector<double> pt_bin_edges_ = {-0.5, -0.41667, -0.33333, -0.25, -0.16667, -0.08333, 0.0, 0.08333, 0.16667, 0.25, 0.33333, 0.41667, 0.5};
+
     double bendcutte(int ibend, int layerdisk, bool isPSmodule) const { return bendcut(ibend, layerdisk, isPSmodule); }
 
     double bendcutme(int ibend, int layerdisk, bool isPSmodule) const {
@@ -489,6 +492,7 @@ namespace trklet {
                                                         {"2S_4", {5, 8}},
                                                         {"2S_5", {6, 9}},
                                                         {"2S_6", {7, 10}}};
+
 
     double rmindiskvm_{22.5};
     double rmaxdiskvm_{67.0};
