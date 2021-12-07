@@ -265,6 +265,9 @@ namespace trklet {
     void setStripLength_PS(double stripLength_PS) { stripLength_PS_ = stripLength_PS; }
     void setStripLength_2S(double stripLength_2S) { stripLength_2S_ = stripLength_2S; }
 
+    std::vector<double> rinvbins() const { return rinvbins_; }
+    void setRinvbins(std::vector<double> rinvbins) { rinvbins_ = rinvbins; }
+
     std::string skimfile() const { return skimfile_; }
     void setSkimfile(std::string skimfile) { skimfile_ = skimfile; }
 
@@ -423,9 +426,6 @@ namespace trklet {
       return iter->second;
     }
 
-    // Create 12 bins that will sort momentum
-    std::vector<double> pt_bin_edges_ = {-0.5, -0.41667, -0.33333, -0.25, -0.16667, -0.08333, 0.0, 0.08333, 0.16667, 0.25, 0.33333, 0.41667, 0.5};
-
     double bendcutte(int ibend, int layerdisk, bool isPSmodule) const { return bendcut(ibend, layerdisk, isPSmodule); }
 
     double bendcutme(int ibend, int layerdisk, bool isPSmodule) const {
@@ -480,6 +480,17 @@ namespace trklet {
          {{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2}},
          {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1}}}};
 
+    // Create 12 bins that will sort momentum
+    unsigned int nrinvbins_{12};
+    std::vector<double> defaultrinvbins() {
+      std::vector<double> rinv;
+      for (unsigned int i = 1; i<nrinvbins_; i++) {
+        double rinvbinedges = -1 * rinvcut() + (i+1) * 2* rinvcut()/nrinvbins_;
+        rinv.push_back(rinvbinedges);
+      } 
+      return rinv;
+    }  
+    std::vector<double> rinvbins_ = defaultrinvbins();
     std::map<std::string, std::vector<int> > dtclayers_{{"PS10G_1", {0, 6, 8, 10}},
                                                         {"PS10G_2", {0, 7, 9}},
                                                         {"PS10G_3", {1, 7}},

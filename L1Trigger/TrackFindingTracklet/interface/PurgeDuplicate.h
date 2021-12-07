@@ -30,6 +30,7 @@ namespace trklet {
 
   private:
     double getPhiRes(Tracklet* curTracklet, const Stub* curStub);
+    int  findRInvBin(Tracklet* trk);
 
     std::vector<Track*> inputtracks_;
     std::vector<std::vector<const Stub*>> inputstublists_;
