@@ -277,6 +277,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         if (nShareUR >= settings_.minIndStubs()) {  // For number of shared stub merge condition
           dupMap[itrk][jtrk] = true;
           dupMap[jtrk][itrk] = true;
+          std::cout<<findRInvBin(track1)<<" , "<<findRInvBin(track2)<<std::endl;
         }
       }
     }
@@ -522,6 +523,8 @@ double PurgeDuplicate::getPhiRes(Tracklet* curTracklet, const Stub* curStub) {
 }
 int PurgeDuplicate::findRInvBin(Tracklet* trk) {
   std::vector<double> rinvbins = settings_.rinvbins();
+
+  for (unsigned int i = 0; i < settings_.defaultrinvbins().size(); i++) std::cout<<settings_.defaultrinvbins()[i]<<std::endl;
   //Get rinverse of track 
   double rInv = trk->rinv();
   //Check between what 2 values in rinvbins rinv  is in
@@ -529,6 +532,6 @@ int PurgeDuplicate::findRInvBin(Tracklet* trk) {
   //return integer for bin index
   unsigned int rIndx = std::distance(rinvbins.begin(),bins);
   //Make last bin overflow bin
-  if (rIndx >= rinvbins.size()) return rinvbins.size()-1;
-  return rIndx;
+  if (rIndx == std::distance(rinvbins.end(),bins)) return rinvbins.size()-1;
+  else return rIndx;
 }

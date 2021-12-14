@@ -481,11 +481,12 @@ namespace trklet {
          {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1}}}};
 
     // Create 12 bins that will sort momentum
-    unsigned int nrinvbins_{12};
+    unsigned int nrinvbins_{1};
+    double nrinvbins() const { return nrinvbins_; }
     std::vector<double> defaultrinvbins() {
       std::vector<double> rinv;
-      for (unsigned int i = 1; i<nrinvbins_; i++) {
-        double rinvbinedges = -1 * rinvcut() + (i+1) * 2* rinvcut()/nrinvbins_;
+      for (unsigned int i = 0; i<nrinvbins_; i++) {
+        double rinvbinedges = -1 * rinvcut() + (i+1) * 2* rinvcut()/nrinvbins();
         rinv.push_back(rinvbinedges);
       } 
       return rinv;
