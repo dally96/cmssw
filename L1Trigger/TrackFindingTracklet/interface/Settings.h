@@ -265,8 +265,11 @@ namespace trklet {
     void setStripLength_PS(double stripLength_PS) { stripLength_PS_ = stripLength_PS; }
     void setStripLength_2S(double stripLength_2S) { stripLength_2S_ = stripLength_2S; }
 
+    double nrinvbins() const { return nrinvbins_; }
+    void setNrinvbins(int nrinvbins) { nrinvbins_= nrinvbins; } 
+
     std::vector<double> rinvbins() const { return rinvbins_; }
-    void setRinvbins(std::vector<double> rinvbins) { rinvbins_ = rinvbins; }
+    void setRinvbins(std::vector<double> rinvbins) { defaultrinvbins() = rinvbins; }
 
     std::string skimfile() const { return skimfile_; }
     void setSkimfile(std::string skimfile) { skimfile_ = skimfile; }
@@ -434,6 +437,7 @@ namespace trklet {
       return fact * bendcut(ibend, layerdisk, isPSmodule);
     }
 
+
   private:
     std::string fitPatternFile_;
     std::string processingModulesFile_;
@@ -480,18 +484,8 @@ namespace trklet {
          {{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2}},
          {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1}}}};
 
-    // Create 12 bins that will sort momentum
-    unsigned int nrinvbins_{1};
-    double nrinvbins() const { return nrinvbins_; }
-    std::vector<double> defaultrinvbins() {
-      std::vector<double> rinv;
-      for (unsigned int i = 0; i<nrinvbins_; i++) {
-        double rinvbinedges = -1 * rinvcut() + (i+1) * 2* rinvcut()/nrinvbins();
-        rinv.push_back(rinvbinedges);
-      } 
-      return rinv;
-    }  
-    std::vector<double> rinvbins_ = defaultrinvbins();
+   
+
     std::map<std::string, std::vector<int> > dtclayers_{{"PS10G_1", {0, 6, 8, 10}},
                                                         {"PS10G_2", {0, 7, 9}},
                                                         {"PS10G_3", {1, 7}},
@@ -909,6 +903,7 @@ namespace trklet {
 
     std::string skimfile_{""};  //if not empty events will be written out in ascii format to this file
 
+    int nrinvbins_{12};
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
 
@@ -920,6 +915,20 @@ namespace trklet {
 
     double stripLength_PS_{0.1467};
     double stripLength_2S_{5.0250};
+ // Create 12 bins that will sort momentum
+    std::vector<double> defaultrinvbins() {
+      double rinvbinwidth = 2 * rinvcut()/nrinvbins();
+      std::vector<double> rinv;
+      double negrinvcut = -1 * rinvcut();
+      for (int i = 0; i<nrinvbins(); i++) {
+        double rinvbinedges = negrinvcut + (i+1) * rinvbinwidth;
+        rinv.push_back(rinvbinedges);
+      } 
+      return rinv;
+      //return {1,2,3};
+    }  
+    
+    std::vector<double> rinvbins_ = defaultrinvbins();
   };
 
   constexpr unsigned int N_TILTED_RINGS = 12;  // # of tilted rings per half-layer in TBPS layers
