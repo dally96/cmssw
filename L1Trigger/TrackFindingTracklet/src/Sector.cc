@@ -93,8 +93,7 @@ bool Sector::addStub(L1TStub stub, string dtc) {
     nadd++;
   }
 
-  if (!(settings_.reduced()))
-    assert(nadd == 1);
+  assert(nadd == 1);
 
   return true;
 }

@@ -1,23 +1,17 @@
 #ifndef L1Trigger_TrackerDTC_Stub_h
 #define L1Trigger_TrackerDTC_Stub_h
 
-#include "L1Trigger/TrackTrigger/interface/Setup.h"
-#include "L1Trigger/TrackerDTC/interface/LayerEncoding.h"
-#include "SimTracker/TrackTriggerAssociation/interface/TTTypes.h"
+#include "L1Trigger/TrackerDTC/interface/Setup.h"
 
 #include <utility>
 #include <vector>
 
 namespace trackerDTC {
 
-  /*! \class  trackerDTC::Stub
-   *  \brief  Class to represent an outer tracker Stub
-   *  \author Thomas Schuh
-   *  \date   2020, Jan
-   */
+  // representation of a stub
   class Stub {
   public:
-    Stub(const edm::ParameterSet&, const tt::Setup*, const LayerEncoding*, tt::SensorModule*, const TTStubRef&);
+    Stub(const edm::ParameterSet&, const Setup&, SensorModule*, const TTStubRef&);
     ~Stub() {}
 
     // underlying TTStubRef
@@ -27,7 +21,7 @@ namespace trackerDTC {
     // stub bend in quarter pitch units
     int bend() const { return bend_; }
     // bit accurate representation of Stub
-    tt::Frame frame(int region) const;
+    TTDTC::BV frame(int region) const;
     // checks stubs region assignment
     bool inRegion(int region) const;
 
@@ -35,16 +29,14 @@ namespace trackerDTC {
     // truncates double precision to f/w integer equivalent
     double digi(double value, double precision) const;
     // 64 bit stub in hybrid data format
-    tt::Frame formatHybrid(int region) const;
+    TTDTC::BV formatHybrid(int region) const;
     // 64 bit stub in tmtt data format
-    tt::Frame formatTMTT(int region) const;
+    TTDTC::BV formatTMTT(int region) const;
 
     // stores, calculates and provides run-time constants
-    const tt::Setup* setup_;
-    // class to encode layer ids used between DTC and TFP in Hybrid
-    const LayerEncoding* layerEncoding_;
+    const Setup* setup_;
     // representation of an outer tracker sensormodule
-    tt::SensorModule* sm_;
+    SensorModule* sm_;
     // underlying TTStubRef
     TTStubRef ttStubRef_;
     // chosen TT algorithm
@@ -73,8 +65,8 @@ namespace trackerDTC {
     double c_;
     // radius of a column of strips/pixel in cm
     double d_;
-    // range of stub inv2R in 1/cm
-    std::pair<double, double> inv2R_;
+    // range of stub qOverPt in 1/cm
+    std::pair<double, double> qOverPt_;
     // range of stub cot(theta)
     std::pair<double, double> cot_;
     // range of stub extrapolated phi to radius chosenRofPhi in rad

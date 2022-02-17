@@ -74,7 +74,6 @@ void InputRouter::execute() {
         iadd++;
       }
     }
-    if (!(settings_.reduced()))
-      assert(iadd == 1);
+    assert(iadd == 1);
   }
 }

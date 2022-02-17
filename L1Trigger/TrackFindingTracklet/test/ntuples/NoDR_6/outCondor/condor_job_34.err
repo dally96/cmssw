@@ -1,0 +1,112 @@
+************************************************************************************************************************
+						 WARNING!
+ The key phase2_realistic now points to 113X_mcRun4_realistic_v7.
+ Usage of this key is discretionary and users are cautioned to use it at their own risk!
+ This Global Tag contains tags suited for an Inner Tracker layout with rectangular (25x100um2) pixel cells (T15,T21).
+ If this is not the geometry you are expecting to use, please consult:
+ https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCondPhase2.py to retrieve the right key.
+************************************************************************************************************************
+16-Feb-2022 20:59:20 CET  Initiating request to open file root://eoscms.cern.ch//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 20:59:21 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root?xrdcl.requuid=aa696056-d06c-42f9-95a7-791bf957f6dd.
+%MSG
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 20:59:21 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root?tried=&xrdcl.requuid=f252f7ed-9c6e-4966-8c88-be1c8610357f.
+%MSG
+16-Feb-2022 20:59:21 CET  Initiating request to open file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root
+%MSG-w XrdAdaptor:  file_open 16-Feb-2022 20:59:22 CET pre-events
+Data is served from lnl.infn.it instead of original site T2_IT_Pisa
+%MSG
+16-Feb-2022 20:59:26 CET  Successfully opened file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root
+L1TrackNtupleMaker::beginJob
+%MSG-w XrdAdaptor:  (NoModuleName) 16-Feb-2022 20:59:29 CET pre-events
+Data is now served from lnl.infn.it, T2_UK_SGrid_RALPP instead of previous lnl.infn.it
+%MSG
+%MSG-w XrdAdaptor:  AfterModBeginStream 16-Feb-2022 20:59:30 CET BeforeEvents
+Data is now served from lnl.infn.it instead of previous lnl.infn.it, T2_UK_SGrid_RALPP
+%MSG
+%MSG-w XrdAdaptor:  (NoModuleName) 16-Feb-2022 20:59:33 CET pre-events
+Data is now served from lnl.infn.it, T2_UK_SGrid_RALPP instead of previous lnl.infn.it
+%MSG
+----- Begin Fatal Exception 16-Feb-2022 21:00:14 CET-----------------------
+An exception of category 'FileWriteError' occurred while
+   [0] Calling IOChannel::write()
+Exception Message:
+write() failed with system error 'No such file or directory' (error code 2)
+----- End Fatal Exception -------------------------------------------------
+L1TrackNtupleMaker::endJob
+16-Feb-2022 21:00:14 CET  Closed file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/72d74f78-ccab-4999-bd57-0337857bbb31.root
+TimeReport> Time report complete in 68.0196 seconds
+ Time Summary: 
+ - Min event:   1e+06
+ - Max event:   0
+ - Avg event:   0
+ - Total loop:  0
+ - Total init:  22.3263
+ - Total job:   68.0196
+ - EventSetup Lock:   0
+ - EventSetup Get:   0
+ Event Throughput: 0 ev/s
+ CPU Summary: 
+ - Total loop:  0
+ - Total init:  7.6282
+ - Total extra: 0
+ - Total job:   9.27872
+ Processing Summary: 
+ - Number of Events:  0
+ - Number of Global Begin Lumi Calls:  0
+ - Number of Global Begin Run Calls: 0
+
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 XrdAdaptor           -w (NoModuleName)                         2        2
+    2 XrdAdaptor           -w AfterModBeginStr                       1        1
+    3 XrdAdaptor           -w file_open                              1        1
+    4 XrdAdaptorInternal   -w file_open                              2        2
+    5 TimeReport           -e AfterFile                              1        1
+    6 Fatal Exception      -s                                        1        1
+    7 fileAction           -s file_close                             1        1
+    8 fileAction           -s file_open                              3        3
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 XrdAdaptor           pre-events       pre-events       
+    2 XrdAdaptor           BeforeEvents                      
+    3 XrdAdaptor           pre-events                        
+    4 XrdAdaptorInternal   pre-events       pre-events       
+    5 TimeReport           EndJob                            
+    6 Fatal Exception      BeforeEvents                      
+    7 fileAction           EndJob                            
+    8 fileAction           pre-events       pre-events       pre-events
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning                 6                   6
+Error                   1                   1
+System                  5                   5
+
+dropped waiting message count 0
+Error in <TList::Clear>: A list is accessing an object (0x7ffeacc93b20) already deleted (list name = TList)
+terminate called after throwing an instance of 'edm::Exception'
+  what():  An exception of category 'FileWriteError' occurred while
+   [0] Calling IOChannel::write()
+Exception Message:
+write() failed with system error 'No such file or directory' (error code 2)
+
+
+
+A fatal system signal has occurred: abort signal
+The following is the call stack containing the origin of the signal.
+
+
+Current Modules:
+
+Module: none (crashed)
+
+A fatal system signal has occurred: abort signal
+Abort

@@ -180,9 +180,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         dupMap[itrk][jtrk] = false;
       }
     }
-    // Create 12 bins that will sort momentum
-    std::vector<double> pt_bin_edges_ = {-0.5, -0.41667, -0.33333, -0.25, -0.16667, -0.08333, 0.0, 0.08333, 0.16667, 0.25, 0.33333, 0.41667, 0.5};
-    
+
+
     // Find duplicates; Fill dupMap by looping over all pairs of "tracks"
     // numStublists-1 since last track has no other to compare to
     for (unsigned int itrk = 0; itrk < numStublists-1; itrk++) {
@@ -190,7 +189,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         //Get primary and secondary track
         Tracklet* track1 = inputtracklets_[itrk];
         Tracklet* track2 = inputtracklets_[jtrk];
-        if (findPtBin(track1,pt_bin_edges_) != findPtBin(track2,pt_bin_edges_)) continue;
+        if (findRInvBin(track1) != findRInvBin(track2)) continue;
 
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
@@ -277,6 +276,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         if (nShareUR >= settings_.minIndStubs()) {  // For number of shared stub merge condition
           dupMap[itrk][jtrk] = true;
           dupMap[jtrk][itrk] = true;
+          //std::cout<<findRInvBin(track1)<<" , "<<findRInvBin(track2)<<std::endl;
         }
       }
     }
@@ -309,7 +309,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           }
           // Overwrite stublist of preferred track with merged list
           inputstublists_[preftrk] = newStubList;
-
           std::vector<std::pair<int, int>> newStubidsList;
           std::vector<std::pair<int, int>> stubidsTrk1 = mergedstubidslists_[rejetrk];
           std::vector<std::pair<int, int>> stubidsTrk2 = mergedstubidslists_[preftrk];
@@ -353,7 +352,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       }
     }
   }
-
 #endif
 
   //////////////////
@@ -520,13 +518,17 @@ double PurgeDuplicate::getPhiRes(Tracklet* curTracklet, const Stub* curStub) {
   phires = std::abs(stubphi - phiproj);
   return phires;
 }
-int PurgeDuplicate::findPtBin(Tracklet* trk, std::vector<double> bin_edges) {
-  //Get ptinverse of track 
-  double ptInv = trk->ptinverse(settings_);
-  //Check between what 2 values in bin_edges q/pt is in
-  auto bins = std::upper_bound(bin_edges.begin(), bin_edges.end(), ptInv);
+int PurgeDuplicate::findRInvBin(Tracklet* trk) {
+  std::vector<double> rinvbins = settings_.rinvbins();
+
+  //Get rinverse of track 
+  double rInv = trk->rinv();
+
+  //Check between what 2 values in rinvbins rinv  is in
+  auto bins = std::upper_bound(rinvbins.begin(), rinvbins.end(), rInv);
+
   //return integer for bin index
-  if (ptInv > 0.523562356) std::cout<<ptInv<<" is out of bounds"<<std::endl; 
-  int ptIndx = std::distance(bin_edges.begin(),bins);
-  return ptIndx;
+  int rIndx = std::distance(rinvbins.begin(),bins);
+  if (rIndx == std::distance(rinvbins.end(),bins)) return rinvbins.size()-1;
+  else return rIndx;
 }

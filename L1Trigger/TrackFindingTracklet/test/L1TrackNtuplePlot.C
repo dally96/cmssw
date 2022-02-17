@@ -419,7 +419,7 @@ void L1TrackNtuplePlot(TString type,
       new TH1F("match_tp_eta_5", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
 
   // ----------------------------------------------------------------------------------------------------------------
-  // Tracklet propogation efficiencies vs. eta for seeding layers
+  // Tracklet propogation efficiencies vs. eta for  g layers
 
   int trackletEffEtaBins = 24;
   double trackletEffMaxEta = 2.4;
@@ -3394,6 +3394,14 @@ void L1TrackNtuplePlot(TString type,
   h_duplicatefrac_pt->Draw();
   c.SaveAs(DIR + type + "_duplicatefrac.pdf");
 
+  TH1F* h_duplicate_pt = (TH1F*)h_trk_duplicate_vspt->Clone();
+  h_duplicate_pt->SetName("duplicate_pt");
+  h_duplicate_pt->GetYaxis()->SetTitle("Duplicate pT");
+
+  h_duplicate_pt->Write();
+  h_duplicate_pt->Draw();
+  c.SaveAs(DIR + type + "_duplicatepT.pdf");
+
   // ---------------------------------------------------------------------------------------------------------
   // total track rates vs pt
 
@@ -3425,7 +3433,7 @@ void L1TrackNtuplePlot(TString type,
   h_trk_all_vspt->Draw("same,hist");
   h_tp_vspt->Draw("same,hist");
   h_trk_notgenuine_vspt->Draw("same,hist");
-  //h_trk_duplicate_vspt->Draw("same,hist");
+  h_trk_duplicate_vspt->Draw("same,hist");
 
   h_trk_all_vspt->Write();
   h_trk_loose_vspt->Write();
@@ -3447,8 +3455,8 @@ void L1TrackNtuplePlot(TString type,
 
   sprintf(txt, "# !genuine tracks/event = %.1f", h_trk_notgenuine_vspt->GetSum());
   mySmallText(0.5, 0.69, 2, txt);
-  //sprintf(txt,"# duplicates/event = %.1f",h_trk_duplicate_vspt->GetSum());
-  //mySmallText(0.5,0.64,8,txt);
+  sprintf(txt,"# duplicates/event = %.1f",h_trk_duplicate_vspt->GetSum());
+  mySmallText(0.5,0.64,8,txt);
 
   c.SaveAs(DIR + type + "_trackrate_vspt.pdf");
 
@@ -3460,7 +3468,7 @@ void L1TrackNtuplePlot(TString type,
   // sum track/ TP pt in jets
   /*
   if (TP_select_injet > 0) {
-    
+  
     TH1F* h_frac_sumpt_vspt = (TH1F*) h_jet_trk_sumpt_vspt->Clone();
     h_frac_sumpt_vspt->SetName("frac_sumpt_vspt");
     h_frac_sumpt_vspt->GetYaxis()->SetTitle("L1 sum(p_{T}) / TP sum(p_{T})");

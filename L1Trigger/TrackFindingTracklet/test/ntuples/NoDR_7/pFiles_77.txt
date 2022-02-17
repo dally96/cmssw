@@ -1,0 +1,1 @@
+/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/70b6d0de-7e34-46e1-8e72-61a51834305e.root

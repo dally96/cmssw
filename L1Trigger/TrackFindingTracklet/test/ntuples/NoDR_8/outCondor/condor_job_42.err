@@ -1,0 +1,99 @@
+************************************************************************************************************************
+						 WARNING!
+ The key phase2_realistic now points to 113X_mcRun4_realistic_v7.
+ Usage of this key is discretionary and users are cautioned to use it at their own risk!
+ This Global Tag contains tags suited for an Inner Tracker layout with rectangular (25x100um2) pixel cells (T15,T21).
+ If this is not the geometry you are expecting to use, please consult:
+ https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCondPhase2.py to retrieve the right key.
+************************************************************************************************************************
+16-Feb-2022 21:47:29 CET  Initiating request to open file root://eoscms.cern.ch//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 21:47:30 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root?xrdcl.requuid=f5895cc8-5c4e-45fd-ac48-50a8b0e352c3.
+%MSG
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 21:47:30 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root?tried=&xrdcl.requuid=83ce369f-64c1-4d47-9020-1d37528e934f.
+%MSG
+16-Feb-2022 21:47:30 CET  Initiating request to open file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root
+%MSG-w XrdAdaptor:  file_open 16-Feb-2022 21:47:32 CET pre-events
+Data is served from T2_UK_SGrid_RALPP instead of original site infn.it
+%MSG
+16-Feb-2022 21:47:38 CET  Successfully opened file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root
+L1TrackNtupleMaker::beginJob
+----- Begin Fatal Exception 16-Feb-2022 21:47:55 CET-----------------------
+An exception of category 'FileWriteError' occurred while
+   [0] Calling IOChannel::write()
+Exception Message:
+write() failed with system error 'No such file or directory' (error code 2)
+----- End Fatal Exception -------------------------------------------------
+L1TrackNtupleMaker::endJob
+16-Feb-2022 21:47:55 CET  Closed file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/1f4f191f-b64a-4079-9f4c-ebadd6121262.root
+TimeReport> Time report complete in 34.8557 seconds
+ Time Summary: 
+ - Min event:   1e+06
+ - Max event:   0
+ - Avg event:   0
+ - Total loop:  0
+ - Total init:  20.5184
+ - Total job:   34.8557
+ - EventSetup Lock:   0
+ - EventSetup Get:   0
+ Event Throughput: 0 ev/s
+ CPU Summary: 
+ - Total loop:  0
+ - Total init:  11.4995
+ - Total extra: 0
+ - Total job:   12.7197
+ Processing Summary: 
+ - Number of Events:  0
+ - Number of Global Begin Lumi Calls:  0
+ - Number of Global Begin Run Calls: 0
+
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 XrdAdaptor           -w file_open                              1        1
+    2 XrdAdaptorInternal   -w file_open                              2        2
+    3 TimeReport           -e AfterFile                              1        1
+    4 Fatal Exception      -s                                        1        1
+    5 fileAction           -s file_close                             1        1
+    6 fileAction           -s file_open                              3        3
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 XrdAdaptor           pre-events                        
+    2 XrdAdaptorInternal   pre-events       pre-events       
+    3 TimeReport           EndJob                            
+    4 Fatal Exception      BeforeEvents                      
+    5 fileAction           EndJob                            
+    6 fileAction           pre-events       pre-events       pre-events
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning                 3                   3
+Error                   1                   1
+System                  5                   5
+
+dropped waiting message count 0
+Error in <TList::Clear>: A list is accessing an object (0x7ffe3965a8b0) already deleted (list name = TList)
+terminate called after throwing an instance of 'edm::Exception'
+  what():  An exception of category 'FileWriteError' occurred while
+   [0] Calling IOChannel::write()
+Exception Message:
+write() failed with system error 'No such file or directory' (error code 2)
+
+
+
+A fatal system signal has occurred: abort signal
+The following is the call stack containing the origin of the signal.
+
+
+Current Modules:
+
+Module: none (crashed)
+
+A fatal system signal has occurred: abort signal
+Abort

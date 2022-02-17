@@ -52,7 +52,7 @@
 #include "DataFormats/L1TrackTrigger/interface/TTTrack_TrackWord.h"
 #include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 #include "DataFormats/L1TrackTrigger/interface/TTDTC.h"
-#include "L1Trigger/TrackTrigger/interface/Setup.h"
+#include "L1Trigger/TrackerDTC/interface/Setup.h"
 //
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
@@ -164,7 +164,6 @@ private:
 
   unsigned int nHelixPar_;
   bool extended_;
-  bool reduced_;
 
   bool trackQuality_;
   std::unique_ptr<TrackQuality> trackQualityModel_;
@@ -185,10 +184,10 @@ private:
   edm::EDGetTokenT<TTDTC> tokenDTC_;
 
   // helper class to store DTC configuration
-  tt::Setup setup_;
+  trackerDTC::Setup setup_;
 
   // Setup token
-  edm::ESGetToken<tt::Setup, tt::SetupRcd> esGetToken_;
+  edm::ESGetToken<trackerDTC::Setup, trackerDTC::SetupRcd> esGetToken_;
 
   /// ///////////////// ///
   /// MANDATORY METHODS ///
@@ -225,7 +224,6 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
   wiresFile = iConfig.getParameter<edm::FileInPath>("wiresFile");
 
   extended_ = iConfig.getParameter<bool>("Extended");
-  reduced_ = iConfig.getParameter<bool>("Reduced");
   nHelixPar_ = iConfig.getParameter<unsigned int>("Hnpar");
 
   if (extended_) {
@@ -234,22 +232,19 @@ L1FPGATrackProducer::L1FPGATrackProducer(edm::ParameterSet const& iConfig)
   }
 
   // book ES product
-  esGetToken_ = esConsumes<tt::Setup, tt::SetupRcd, edm::Transition::BeginRun>();
+  esGetToken_ = esConsumes<trackerDTC::Setup, trackerDTC::SetupRcd, edm::Transition::BeginRun>();
 
   // --------------------------------------------------------------------------------
   // set options in Settings based on inputs from configuration files
   // --------------------------------------------------------------------------------
 
   settings.setExtended(extended_);
-  settings.setReduced(reduced_);
   settings.setNHelixPar(nHelixPar_);
 
   settings.setFitPatternFile(fitPatternFile.fullPath());
   settings.setProcessingModulesFile(processingModulesFile.fullPath());
   settings.setMemoryModulesFile(memoryModulesFile.fullPath());
   settings.setWiresFile(wiresFile.fullPath());
-
-  settings.setFakefit(iConfig.getParameter<bool>("Fakefit"));
 
   if (extended_) {
     settings.setTableTEDFile(tableTEDFile.fullPath());
@@ -429,11 +424,11 @@ void L1FPGATrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
       dtcname += (channel < 24) ? "_A" : "_B";
 
       // Get the stubs from the DTC
-      const tt::StreamStub& streamFromDTC{handleDTC->stream(region, channel)};
+      const TTDTC::Stream& streamFromDTC{handleDTC->stream(region, channel)};
 
       // Prepare the DTC stubs for the IR
       for (size_t stubIndex = 0; stubIndex < streamFromDTC.size(); ++stubIndex) {
-        const tt::FrameStub& stub{streamFromDTC[stubIndex]};
+        const TTDTC::Frame& stub{streamFromDTC[stubIndex]};
 
         if (stub.first.isNull()) {
           continue;

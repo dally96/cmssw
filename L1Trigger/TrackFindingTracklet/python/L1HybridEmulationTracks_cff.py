@@ -9,11 +9,10 @@ from SimTracker.TrackTriggerAssociation.TrackTriggerAssociator_cff import *
 # prompt hybrid emulation
 TTTrackAssociatorFromPixelDigis.TTTracks = cms.VInputTag(cms.InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks") )
 
-L1TrackletTracks = cms.Sequence(offlineBeamSpot*TrackletTracksFromTrackletEmulation)
 L1HybridTracks = cms.Sequence(offlineBeamSpot*TTTracksFromTrackletEmulation)
 L1HybridTracksWithAssociators = cms.Sequence(offlineBeamSpot*TTTracksFromTrackletEmulation*TrackTriggerAssociatorTracks)
 
-# extended hybrid (=displaced tracking) emulation
+# extended hybrid emulation
 TTTrackAssociatorFromPixelDigisExtended = TTTrackAssociatorFromPixelDigis.clone(
     TTTracks = cms.VInputTag(cms.InputTag("TTTracksFromExtendedTrackletEmulation", "Level1TTTracks") )
 )
@@ -21,14 +20,7 @@ TTTrackAssociatorFromPixelDigisExtended = TTTrackAssociatorFromPixelDigis.clone(
 L1ExtendedHybridTracks = cms.Sequence(offlineBeamSpot*TTTracksFromExtendedTrackletEmulation)
 L1ExtendedHybridTracksWithAssociators = cms.Sequence(offlineBeamSpot*TTTracksFromExtendedTrackletEmulation*TTTrackAssociatorFromPixelDigisExtended)
 
-# both (prompt + extended) hybrid emulation
+# both (prompt + extended) hybrid emulation 
 L1PromptExtendedHybridTracks = cms.Sequence(offlineBeamSpot*TTTracksFromTrackletEmulation*TTTracksFromExtendedTrackletEmulation)
 L1PromptExtendedHybridTracksWithAssociators = cms.Sequence(offlineBeamSpot*TTTracksFromTrackletEmulation*TrackTriggerAssociatorTracks*TTTracksFromExtendedTrackletEmulation*TTTrackAssociatorFromPixelDigisExtended)
-
-# reduced hybrid (=summer chain) emuluation
-TTTrackAssociatorFromPixelDigisReduced = TTTrackAssociatorFromPixelDigis.clone(
-            TTTracks = cms.VInputTag(cms.InputTag("TTTracksFromReducedTrackletEmulation", "Level1TTTracks") )
-            )
-L1ReducedHybridTracks = cms.Sequence(offlineBeamSpot*TTTracksFromReducedTrackletEmulation)
-L1ReducedHybridTracksWithAssociators = cms.Sequence(offlineBeamSpot*TTTracksFromReducedTrackletEmulation*TTTrackAssociatorFromPixelDigisReduced)
 

@@ -1,0 +1,174 @@
+************************************************************************************************************************
+						 WARNING!
+ The key phase2_realistic now points to 113X_mcRun4_realistic_v7.
+ Usage of this key is discretionary and users are cautioned to use it at their own risk!
+ This Global Tag contains tags suited for an Inner Tracker layout with rectangular (25x100um2) pixel cells (T15,T21).
+ If this is not the geometry you are expecting to use, please consult:
+ https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCondPhase2.py to retrieve the right key.
+************************************************************************************************************************
+16-Feb-2022 18:55:49 CET  Initiating request to open file root://eoscms.cern.ch//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 18:55:50 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root?xrdcl.requuid=b295de25-be23-4d2f-8f7f-29a5e3af2211.
+%MSG
+%MSG-w XrdAdaptorInternal:  file_open 16-Feb-2022 18:55:50 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root?tried=&xrdcl.requuid=9be1dfec-cba6-4d5e-8954-df9d276b93bd.
+%MSG
+16-Feb-2022 18:55:50 CET  Initiating request to open file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root
+%MSG-w XrdAdaptor:  file_open 16-Feb-2022 18:55:52 CET pre-events
+Data is served from T2_UK_SGrid_RALPP instead of original site infn.it
+%MSG
+16-Feb-2022 18:55:57 CET  Successfully opened file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root
+L1TrackNtupleMaker::beginJob
+Begin processing the 1st record. Run 1, Event 3306, LumiSection 34 on stream 0 at 16-Feb-2022 19:09:52.951 CET
+Begin processing the 2nd record. Run 1, Event 3305, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:00.776 CET
+Begin processing the 3rd record. Run 1, Event 3308, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:07.012 CET
+Begin processing the 4th record. Run 1, Event 3302, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:15.058 CET
+Begin processing the 5th record. Run 1, Event 3309, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:22.382 CET
+Begin processing the 6th record. Run 1, Event 3301, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:27.253 CET
+Begin processing the 7th record. Run 1, Event 3303, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:35.272 CET
+Begin processing the 8th record. Run 1, Event 3312, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:43.508 CET
+Begin processing the 9th record. Run 1, Event 3307, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:49.359 CET
+Begin processing the 10th record. Run 1, Event 3310, LumiSection 34 on stream 0 at 16-Feb-2022 19:10:55.712 CET
+Begin processing the 11th record. Run 1, Event 3316, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:01.969 CET
+Begin processing the 12th record. Run 1, Event 3304, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:09.060 CET
+Begin processing the 13th record. Run 1, Event 3315, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:16.464 CET
+Begin processing the 14th record. Run 1, Event 3311, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:25.001 CET
+Begin processing the 15th record. Run 1, Event 3320, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:33.380 CET
+Begin processing the 16th record. Run 1, Event 3319, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:39.280 CET
+Begin processing the 17th record. Run 1, Event 3313, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:45.817 CET
+Begin processing the 18th record. Run 1, Event 3317, LumiSection 34 on stream 0 at 16-Feb-2022 19:11:52.870 CET
+Begin processing the 19th record. Run 1, Event 3318, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:00.254 CET
+Begin processing the 20th record. Run 1, Event 3324, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:08.287 CET
+Begin processing the 21st record. Run 1, Event 3323, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:13.634 CET
+Begin processing the 22nd record. Run 1, Event 3327, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:20.866 CET
+Begin processing the 23rd record. Run 1, Event 3326, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:27.851 CET
+Begin processing the 24th record. Run 1, Event 3325, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:33.403 CET
+Begin processing the 25th record. Run 1, Event 3314, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:40.250 CET
+Begin processing the 26th record. Run 1, Event 3322, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:47.248 CET
+Begin processing the 27th record. Run 1, Event 3331, LumiSection 34 on stream 0 at 16-Feb-2022 19:12:55.362 CET
+Begin processing the 28th record. Run 1, Event 3330, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:02.237 CET
+Begin processing the 29th record. Run 1, Event 3334, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:08.952 CET
+Begin processing the 30th record. Run 1, Event 3321, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:15.132 CET
+Begin processing the 31st record. Run 1, Event 3332, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:21.913 CET
+Begin processing the 32nd record. Run 1, Event 3329, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:29.811 CET
+Begin processing the 33rd record. Run 1, Event 3337, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:37.979 CET
+Begin processing the 34th record. Run 1, Event 3336, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:45.431 CET
+Begin processing the 35th record. Run 1, Event 3335, LumiSection 34 on stream 0 at 16-Feb-2022 19:13:52.241 CET
+Begin processing the 36th record. Run 1, Event 3338, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:00.213 CET
+Begin processing the 37th record. Run 1, Event 3340, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:06.802 CET
+Begin processing the 38th record. Run 1, Event 3341, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:13.747 CET
+Begin processing the 39th record. Run 1, Event 3333, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:21.359 CET
+Begin processing the 40th record. Run 1, Event 3339, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:28.797 CET
+Begin processing the 41st record. Run 1, Event 3344, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:35.117 CET
+Begin processing the 42nd record. Run 1, Event 3343, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:41.995 CET
+Begin processing the 43rd record. Run 1, Event 3328, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:47.733 CET
+Begin processing the 44th record. Run 1, Event 3345, LumiSection 34 on stream 0 at 16-Feb-2022 19:14:55.444 CET
+Begin processing the 45th record. Run 1, Event 3342, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:01.047 CET
+Begin processing the 46th record. Run 1, Event 3347, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:08.154 CET
+Begin processing the 47th record. Run 1, Event 3346, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:14.779 CET
+Begin processing the 48th record. Run 1, Event 3354, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:20.618 CET
+Begin processing the 49th record. Run 1, Event 3350, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:27.252 CET
+Begin processing the 50th record. Run 1, Event 3351, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:36.573 CET
+Begin processing the 51st record. Run 1, Event 3348, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:44.555 CET
+[2022-02-16 19:15:52.032022 +0100][Error  ][PostMaster        ] [eoscms.cern.ch:1094 #0] Forcing error on disconnect: [ERROR] Operation interrupted.
+Begin processing the 52nd record. Run 1, Event 3349, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:52.359 CET
+Begin processing the 53rd record. Run 1, Event 3359, LumiSection 34 on stream 0 at 16-Feb-2022 19:15:59.703 CET
+Begin processing the 54th record. Run 1, Event 3356, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:06.129 CET
+[2022-02-16 19:16:12.621361 +0100][Error  ][PostMaster        ] [xrootd-cms.infn.it:1094 #0] Forcing error on disconnect: [ERROR] Operation interrupted.
+Begin processing the 55th record. Run 1, Event 3357, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:13.958 CET
+Begin processing the 56th record. Run 1, Event 3362, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:20.131 CET
+Begin processing the 57th record. Run 1, Event 3360, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:27.489 CET
+Begin processing the 58th record. Run 1, Event 3358, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:35.799 CET
+Begin processing the 59th record. Run 1, Event 3352, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:42.449 CET
+Begin processing the 60th record. Run 1, Event 3367, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:49.560 CET
+Begin processing the 61st record. Run 1, Event 3355, LumiSection 34 on stream 0 at 16-Feb-2022 19:16:55.935 CET
+Begin processing the 62nd record. Run 1, Event 3361, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:02.859 CET
+Begin processing the 63rd record. Run 1, Event 3368, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:09.851 CET
+Begin processing the 64th record. Run 1, Event 3364, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:16.372 CET
+Begin processing the 65th record. Run 1, Event 3353, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:24.483 CET
+Begin processing the 66th record. Run 1, Event 3363, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:30.984 CET
+Begin processing the 67th record. Run 1, Event 3366, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:39.515 CET
+Begin processing the 68th record. Run 1, Event 3369, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:46.866 CET
+Begin processing the 69th record. Run 1, Event 3374, LumiSection 34 on stream 0 at 16-Feb-2022 19:17:55.004 CET
+Begin processing the 70th record. Run 1, Event 3373, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:01.788 CET
+Begin processing the 71st record. Run 1, Event 3365, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:09.710 CET
+Begin processing the 72nd record. Run 1, Event 3370, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:18.113 CET
+Begin processing the 73rd record. Run 1, Event 3376, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:24.907 CET
+Begin processing the 74th record. Run 1, Event 3372, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:32.575 CET
+Begin processing the 75th record. Run 1, Event 3371, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:39.093 CET
+Begin processing the 76th record. Run 1, Event 3379, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:47.018 CET
+Begin processing the 77th record. Run 1, Event 3380, LumiSection 34 on stream 0 at 16-Feb-2022 19:18:54.919 CET
+Begin processing the 78th record. Run 1, Event 3378, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:02.106 CET
+Begin processing the 79th record. Run 1, Event 3381, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:08.575 CET
+Begin processing the 80th record. Run 1, Event 3377, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:16.215 CET
+Begin processing the 81st record. Run 1, Event 3382, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:24.417 CET
+Begin processing the 82nd record. Run 1, Event 3383, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:31.215 CET
+Begin processing the 83rd record. Run 1, Event 3375, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:37.597 CET
+Begin processing the 84th record. Run 1, Event 3385, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:44.930 CET
+Begin processing the 85th record. Run 1, Event 3384, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:50.027 CET
+Begin processing the 86th record. Run 1, Event 3386, LumiSection 34 on stream 0 at 16-Feb-2022 19:19:57.872 CET
+Begin processing the 87th record. Run 1, Event 3387, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:06.342 CET
+Begin processing the 88th record. Run 1, Event 3390, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:12.536 CET
+Begin processing the 89th record. Run 1, Event 3388, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:20.205 CET
+Begin processing the 90th record. Run 1, Event 3391, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:26.376 CET
+Begin processing the 91st record. Run 1, Event 3395, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:34.461 CET
+Begin processing the 92nd record. Run 1, Event 3392, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:41.387 CET
+Begin processing the 93rd record. Run 1, Event 3394, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:49.054 CET
+Begin processing the 94th record. Run 1, Event 3393, LumiSection 34 on stream 0 at 16-Feb-2022 19:20:55.516 CET
+Begin processing the 95th record. Run 1, Event 3400, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:01.567 CET
+Begin processing the 96th record. Run 1, Event 3396, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:11.002 CET
+Begin processing the 97th record. Run 1, Event 3399, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:17.962 CET
+Begin processing the 98th record. Run 1, Event 3389, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:23.830 CET
+Begin processing the 99th record. Run 1, Event 3397, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:30.743 CET
+Begin processing the 100th record. Run 1, Event 3398, LumiSection 34 on stream 0 at 16-Feb-2022 19:21:38.125 CET
+16-Feb-2022 19:21:45 CET  Closed file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/b53cb230-1e4d-411a-bc72-78472214c263.root
+L1TrackNtupleMaker::endJob
+TimeReport> Time report complete in 1578.44 seconds
+ Time Summary: 
+ - Min event:   4.62994
+ - Max event:   8.99935
+ - Avg event:   6.85427
+ - Total loop:  1544.71
+ - Total init:  23.4098
+ - Total job:   1578.44
+ - EventSetup Lock:   0
+ - EventSetup Get:   0
+ Event Throughput: 0.0647371 ev/s
+ CPU Summary: 
+ - Total loop:  823.457
+ - Total init:  11.9055
+ - Total extra: 0
+ - Total job:   842.544
+ Processing Summary: 
+ - Number of Events:  100
+ - Number of Global Begin Lumi Calls:  1
+ - Number of Global Begin Run Calls: 1
+
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 XrdAdaptor           -w file_open                              1        1
+    2 XrdAdaptorInternal   -w file_open                              2        2
+    3 TimeReport           -e AfterModEndJob                         1        1
+    4 fileAction           -s file_close                             1        1
+    5 fileAction           -s file_open                              3        3
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 XrdAdaptor           pre-events                        
+    2 XrdAdaptorInternal   pre-events       pre-events       
+    3 TimeReport           EndJob                            
+    4 fileAction           PostGlobalEndRun                  
+    5 fileAction           pre-events       pre-events       pre-events
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning                 3                   3
+Error                   1                   1
+System                  4                   4
+
+dropped waiting message count 0

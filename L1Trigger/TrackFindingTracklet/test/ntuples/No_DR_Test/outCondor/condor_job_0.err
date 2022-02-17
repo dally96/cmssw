@@ -1,0 +1,204 @@
+************************************************************************************************************************
+						 WARNING!
+ The key phase2_realistic now points to 113X_mcRun4_realistic_v7.
+ Usage of this key is discretionary and users are cautioned to use it at their own risk!
+ This Global Tag contains tags suited for an Inner Tracker layout with rectangular (25x100um2) pixel cells (T15,T21).
+ If this is not the geometry you are expecting to use, please consult:
+ https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCondPhase2.py to retrieve the right key.
+************************************************************************************************************************
+17-Feb-2022 15:36:17 CET  Initiating request to open file root://eoscms.cern.ch//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root
+%MSG-w XrdAdaptorInternal:  file_open 17-Feb-2022 15:36:18 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?xrdcl.requuid=0b45ba19-b031-4f2f-b19a-a18424259a3c.
+%MSG
+%MSG-w XrdAdaptorInternal:  file_open 17-Feb-2022 15:36:18 CET pre-events
+Failed to open file at URL root://eoscms.cern.ch:1094//eos/cms/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=&xrdcl.requuid=514b6c84-0b2e-49dd-8c1a-83c563bca691.
+%MSG
+17-Feb-2022 15:36:18 CET  Initiating request to open file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root
+%MSG-w XrdAdaptor:  file_open 17-Feb-2022 15:36:20 CET pre-events
+Data is served from [2001 instead of original site T2_IT_Pisa
+%MSG
+17-Feb-2022 15:36:23 CET  Successfully opened file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root
+L1TrackNtupleMaker::beginJob
+%MSG-w XrdAdaptor:  (NoModuleName) 17-Feb-2022 15:36:26 CET pre-events
+Data is now served from [2001, T2_UK_SGrid_RALPP instead of previous [2001
+%MSG
+%MSG-w XrdAdaptor:  AfterModBeginStream 17-Feb-2022 15:38:40 CET BeforeEvents
+Data is now served from T2_UK_SGrid_RALPP instead of previous [2001, T2_UK_SGrid_RALPP
+%MSG
+[2022-02-17 15:41:34.009102 +0100][Error  ][PostMaster        ] [t2-xrdcms.lnl.infn.it:7070 #0] Forcing error on disconnect: [ERROR] Operation interrupted.
+[2022-02-17 15:41:35.002344 +0100][Error  ][PostMaster        ] [t2-xrdcms.lnl.infn.it:1094 #0] Forcing error on disconnect: [ERROR] Operation interrupted.
+[2022-02-17 15:48:47.006969 +0100][Error  ][AsyncSock         ] [xrootd.ba.infn.it:1094 #0.0] Socket error while handshaking: [ERROR] Socket timeout
+[2022-02-17 15:48:47.007033 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] elapsed = 45, pConnectionWindow = 31 seconds.
+Begin processing the 1st record. Run 1, Event 408, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:01.899 CET
+Begin processing the 2nd record. Run 1, Event 401, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:08.342 CET
+Begin processing the 3rd record. Run 1, Event 404, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:14.442 CET
+Begin processing the 4th record. Run 1, Event 405, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:19.868 CET
+Begin processing the 5th record. Run 1, Event 402, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:25.082 CET
+Begin processing the 6th record. Run 1, Event 406, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:31.171 CET
+[2022-02-17 15:49:32.892355 +0100][Error  ][AsyncSock         ] [xrootd.ba.infn.it:1094 #0.0] Socket error while handshaking: [ERROR] Socket timeout
+[2022-02-17 15:49:32.892464 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] elapsed = 45, pConnectionWindow = 31 seconds.
+[2022-02-17 15:49:32.892504 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] Unable to recover: [ERROR] Socket timeout.
+[2022-02-17 15:49:32.892512 +0100][Error  ][XRootD            ] [xrootd.ba.infn.it:1094] Impossible to send message kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1213xrootd011213xrootd-cms-uk.gridpp.rl1213xrootd02.grid.hep.ph.ic.ac.uk,+1213xrootd-redic.pi.infn.it,+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk, mode: 0460, flags: kXR_open_read kXR_async kXR_retstat ). Trying to recover.
+Begin processing the 7th record. Run 1, Event 410, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:38.013 CET
+Begin processing the 8th record. Run 1, Event 403, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:43.685 CET
+Begin processing the 9th record. Run 1, Event 411, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:48.916 CET
+Begin processing the 10th record. Run 1, Event 409, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:53.593 CET
+Begin processing the 11th record. Run 1, Event 413, LumiSection 5 on stream 0 at 17-Feb-2022 15:49:58.938 CET
+Begin processing the 12th record. Run 1, Event 407, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:04.111 CET
+Begin processing the 13th record. Run 1, Event 418, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:08.950 CET
+Begin processing the 14th record. Run 1, Event 415, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:12.962 CET
+Begin processing the 15th record. Run 1, Event 417, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:17.317 CET
+Begin processing the 16th record. Run 1, Event 414, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:21.332 CET
+Begin processing the 17th record. Run 1, Event 416, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:27.273 CET
+Begin processing the 18th record. Run 1, Event 412, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:32.190 CET
+Begin processing the 19th record. Run 1, Event 423, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:36.526 CET
+Begin processing the 20th record. Run 1, Event 420, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:42.047 CET
+Begin processing the 21st record. Run 1, Event 419, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:46.223 CET
+Begin processing the 22nd record. Run 1, Event 421, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:51.849 CET
+Begin processing the 23rd record. Run 1, Event 426, LumiSection 5 on stream 0 at 17-Feb-2022 15:50:56.545 CET
+Begin processing the 24th record. Run 1, Event 424, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:01.461 CET
+Begin processing the 25th record. Run 1, Event 422, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:06.927 CET
+Begin processing the 26th record. Run 1, Event 430, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:11.681 CET
+Begin processing the 27th record. Run 1, Event 429, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:15.021 CET
+Begin processing the 28th record. Run 1, Event 425, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:19.146 CET
+Begin processing the 29th record. Run 1, Event 432, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:22.936 CET
+Begin processing the 30th record. Run 1, Event 427, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:27.139 CET
+Begin processing the 31st record. Run 1, Event 436, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:31.864 CET
+Begin processing the 32nd record. Run 1, Event 431, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:35.629 CET
+Begin processing the 33rd record. Run 1, Event 435, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:40.169 CET
+Begin processing the 34th record. Run 1, Event 437, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:45.648 CET
+Begin processing the 35th record. Run 1, Event 433, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:50.089 CET
+Begin processing the 36th record. Run 1, Event 434, LumiSection 5 on stream 0 at 17-Feb-2022 15:51:54.968 CET
+Begin processing the 37th record. Run 1, Event 438, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:00.289 CET
+Begin processing the 38th record. Run 1, Event 440, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:04.752 CET
+Begin processing the 39th record. Run 1, Event 439, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:08.588 CET
+Begin processing the 40th record. Run 1, Event 441, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:13.408 CET
+Begin processing the 41st record. Run 1, Event 443, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:19.562 CET
+Begin processing the 42nd record. Run 1, Event 446, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:24.015 CET
+Begin processing the 43rd record. Run 1, Event 447, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:27.414 CET
+Begin processing the 44th record. Run 1, Event 445, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:30.957 CET
+Begin processing the 45th record. Run 1, Event 444, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:34.839 CET
+Begin processing the 46th record. Run 1, Event 449, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:39.667 CET
+Begin processing the 47th record. Run 1, Event 450, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:43.134 CET
+Begin processing the 48th record. Run 1, Event 428, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:47.192 CET
+Begin processing the 49th record. Run 1, Event 442, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:52.143 CET
+Begin processing the 50th record. Run 1, Event 453, LumiSection 5 on stream 0 at 17-Feb-2022 15:52:57.223 CET
+Begin processing the 51st record. Run 1, Event 448, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:02.151 CET
+Begin processing the 52nd record. Run 1, Event 452, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:08.448 CET
+Begin processing the 53rd record. Run 1, Event 454, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:13.195 CET
+Begin processing the 54th record. Run 1, Event 456, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:18.891 CET
+Begin processing the 55th record. Run 1, Event 455, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:24.010 CET
+Begin processing the 56th record. Run 1, Event 451, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:29.430 CET
+Begin processing the 57th record. Run 1, Event 458, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:33.896 CET
+Begin processing the 58th record. Run 1, Event 463, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:39.303 CET
+Begin processing the 59th record. Run 1, Event 459, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:43.918 CET
+Begin processing the 60th record. Run 1, Event 460, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:48.881 CET
+Begin processing the 61st record. Run 1, Event 461, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:53.768 CET
+Begin processing the 62nd record. Run 1, Event 457, LumiSection 5 on stream 0 at 17-Feb-2022 15:53:58.807 CET
+Begin processing the 63rd record. Run 1, Event 465, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:03.825 CET
+Begin processing the 64th record. Run 1, Event 462, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:08.391 CET
+Begin processing the 65th record. Run 1, Event 464, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:13.907 CET
+Begin processing the 66th record. Run 1, Event 467, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:17.887 CET
+Begin processing the 67th record. Run 1, Event 468, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:22.063 CET
+Begin processing the 68th record. Run 1, Event 466, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:27.771 CET
+Begin processing the 69th record. Run 1, Event 471, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:33.941 CET
+Begin processing the 70th record. Run 1, Event 472, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:37.984 CET
+Begin processing the 71st record. Run 1, Event 470, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:44.396 CET
+Begin processing the 72nd record. Run 1, Event 475, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:51.793 CET
+Begin processing the 73rd record. Run 1, Event 469, LumiSection 5 on stream 0 at 17-Feb-2022 15:54:56.864 CET
+Begin processing the 74th record. Run 1, Event 474, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:03.415 CET
+Begin processing the 75th record. Run 1, Event 477, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:09.290 CET
+Begin processing the 76th record. Run 1, Event 478, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:15.089 CET
+[2022-02-17 15:55:22.006674 +0100][Error  ][AsyncSock         ] [xrootd.ba.infn.it:1094 #0.0] Socket error while handshaking: [ERROR] Socket timeout
+[2022-02-17 15:55:22.006755 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] elapsed = 45, pConnectionWindow = 31 seconds.
+Begin processing the 77th record. Run 1, Event 473, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:22.129 CET
+Begin processing the 78th record. Run 1, Event 476, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:28.800 CET
+[2022-02-17 15:55:32.252538 +0100][Error  ][XRootD            ] [xrootd.ba.infn.it:1094] Impossible to send message kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1313xrootd-cms-redir-int.cr.cnaf.infn.it,+1213xrootd011213xrootd-cms-uk.gridpp.rl1213xrootd02.grid.hep.ph.ic.ac.uk,+1213xrootd-redic.pi.infn.it,+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk,xrootd-cms.infn.it,xrootd-cms-redir-int.cr.cnaf.infn.it&triedrc=enoent, mode: 0660, flags: kXR_open_read kXR_async kXR_retstat ). Trying to recover.
+[2022-02-17 15:55:32.252605 +0100][Error  ][XRootD            ] [xrootd.ba.infn.it:1094] Unable to get the response to request kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1313xrootd-cms-redir-int.cr.cnaf.infn.it,+1213xrootd011213xrootd-cms-uk.gridpp.rl1213xrootd02.grid.hep.ph.ic.ac.uk,+1213xrootd-redic.pi.infn.it,+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk,xrootd-cms.infn.it,xrootd-cms-redir-int.cr.cnaf.infn.it&triedrc=enoent, mode: 0660, flags: kXR_open_read kXR_async kXR_retstat )
+Begin processing the 79th record. Run 1, Event 480, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:34.096 CET
+Begin processing the 80th record. Run 1, Event 481, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:39.376 CET
+Begin processing the 81st record. Run 1, Event 484, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:45.711 CET
+Begin processing the 82nd record. Run 1, Event 485, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:50.973 CET
+Begin processing the 83rd record. Run 1, Event 483, LumiSection 5 on stream 0 at 17-Feb-2022 15:55:56.588 CET
+Begin processing the 84th record. Run 1, Event 479, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:02.178 CET
+[2022-02-17 15:56:07.285918 +0100][Error  ][AsyncSock         ] [xrootd.ba.infn.it:1094 #0.0] Socket error while handshaking: [ERROR] Socket timeout
+[2022-02-17 15:56:07.286012 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] elapsed = 45, pConnectionWindow = 31 seconds.
+[2022-02-17 15:56:07.286025 +0100][Error  ][PostMaster        ] [xrootd.ba.infn.it:1094 #0] Unable to recover: [ERROR] Socket timeout.
+Begin processing the 85th record. Run 1, Event 491, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:09.092 CET
+Begin processing the 86th record. Run 1, Event 490, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:13.940 CET
+Begin processing the 87th record. Run 1, Event 482, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:20.168 CET
+Begin processing the 88th record. Run 1, Event 486, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:25.474 CET
+Begin processing the 89th record. Run 1, Event 492, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:31.090 CET
+[2022-02-17 15:56:33.392485 +0100][Error  ][PostMaster        ] [eoscms.cern.ch:1094 #0] Forcing error on disconnect: [ERROR] Operation interrupted.
+Begin processing the 90th record. Run 1, Event 493, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:37.219 CET
+Begin processing the 91st record. Run 1, Event 494, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:42.816 CET
+Begin processing the 92nd record. Run 1, Event 489, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:47.115 CET
+Begin processing the 93rd record. Run 1, Event 495, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:53.120 CET
+Begin processing the 94th record. Run 1, Event 488, LumiSection 5 on stream 0 at 17-Feb-2022 15:56:58.508 CET
+Begin processing the 95th record. Run 1, Event 499, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:05.118 CET
+Begin processing the 96th record. Run 1, Event 496, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:11.351 CET
+Begin processing the 97th record. Run 1, Event 498, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:15.101 CET
+Begin processing the 98th record. Run 1, Event 487, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:21.339 CET
+Begin processing the 99th record. Run 1, Event 497, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:30.323 CET
+Begin processing the 100th record. Run 1, Event 500, LumiSection 5 on stream 0 at 17-Feb-2022 15:57:38.495 CET
+17-Feb-2022 15:57:45 CET  Closed file root://xrootd-cms.infn.it//store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root
+L1TrackNtupleMaker::endJob
+TimeReport> Time report complete in 1298.61 seconds
+ Time Summary: 
+ - Min event:   3.21202
+ - Max event:   8.37652
+ - Avg event:   4.86057
+ - Total loop:  1281.35
+ - Total init:  14.1683
+ - Total job:   1298.61
+ - EventSetup Lock:   0
+ - EventSetup Get:   0
+ Event Throughput: 0.0780425 ev/s
+ CPU Summary: 
+ - Total loop:  543.593
+ - Total init:  6.74022
+ - Total extra: 0
+ - Total job:   552.367
+ Processing Summary: 
+ - Number of Events:  100
+ - Number of Global Begin Lumi Calls:  1
+ - Number of Global Begin Run Calls: 1
+
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 XrdAdaptor           -w (NoModuleName)                         1        1
+    2 XrdAdaptor           -w AfterModBeginStr                       1        1
+    3 XrdAdaptor           -w file_open                              1        1
+    4 XrdAdaptorInternal   -w file_open                              2        2
+    5 TimeReport           -e AfterModEndJob                         1        1
+    6 fileAction           -s file_close                             1        1
+    7 fileAction           -s file_open                              3        3
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 XrdAdaptor           pre-events                        
+    2 XrdAdaptor           BeforeEvents                      
+    3 XrdAdaptor           pre-events                        
+    4 XrdAdaptorInternal   pre-events       pre-events       
+    5 TimeReport           EndJob                            
+    6 fileAction           PostGlobalEndRun                  
+    7 fileAction           pre-events       pre-events       pre-events
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+Warning                 5                   5
+Error                   1                   1
+System                  4                   4
+
+dropped waiting message count 0
+[2022-02-17 15:57:49.289804 +0100][Error  ][AsyncSock         ] [xrootd-cms.infn.it:1094 #0.0] Socket error encountered: [ERROR] Invalid operation
+[2022-02-17 15:57:49.289937 +0100][Error  ][XRootD            ] [xrootd-cms.infn.it:1094] Impossible to send message kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk, mode: 0460, flags: kXR_open_read kXR_async kXR_retstat ). Trying to recover.
+[2022-02-17 15:57:49.330642 +0100][Error  ][AsyncSock         ] [xrootd-cms.infn.it:1094 #0.0] Socket error encountered: [ERROR] Invalid operation
+[2022-02-17 15:57:49.330737 +0100][Error  ][XRootD            ] [xrootd-cms.infn.it:1094] Impossible to send message kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk,xrootd-cms.infn.it, mode: 0460, flags: kXR_open_read kXR_async kXR_retstat ). Trying to recover.
+[2022-02-17 15:57:49.372039 +0100][Error  ][AsyncSock         ] [xrootd-cms.infn.it:1094 #0.0] Socket error encountered: [ERROR] Invalid operation
+[2022-02-17 15:57:49.372127 +0100][Error  ][XRootD            ] [xrootd-cms.infn.it:1094] Impossible to send message kXR_open (file: /store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/81b36c94-be96-43b3-9868-b98a9410899d.root?tried=+1313xrootd-redic.pi.infn.it,heplnx229.pp.rl.ac.uk,t2-xrdcms.lnl.infn.it,heplnx228.pp.rl.ac.uk,xrootd-cms.infn.it, mode: 0460, flags: kXR_open_read kXR_async kXR_retstat ). Trying to recover.

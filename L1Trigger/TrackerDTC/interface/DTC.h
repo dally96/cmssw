@@ -1,9 +1,7 @@
 #ifndef L1Trigger_TrackerDTC_DTC_h
 #define L1Trigger_TrackerDTC_DTC_h
 
-#include "DataFormats/L1TrackTrigger/interface/TTDTC.h"
-#include "L1Trigger/TrackTrigger/interface/Setup.h"
-#include "L1Trigger/TrackerDTC/interface/LayerEncoding.h"
+#include "L1Trigger/TrackerDTC/interface/Setup.h"
 #include "L1Trigger/TrackerDTC/interface/Stub.h"
 
 #include <vector>
@@ -11,11 +9,7 @@
 
 namespace trackerDTC {
 
-  /*! \class  trackerDTC::DTC
-   *  \brief  Class to represent an outer tracker DTC board
-   *  \author Thomas Schuh
-   *  \date   2020, Jan
-   */
+  // representation of an outer tracker DTC board
   class DTC {
   private:
     typedef std::deque<Stub*> Stubs;
@@ -24,8 +18,7 @@ namespace trackerDTC {
 
   public:
     DTC(const edm::ParameterSet& iConfig,
-        const tt::Setup* setup,
-        const LayerEncoding* layerEncoding,
+        const Setup& setup,
         int dtcId,
         const std::vector<std::vector<TTStubRef>>& stubsDTC);
     ~DTC() {}
@@ -43,7 +36,7 @@ namespace trackerDTC {
     Stub* pop_front(Stubs& stubs);
 
     // helper class to store configurations
-    const tt::Setup* setup_;
+    const Setup* setup_;
     // enables emulation of truncation
     bool enableTruncation_;
     // outer tracker detector region [0-8]
@@ -51,7 +44,7 @@ namespace trackerDTC {
     // outer tracker dtc id in region [0-23]
     int board_;
     // container of modules connected to this DTC
-    std::vector<tt::SensorModule*> modules_;
+    std::vector<SensorModule*> modules_;
     // container of stubs on this DTC
     std::vector<Stub> stubs_;
     // input stubs organised in routing blocks [0..1] and channel [0..35]

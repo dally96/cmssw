@@ -1,0 +1,56 @@
+/afs/cern.ch/user/d/dally/CMSSW_12_0_0_pre4/src/L1Trigger/TrackFindingTracklet/test /pool/condor/dir_37466 
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally/CN=546391038
+issuer    : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+identity  : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+type      : RFC3820 compliant impersonation proxy
+strength  : 2048
+path      : /afs/cern.ch/user/d/dally/private/x509up_u141138
+timeleft  : 06:27:15
+key usage : Digital Signature, Key Encipherment
+=== VO cms extension information ===
+VO        : cms
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+issuer    : /DC=ch/DC=cern/OU=computers/CN=cms-auth.web.cern.ch
+attribute : /cms/Role=NULL/Capability=NULL
+timeleft  : 06:27:14
+uri       : voms-cms-auth.app.cern.ch:443
+
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally/CN=546391038
+issuer    : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+identity  : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+type      : RFC3820 compliant impersonation proxy
+strength  : 2048
+path      : /afs/cern.ch/user/d/dally/private/x509up_u141138
+timeleft  : 06:27:14
+key usage : Digital Signature, Key Encipherment
+=== VO cms extension information ===
+VO        : cms
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=dally/CN=852449/CN=Daniel Asif Ally
+issuer    : /DC=ch/DC=cern/OU=computers/CN=cms-auth.web.cern.ch
+attribute : /cms/Role=NULL/Capability=NULL
+timeleft  : 06:27:13
+uri       : voms-cms-auth.app.cern.ch:443
+
+cmsRun /afs/cern.ch/user/d/dally/CMSSW_12_0_0_pre4/src/L1Trigger/TrackFindingTracklet/test/customise_L1TrackNtupleMaker.py inputFiles_clear inputFiles_load=/afs/cern.ch/user/d/dally/CMSSW_12_0_0_pre4/src/L1Trigger/TrackFindingTracklet/test/ntuples/NoDR_8/pFiles_11.txt outputFile=outputL1Ntuple_11.root print
+Singletons:
+  filePrepend        : 
+                     - String to prepend location of all files
+  maxEvents          : -1
+                     - Number of events to process (-1 for all)
+  outputFile         : outputL1Ntuple_11.root
+                     - Name of output file (if needed)
+  secondaryOutputFile: 
+                     - Name of second output file (if needed)
+  section            : 0
+                     - This section (from 1..totalSections inclusive)
+  tag                : 
+                     - tag to add to output filename
+  totalSections      : 0
+                     - Total number of sections
+Lists:
+  inputFiles         : ['/store/relval/CMSSW_11_3_0_pre6/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_113X_mcRun4_realistic_v6_2026D76PU200-v1/00000/6bd37924-f529-4fa1-841e-1e7ad259169c.root' ]
+                     - Files to process
+  secondaryInputFiles: []
+                     - Second group of files to process (if needed)
+
+using geometry D76 (tilted)

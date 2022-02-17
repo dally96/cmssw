@@ -134,7 +134,6 @@ void TrackletEngine::execute() {
         if (settings_.debugTracklet())
           edm::LogVerbatim("Tracklet") << "Adding stub pair in " << getName();
 
-        assert(stubpairs_ != nullptr);
         stubpairs_->addStubPair(innervmstub, outervmstub);
         countpass++;
       }
