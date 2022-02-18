@@ -187,9 +187,9 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     for (unsigned int itrk = 0; itrk < numStublists-1; itrk++) {
       for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
         //Get primary and secondary track
-        //Tracklet* track1 = inputtracklets_[itrk];
-        //Tracklet* track2 = inputtracklets_[jtrk];
-        //if (findRInvBin(track1) != findRInvBin(track2)) continue;
+        Tracklet* track1 = inputtracklets_[itrk];
+        Tracklet* track2 = inputtracklets_[jtrk];
+        if (findRInvBin(track1) != findRInvBin(track2)) continue;
 
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
