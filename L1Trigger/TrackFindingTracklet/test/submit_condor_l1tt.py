@@ -1,4 +1,4 @@
-# ! /bin/env python
+#!/bin/env python
 
 import os
 import subprocess
@@ -134,9 +134,9 @@ Queue {njobs}'''.format( bname = bname,
                     njobs = njobs )
 )    
     # submit to the queue
-print('condor_submit -verbose {base_out}/condor_sub.cfg'.format(base_out=base_out))
+print('condor_submit {base_out}/condor_sub.cfg'.format(base_out=base_out))
 if not args.test:
-    os.system("condor_submit -verbose {base_out}/condor_sub.cfg".format(base_out=base_out))   
+    os.system("condor_submit {base_out}/condor_sub.cfg".format(base_out=base_out))   
 
 
 # +JobFlavour = "{flavour}"

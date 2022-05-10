@@ -236,6 +236,7 @@ namespace trklet {
 
     unsigned int minIndStubs() const { return minIndStubs_; }
     std::string removalType() const { return removalType_; }
+    std::string mergeType() const { return mergeType_; }
     std::string mergeComparison() const { return mergeComparison_; }
     bool doKF() const { return doKF_; }
     bool doMultipleMatches() const { return doMultipleMatches_; }
@@ -269,6 +270,9 @@ namespace trklet {
     void setNrinvbins(int nrinvbins) { nrinvbins_= nrinvbins; } 
 
     std::vector<double> rinvbins() const { return rinvbins_; }
+    std::vector<double> varrinvbins() const { return varrinvbins_; }
+    std::vector<std::vector<double>> overlapbins() const { return overlapbins_; }
+    std::vector<double> shiftvarrinvbins() const { return shiftvarrinvbins_; }
     void setRinvbins(std::vector<double> rinvbins) { defaultrinvbins() = rinvbins; }
 
     std::string skimfile() const { return skimfile_; }
@@ -874,7 +878,11 @@ namespace trklet {
     unsigned int minIndStubs_{3};  // not used with merge removal
 
 #ifdef USEHYBRID
-    std::string removalType_{""};
+    std::string removalType_{"merge"};
+    // How to compare tracks
+    // "rinv" (by rinv value)
+    // "seed" (by seed type)
+    std::string mergeType_{"rinv"};
     // "CompareBest" (recommended) Compares only the best stub in each track for each region (best = smallest phi residual)
     // and will merge the two tracks if stubs are shared in three or more regions
     // "CompareAll" Compares all stubs in a region, looking for matches, and will merge the two tracks if stubs are shared in three or more regions
@@ -903,7 +911,7 @@ namespace trklet {
 
     std::string skimfile_{""};  //if not empty events will be written out in ascii format to this file
 
-    int nrinvbins_{12};
+    int nrinvbins_{1000};
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
 
@@ -925,10 +933,39 @@ namespace trklet {
         rinv.push_back(rinvbinedges);
       } 
       return rinv;
-      //return {1,2,3};
     }  
     
     std::vector<double> rinvbins_ = defaultrinvbins();
+
+    std::vector<double> varrinvbins_ = { -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()};
+
+    /*std::vector<double> shiftvarrinvbins() {
+      std::vector<double> rinv;
+      for (long unsigned int i = 0; i < varrinvbins_.size(); i++) {
+        double rinvbinedges_minus = varrinvbins_[i] - 0.0004;
+        double rinvbinedges_plus = varrinvbins_[i] + 0.0004;
+        rinv.push_back(rinvbinedges_minus);
+        rinv.push_back(rinvbinedges_plus);
+      }
+      return rinv;
+    }*/
+
+    std::vector<std::vector<double>> overlapbins() {
+      std::vector<std::vector<double>> overlap;
+      std::vector<double> rinv;
+      for (long unsigned int i =0; i< varrinvbins_.size(); i++) {
+        double rinvedge_minus = varrinvbins_[i] - 0.0004;
+        double rinvedge_plus = varrinvbins_[i] + 0.0004;
+        rinv.push_back(rinvedge_minus);
+        rinv.push_back(rinvedge_plus);
+        overlap.push_back(rinv);
+      }
+      return overlap;
+    }
+        
+
+    std::vector<std::vector<double>> overlapbins_ = overlapbins();
+    std::vector<double> shiftvarrinvbins_ = shiftvarrinvbins();
   };
 
   constexpr unsigned int N_TILTED_RINGS = 12;  // # of tilted rings per half-layer in TBPS layers
