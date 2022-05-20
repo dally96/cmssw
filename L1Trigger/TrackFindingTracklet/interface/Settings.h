@@ -118,7 +118,7 @@ namespace trklet {
         throw cms::Exception("BadConfig")
             << __FILE__ << " " << __LINE__ << " maxStep module = " << module << " not known";
       }
-      return maxstep_.at(module) + maxstepoffset_;
+      return extended_ ? (maxstep_.at(module) + maxstepoffset_extended_) : (maxstep_.at(module) + maxstepoffset_);
     }
 
     double zlength() const { return zlength_; }
@@ -236,11 +236,17 @@ namespace trklet {
 
     unsigned int minIndStubs() const { return minIndStubs_; }
     std::string removalType() const { return removalType_; }
-    std::string mergeType() const { return mergeType_; }
     std::string mergeComparison() const { return mergeComparison_; }
     bool doKF() const { return doKF_; }
     bool doMultipleMatches() const { return doMultipleMatches_; }
     bool fakefit() const { return fakefit_; }
+    void setFakefit(bool fakefit) { fakefit_ = fakefit; }
+    bool storeTrackBuilderOutput() const { return storeTrackBuilderOutput_; }
+    void setStoreTrackBuilderOutput(bool storeTrackBuilderOutput) {
+      storeTrackBuilderOutput_ = storeTrackBuilderOutput;
+    }
+    void setRemovalType(std::string removalType) { removalType_ = removalType; }
+    void setDoMultipleMatches(bool doMultipleMatches) { doMultipleMatches_ = doMultipleMatches; }
 
     // configurable
     unsigned int nHelixPar() const { return nHelixPar_; }
@@ -250,6 +256,8 @@ namespace trklet {
     void setExtended(bool extended) { extended_ = extended; }
     bool combined() const { return combined_; }
     void setCombined(bool combined) { combined_ = combined; }
+    bool reduced() const { return reduced_; }
+    void setReduced(bool reduced) { reduced_ = reduced; }
 
     double bfield() const { return bfield_; }
     void setBfield(double bfield) { bfield_ = bfield; }
@@ -288,6 +296,7 @@ namespace trklet {
     void setNbitsseed(unsigned int nbitsseed) { nbitsseed_ = nbitsseed; }
     void setNbitsseedextended(unsigned int nbitsseed) { nbitsseedextended_ = nbitsseed; }
 
+    // Phi width of nonant including overlaps (at widest point).
     double dphisectorHG() const {
       //These values are used in the DTC emulation code.
       double rsectmin = 21.8;
@@ -305,6 +314,7 @@ namespace trklet {
     double phicritminmc() const { return phicritmin() - dphicritmc_; }
     double phicritmaxmc() const { return phicritmax() + dphicritmc_; }
 
+    // Stub digitization granularities
     double kphi() const { return dphisectorHG() / (1 << nphibitsstub(0)); }
     double kphi1() const { return dphisectorHG() / (1 << nphibitsstub(N_LAYER - 1)); }
     double kphi(unsigned int layerdisk) const { return dphisectorHG() / (1 << nphibitsstub(layerdisk)); }
@@ -390,6 +400,7 @@ namespace trklet {
     int chisqphifactbits() const { return chisqphifactbits_; }
     int chisqzfactbits() const { return chisqzfactbits_; }
 
+    // Helix param digisation granularities
     //0.02 here is the maximum range in rinv values that can be represented
     double krinvpars() const {
       int shift = ceil(-log2(0.02 * rmaxdisk_ / ((1 << nbitsrinv_) * dphisectorHG())));
@@ -419,7 +430,7 @@ namespace trklet {
 
     double bendcut(int ibend, int layerdisk, bool isPSmodule) const {
       if (layerdisk >= N_LAYER && (!isPSmodule))
-        layerdisk += (N_LAYER - 1);
+        layerdisk += N_DISK;
       double bendcut = bendcut_[layerdisk][ibend];
       if (bendcut <= 0.0)
         std::cout << "bendcut : " << layerdisk << " " << ibend << " " << isPSmodule << std::endl;
@@ -427,6 +438,10 @@ namespace trklet {
       return bendcut;
     }
 
+    // DTC in given ATCA crate slot.
+    std::string slotToDTCname(unsigned int slot) const { return slotToDTCname_.at(slot); }
+
+    // Tracker layers read by given DTC.
     const std::vector<int>& dtcLayers(const std::string& dtcName) const {
       auto iter = dtclayers_.find(dtcName);
       assert(iter != dtclayers_.end());
@@ -436,11 +451,19 @@ namespace trklet {
     double bendcutte(int ibend, int layerdisk, bool isPSmodule) const { return bendcut(ibend, layerdisk, isPSmodule); }
 
     double bendcutme(int ibend, int layerdisk, bool isPSmodule) const {
-      //FIXME temporary fix until phiprojderdisk bits adjusted. But requires coordinatin with HLS
+      //Should understand why larger cut needed in disks
       double fact = (layerdisk < N_LAYER) ? 1.0 : 1.8;
       return fact * bendcut(ibend, layerdisk, isPSmodule);
     }
 
+    //layers/disks used by each seed
+    std::array<std::array<int, 3>, N_SEED> seedlayers() const { return seedlayers_; }
+
+    //projection layers by seed index. For each seeding index (row) the list of layers that we consider projections to
+    std::array<std::array<unsigned int, N_LAYER - 2>, N_SEED> projlayers() const { return projlayers_; }
+
+    //projection disks by seed index. For each seeding index (row) the list of diks that we consider projections to
+    std::array<std::array<unsigned int, N_DISK>, N_SEED> projdisks() const { return projdisks_; }
 
   private:
     std::string fitPatternFile_;
@@ -488,7 +511,10 @@ namespace trklet {
          {{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2}},
          {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1}}}};
 
-   
+    // FIX: There should be 3 PS10G slots & 3 PS (5G) ones.
+    // (Will change output files used by HLS).
+    std::vector<std::string> slotToDTCname_{
+        "PS10G_1", "PS10G_2", "PS10G_3", "PS10G_4", "PS_1", "PS_2", "2S_1", "2S_2", "2S_3", "2S_4", "2S_5", "2S_6"};
 
     std::map<std::string, std::vector<int> > dtclayers_{{"PS10G_1", {0, 6, 8, 10}},
                                                         {"PS10G_2", {0, 7, 9}},
@@ -502,7 +528,6 @@ namespace trklet {
                                                         {"2S_4", {5, 8}},
                                                         {"2S_5", {6, 9}},
                                                         {"2S_6", {7, 10}}};
-
 
     double rmindiskvm_{22.5};
     double rmaxdiskvm_{67.0};
@@ -534,6 +559,7 @@ namespace trklet {
 
     double ptcutte_{1.8};  //Minimum pt in TE
 
+    // VALUE AUTOMATICALLY INCREASED FOR EXTENDED TRACKING BY PYTHON CFG
     unsigned int nbitstrackletindex_{7};  //Bits used to store the tracklet index
 
     unsigned int nbitsitc_{4};           //Bits used to store the iTC, a unique
@@ -763,16 +789,26 @@ namespace trklet {
     // Set to 0 (default) means standard truncation
     // Set to large value, e.g. 10000, to disable truncation
     unsigned int maxstepoffset_{0};
+    // turn off truncation for displaced tracking (not implemented properly for displaced seeding)
+    unsigned int maxstepoffset_extended_{10000};
 
     //Number of processing steps for one event (108=18TM*240MHz/40MHz)
+
+    //IR should be set to 108 to match the FW for the summer chain, but ultimately should be at 156
     std::unordered_map<std::string, unsigned int> maxstep_{{"IR", 156},  //IR will run at a higher clock speed to handle
                                                                          //input links running at 25 Gbits/s
-                                                           {"VMR", 108},
+                                                           //Set to 108 to match firmware project 240 MHz clock
+
+                                                           {"VMR", 107},
                                                            {"TE", 107},
                                                            {"TC", 108},
                                                            {"PR", 108},
                                                            {"ME", 108},
-                                                           {"MC", 105},
+                                                           //NOTE: The MC is set to 108, but `mergedepth`
+                                                           //removes 3 iterations to emulate the delay
+                                                           //due to the HLS priority encoder
+                                                           {"MC", 108},
+                                                           {"TB", 108},
                                                            {"MP", 108},
                                                            {"TP", 108},
                                                            {"TRE", 108}};
@@ -878,36 +914,38 @@ namespace trklet {
     unsigned int minIndStubs_{3};  // not used with merge removal
 
 #ifdef USEHYBRID
+    // Duplicate track removal algo. VALUE HERE OVERRIDDEN BY PYTHON CFG
     std::string removalType_{"merge"};
-    // How to compare tracks
-    // "rinv" (by rinv value)
-    // "seed" (by seed type)
-    std::string mergeType_{"rinv"};
     // "CompareBest" (recommended) Compares only the best stub in each track for each region (best = smallest phi residual)
     // and will merge the two tracks if stubs are shared in three or more regions
     // "CompareAll" Compares all stubs in a region, looking for matches, and will merge the two tracks if stubs are shared in three or more regions
     std::string mergeComparison_{"CompareBest"};
     bool doKF_{true};
-#endif
-
-#ifndef USEHYBRID
-    bool doKF_{false};
+#else
     std::string removalType_{"ichi"};
     std::string mergeComparison_{""};
+    bool doKF_{false};
 #endif
 
+    // VALUE OVERRIDDEN BY PYTHON CFG
     // When false, match calculator does not save multiple matches, even when doKF=true.
     // This is a temporary fix for compatibilty with HLS. We will need to implement multiple match
     // printing in emulator eventually, possibly after CMSSW-integration inspired rewrites
     // Use false when generating HLS files, use true when doing full hybrid tracking
     bool doMultipleMatches_{true};
 
+    // NEXT 2 VALUES OVERRIDDEN BY PYTHON CFG
     // if true, run a dummy fit, producing TTracks directly from output of tracklet pattern reco stage
     bool fakefit_{false};
+    // if true, EDProducer fills additional bit & clock accurate TrackBuilder EDProduct
+    bool storeTrackBuilderOutput_{false};
 
+    // NEXT 3 VALUES OVERRIDDEN BY PYTHON CFG
     unsigned int nHelixPar_{4};  // 4 or 5 param helix fit
     bool extended_{false};       // turn on displaced tracking
-    bool combined_{false};       // use combined TP (TE+TC) and MP (PR+ME+MC) configuration
+    bool reduced_{false};        // use reduced (Summer Chain) config
+
+    bool combined_{false};  // use combined TP (TE+TC) and MP (PR+ME+MC) configuration
 
     std::string skimfile_{""};  //if not empty events will be written out in ascii format to this file
 
@@ -923,7 +961,8 @@ namespace trklet {
 
     double stripLength_PS_{0.1467};
     double stripLength_2S_{5.0250};
- // Create 12 bins that will sort momentum
+
+    // Create 12 bins that will sort momentum
     std::vector<double> defaultrinvbins() {
       double rinvbinwidth = 2 * rinvcut()/nrinvbins();
       std::vector<double> rinv;
@@ -933,39 +972,39 @@ namespace trklet {
         rinv.push_back(rinvbinedges);
       } 
       return rinv;
-    }  
-    
+    }
+
     std::vector<double> rinvbins_ = defaultrinvbins();
+    std::vector<double> varrinvbins_ = {-rinvcut(),  0, rinvcut()};
 
-    std::vector<double> varrinvbins_ = { -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()};
-
-    /*std::vector<double> shiftvarrinvbins() {
-      std::vector<double> rinv;
-      for (long unsigned int i = 0; i < varrinvbins_.size(); i++) {
-        double rinvbinedges_minus = varrinvbins_[i] - 0.0004;
-        double rinvbinedges_plus = varrinvbins_[i] + 0.0004;
-        rinv.push_back(rinvbinedges_minus);
-        rinv.push_back(rinvbinedges_plus);
+    std::vector<double> shiftvarrinvbins() {
+        std::vector<double> rinv;
+        for (long unsigned int i = 0; i < varrinvbins_.size(); i++) {
+          double rinvbinedges_minus = varrinvbins_[i] - 0.0004;
+          double rinvbinedges_plus = varrinvbins_[i] + 0.0004;
+          rinv.push_back(rinvbinedges_minus);
+          rinv.push_back(rinvbinedges_plus);
+        }
+        return rinv;
       }
-      return rinv;
-    }*/
 
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;
       std::vector<double> rinv;
-      for (long unsigned int i =0; i< varrinvbins_.size(); i++) {
+      for (long unsigned int i =0; i< varrinvbins_.size()-1; i++) {
         double rinvedge_minus = varrinvbins_[i] - 0.0004;
-        double rinvedge_plus = varrinvbins_[i] + 0.0004;
+        double rinvedge_plus = varrinvbins_[i+1] + 0.0004;
         rinv.push_back(rinvedge_minus);
         rinv.push_back(rinvedge_plus);
         overlap.push_back(rinv);
+        rinv.clear();
       }
       return overlap;
     }
-        
 
     std::vector<std::vector<double>> overlapbins_ = overlapbins();
     std::vector<double> shiftvarrinvbins_ = shiftvarrinvbins();
+
   };
 
   constexpr unsigned int N_TILTED_RINGS = 12;  // # of tilted rings per half-layer in TBPS layers
