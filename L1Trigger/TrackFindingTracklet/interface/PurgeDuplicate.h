@@ -37,6 +37,11 @@ namespace trklet {
 
   private:
     double getPhiRes(Tracklet* curTracklet, const Stub* curStub);
+    int findRInvBin(Tracklet* trk);
+    unsigned int findShiftedRInvBin(Tracklet* trk);
+    std::vector<unsigned int> findOverlapRInvBins(Tracklet* trk);
+    int shareOverlapRInvBins(std::vector<int> ol1, std::vector<int> ol2);
+    bool findBin(std::vector<unsigned int> vec, unsigned int num);
 
     std::vector<Track*> inputtracks_;
     std::vector<std::vector<const Stub*>> inputstublists_;
@@ -45,6 +50,7 @@ namespace trklet {
     std::vector<TrackFitMemory*> inputtrackfits_;
     std::vector<Tracklet*> inputtracklets_;
     std::vector<CleanTrackMemory*> outputtracklets_;
+
   };
 
 };  // namespace trklet
