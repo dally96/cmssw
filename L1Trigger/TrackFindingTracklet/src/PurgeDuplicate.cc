@@ -185,6 +185,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     // numStublists-1 since last track has no other to compare to
     for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
       for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
+        Tracklet* track1 = inputtracklets_[itrk];
+        Tracklet* track2 = inputtracklets_[jtrk];
+
+        if (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 1) continue;
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
@@ -515,3 +519,58 @@ double PurgeDuplicate::getPhiRes(Tracklet* curTracklet, const Stub* curStub) {
   phires = std::abs(stubphi - phiproj);
   return phires;
 }
+int PurgeDuplicate::findRInvBin(Tracklet* trk) {
+  std::vector<double> rinvbins = settings_.rinvbins();
+
+  //Get rinverse of track 
+  double rInv = trk->rinv();
+
+  auto bins = std::upper_bound(rinvbins.begin(), rinvbins.end(), rInv);
+
+  int rIndx = std::distance(rinvbins.begin(),bins);
+  if (rIndx == std::distance(rinvbins.end(),bins)) return rinvbins.size()-1;
+  else return rIndx;
+}
+
+int PurgeDuplicate::findShiftedRInvBin(Tracklet* trk) {
+  std::vector<double> rinvbins = settings_.shiftvarrinvbins();
+
+  double rInv = trk->rinv();
+  auto bins = std::upper_bound(rinvbins.begin(), rinvbins.end(), rInv);
+
+  int rIndx = std::distance(rinvbins.begin(),bins);
+  if (rIndx == std::distance(rinvbins.end(),bins)) return rinvbins.size()-1;
+  else return rIndx;
+}
+
+std::vector<int> PurgeDuplicate::findOverlapRInvBins(Tracklet* trk) {
+  std::vector<std::vector<double>> ol_bins = settings_.overlapbins();
+  std::vector<int> bins;
+  //Get rinverse of track  
+  double rInv = trk->rinv();
+  for (long unsigned int i=0; i<ol_bins.size(); i++) {
+    auto binnumber = std::upper_bound(ol_bins[i].begin(), ol_bins[i].end(), rInv);
+    int rIndx = std::distance(ol_bins[i].begin(),binnumber);
+    if (rIndx == 0) {
+      continue;
+    }
+    if (binnumber == ol_bins[i].end()) continue;
+    bins.push_back(i);
+  }
+  return bins;
+}
+
+int PurgeDuplicate::shareOverlapRInvBins(std::vector<int> ol1, std::vector<int> ol2) {
+  std::vector<int> intersection;
+  std::set_intersection(ol1.begin(), ol1.end(), ol2.begin(), ol2.end(), back_inserter(intersection));
+  return intersection.size();
+}
+
+
+
+
+
+
+
+
+
