@@ -187,8 +187,15 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
         Tracklet* track1 = inputtracklets_[itrk];
         Tracklet* track2 = inputtracklets_[jtrk];
+        std::cout<<"Tracks "<<itrk<<" and "<<jtrk<<" with "<<findShiftedRInvBin(track1) % 2<<" and "<<findShiftedRInvBin(track1)<<" & "<<findShiftedRInvBin(track2)<<std::endl;
+        if ((findShiftedRInvBin(track1) % 2 == 0) && (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 1)) {
+          continue;
+        }
+        if ((findShiftedRInvBin(track1) % 2 != 0) && (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 2)) continue;
 
-        if (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 1) continue;
+        //if (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 2) continue;
+
+        std::cout<<"Tracks "<<itrk<<" and "<<jtrk<<" passed through and will be compared"<<std::endl;
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
@@ -352,6 +359,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         }
       }
     }
+    std::cout<<outputtracks_.size()<<std::endl;
   }
 #endif
 
