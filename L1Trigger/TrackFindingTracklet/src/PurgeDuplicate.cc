@@ -131,6 +131,16 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       for (unsigned int k = 0; k < settings_.overlapbins()[bin].size(); k++) {
         std::cout<<settings_.overlapbins()[bin][k]<<std::endl;
       }
+
+      for (unsigned int i = 0; i < inputtrackfits_.size(); i++) {
+        for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
+          std::cout<<"Rinv for this track is "<<inputtrackfits_[i]->getTrack(j)->rinv()<<std::endl;
+          std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
+          for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
+            std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
+          }
+        }   
+      }
       // Get vectors from TrackFit and save them
       // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
       // inputstublists: L1Stubs for that track
@@ -142,11 +152,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         if (inputtrackfits_[i]->nStublists() != inputtrackfits_[i]->nTracks())
           throw "Number of stublists and tracks don't match up!";
         for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
-          std::cout<<"Rinv for this track is "<<inputtrackfits_[i]->getTrack(j)->rinv()<<std::endl;
-          std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
-          for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
-            std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
-          }
           
           if (findBin(findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)), bin)) {  
             std::cout<<"Pass!"<<std::endl;
