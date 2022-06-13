@@ -124,6 +124,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       if (inputtrackfits_[i]->nStublists() != inputtrackfits_[i]->nTracks())
         throw "Number of stublists and tracks don't match up!";
       for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
+        std::cout<<"Track numbers are "<<i<<", "<<j<<std::endl;
         Tracklet* aTrack = inputtrackfits_[i]->getTrack(j);
         inputtracklets_.push_back(inputtrackfits_[i]->getTrack(j));
 
