@@ -111,6 +111,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<std::pair<int, bool>> trackInfo;  // Track seed & duplicate flag
     // Vector to store the relative rank of the track candidate for merging, based on seed type
     std::vector<int> seedRank;
+    int loopnum = 0;
 
     // Get vectors from TrackFit and save them
     // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
@@ -356,10 +357,11 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           outtrack->setStubIDpremerge(inputstubidslists_[itrk]);
           outtrack->setStubIDprefit(mergedstubidslists_[itrk]);
           outputtracks_.push_back(*outtrack);
+          loopnum+=1;
         }
       }
     }
-    std::cout<<outputtracks_.size()<<std::endl;
+    std::cout<<outputtracks_.size()<<"Loop Number is "<<loopnum<<std::endl;
   }
 #endif
 
