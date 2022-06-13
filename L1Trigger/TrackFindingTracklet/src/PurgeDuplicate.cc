@@ -120,6 +120,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<int> prefTrackFit;
     std::vector<Tracklet*> inputtrackletsall;
     
+    int loopnum = 0;
+    
     for (unsigned int bin = 0; bin < settings_.overlapbins().size(); bin++) {
       
       std::cout<<"The current bin is "<<bin<<std::endl;
@@ -394,7 +396,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           mergedstubidslistsall.push_back(mergedstubidslists_[ktrk]);
         }
       }
-      std::cout<<"The number of tracks sent to output is "<<prefTracks.size()<<std::endl;
+      std::cout<<"The number of tracks sent to KF track fit loop is "<<prefTracks.size()<<std::endl;
       seedRank.clear();
       mergedstubidslists_.clear();
       inputstublists_.clear();
@@ -404,6 +406,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       trackBinInfo.clear();
     }
 
+    loopnum += 1;
     // Make the final track objects, fit with KF, and send to output
     for (unsigned int itrk = 0; itrk < prefTracks.size(); itrk++) {
 
@@ -433,7 +436,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         outputtracks_.push_back(*outtrack);
       }
     }
-    std::cout<<"The total number of tracks in output is "<<outputtracks_.size()<<std::endl;
+    std::cout<<"The total number of tracks in output is "<<outputtracks_.size()<<" and loop is "<<loopnum<<std::endl;
   }
 
 #endif
