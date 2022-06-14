@@ -235,7 +235,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
         for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
           
-          std::cout<<"Current track pair is "<<itrk<<", "<<jtrk<<std::endl;
+          std::cout<<"Current track pair is "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<std::endl;
 
           // Get primary track stubids
           const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
@@ -323,7 +323,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             dupMap[itrk][jtrk] = true;
             dupMap[jtrk][itrk] = true;
           }
-          std::cout<<"These tracks "<<itrk<<", "<<jtrk<<" are "<<dupMap[itrk][jtrk]<<" duplicates."<<std::endl;
+          std::cout<<"These tracks "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are "<<dupMap[itrk][jtrk]<<" duplicates."<<std::endl;
         }
       }
       std::vector<int> mergeCount(numStublists, 0);
