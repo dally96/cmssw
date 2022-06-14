@@ -199,7 +199,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
 
         //if (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 2) continue;
 
-        std::cout<<"Tracks "<<itrk<<" and "<<jtrk<<" passed through and will be compared"<<std::endl;
+        //std::cout<<"Tracks "<<itrk<<" and "<<jtrk<<" passed through and will be compared"<<std::endl;
         // Get primary track stubids
         const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
