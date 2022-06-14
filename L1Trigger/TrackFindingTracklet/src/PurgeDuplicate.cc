@@ -414,6 +414,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       inputtracklets_.clear();
       trackInfo.clear();
       trackBinInfo.clear();
+      tracksinbin.clear();
     }
 
     loopnum += 1;
