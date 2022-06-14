@@ -112,6 +112,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     // Vector to store the relative rank of the track candidate for merging, based on seed type
     std::vector<int> seedRank;
     int loopnum = 0;
+    std::vector<std::pair<int, int>> tracksinbin;
 
     // Get vectors from TrackFit and save them
     // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
@@ -124,6 +125,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       if (inputtrackfits_[i]->nStublists() != inputtrackfits_[i]->nTracks())
         throw "Number of stublists and tracks don't match up!";
       for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
+        tracksinbin.emplace_back(i,j);
         std::cout<<"Track numbers are "<<i<<", "<<j<<std::endl;
         Tracklet* aTrack = inputtrackfits_[i]->getTrack(j);
         inputtracklets_.push_back(inputtrackfits_[i]->getTrack(j));
@@ -189,7 +191,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
         Tracklet* track1 = inputtracklets_[itrk];
         Tracklet* track2 = inputtracklets_[jtrk];
-        std::cout<<"Tracks "<<itrk<<" and "<<jtrk<<" with "<<findShiftedRInvBin(track1) % 2<<" and "<<findShiftedRInvBin(track1)<<" & "<<findShiftedRInvBin(track2)<<std::endl;
+        std::cout<<"Tracks "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" with "<<findShiftedRInvBin(track1) % 2<<" and are in bins "<<findShiftedRInvBin(track1)<<" & "<<findShiftedRInvBin(track2)<<" respectively"<<std::endl;
         if ((findShiftedRInvBin(track1) % 2 == 0) && (abs (findShiftedRInvBin(track1) - findShiftedRInvBin(track2)) > 1)) {
           continue;
         }
