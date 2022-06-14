@@ -286,6 +286,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           dupMap[itrk][jtrk] = true;
           dupMap[jtrk][itrk] = true;
         }
+        std::cout<<"These tracks "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are "<<dupMap[itrk][jtrk]<<" duplicates."<<std::endl;
       }
     }
 
