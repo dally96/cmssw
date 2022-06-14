@@ -119,6 +119,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<unsigned int> prefTracks;
     std::vector<int> prefTrackFit;
     std::vector<Tracklet*> inputtrackletsall;
+    std::vector<std::pair<int, int>> tracksinbin;
     
     int loopnum = 0;
     
@@ -154,6 +155,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
           
           if (findBin(findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)), bin)) {  
+            tracksinbin.emplace_back(i,j);
             std::cout<<"Pass!"<<std::endl;
             std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
             for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
@@ -208,6 +210,9 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             trackBinInfo.emplace_back(false);
           } else continue;
         }
+      }
+      for (unsigned int i = 0; i < tracksinbin.size(); i++) {
+        std::cout<<"Tracks in this bin is "<<tracksinbin[i].first<<", "<<tracksinbin[i].second<<std::endl;
       }
 
       if (inputtracklets_.empty())
