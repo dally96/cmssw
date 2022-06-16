@@ -122,7 +122,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<std::pair<int, int>> tracksinbin;
     std::vector<std::pair<int, int>> tracksinall;
     
-    int loopnum = 0;
     
     for (unsigned int bin = 0; bin < settings_.overlapbins().size(); bin++) {
       
@@ -224,12 +223,17 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       // Initialize all-false 2D array of tracks being duplicates to other tracks
       bool dupMap[numStublists][numStublists];  // Ends up symmetric
 
+      bool noMerge[numStublists];
+
       for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
         for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
           dupMap[itrk][jtrk] = false;
         }
       }
 
+      for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+        noMerge[itrk] = false;
+      }
 
       // Find duplicates; Fill dupMap by looping over all pairs of "tracks"
       // numStublists-1 since last track has no other to compare to
@@ -327,7 +331,23 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           //std::cout<<"These tracks "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are "<<dupMap[itrk][jtrk]<<" duplicates."<<std::endl;
         }
       }
-      std::vector<int> mergeCount(numStublists, 0);
+
+      for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+        for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
+          if (dupMap[itrk][jtrk]) {
+            noMerge[itrk] = true;
+          }
+        } 
+      }
+
+      for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+        if (noMerge[itrk] == false) {
+          if ((findOverlapRInvBins(inputtracklets_[itrk]).size() > 1) && (findShiftedRInvBin(inputtracklets_[itrk]) != bin)) {
+            trackInfo[itrk].second = true;
+          } 
+        }
+      }
+
       // Merge duplicate tracks
       for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
         for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
@@ -388,7 +408,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
               // Overwrite stubidslist of preferred track with merged list
               mergedstubidslists_[preftrk] = newStubidsList;
               // Mark that rejected track has been merged into another track
-              mergeCount[preftrk] += 1;
               trackInfo[rejetrk].second = true;
               if (trackInfo[rejetrk].second == true) std::cout<<"Track "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<" has been merged"<<std::endl;
             }
@@ -402,6 +421,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           //std::cout<<"Track Info for track "<<ktrk<<" is "<<trackInfo[ktrk].second<<"."<<std::endl;
           //std::cout<<"Track Bin Info for track "<<ktrk<<" is "<<trackInfo[ktrk].second<<"."<<std::endl;
           //std::cout<<"Add track "<<ktrk<<" to preferred tracks."<<std::endl;
+          std::cout<<"Track "<<tracksinbin[ktrk].first<<", "<<tracksinbin[ktrk].second<<" will be added to prefTracks"<<std::endl;
           prefTracks.push_back(ktrk);
           prefTrackFit.push_back(trackInfo[ktrk].first);
           tracksinall.push_back(tracksinbin[ktrk]);
@@ -422,10 +442,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       tracksinbin.clear();
     }
 
-    loopnum += 1;
+  
     // Make the final track objects, fit with KF, and send to output
     for (unsigned int itrk = 0; itrk < prefTracks.size(); itrk++) {
-      std::cout<<"Track "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" is being sent to the KF"<<std::endl;
+      std::cout<<"Track "<<tracksinall[itrk].first<<", "<<tracksinall[itrk].second<<" is being sent to the KF"<<std::endl;
       //std::cout<<"We are on track "<<itrk<<std::endl;
 
       Tracklet* tracklet = inputtrackletsall[itrk];
@@ -437,7 +457,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
 
       // If the track was accepted (and thus fit), add to output
       if (tracklet->fit()) {
-        std::cout<<"Track "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" is being sent to output"<<std::endl;
+        std::cout<<"Track "<<tracksinall[itrk].first<<", "<<tracksinall[itrk].second<<" is being sent to output"<<std::endl;
         //std::cout<<"Track "<<itrk<<" is sent to output"<<std::endl;
 
         // Add fitted Track to output (later converted to TTTrack)
