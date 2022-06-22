@@ -976,7 +976,7 @@ namespace trklet {
     }
 
     std::vector<double> rinvbins_ = defaultrinvbins();
-    std::vector<double> varrinvbins_ = {-0.003828, 0.003828, rinvcut()};
+    std::vector<double> varrinvbins_ = {-0.004774, -0.003141, 0.003141, 0.004774, rinvcut()};
 
     std::vector<double> shiftvarrinvbins() {
         std::vector<double> rinv;
