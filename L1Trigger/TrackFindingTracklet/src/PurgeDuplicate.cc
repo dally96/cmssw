@@ -331,6 +331,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           //std::cout<<"These tracks "<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are "<<dupMap[itrk][jtrk]<<" duplicates."<<std::endl;
         }
       }
+      
 
       for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
         for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
@@ -339,13 +340,16 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           }
         } 
       }
-
       for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
         if (noMerge[itrk] == false) {
           if ((findOverlapRInvBins(inputtracklets_[itrk]).size() > 1) && (findShiftedRInvBin(inputtracklets_[itrk]) != bin)) {
             trackInfo[itrk].second = true;
           } 
         }
+      }
+      for (unsigned int itrk = 0; itrk < numStublists; itrk++) { 
+        std::cout << "For track " << tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second << ", it is a " << noMerge[itrk] << ". It's in " << findOverlapRInvBins(inputtracklets_[itrk]).size() << " bins and in proper bin " << findShiftedRInvBin(inputtracklets_[itrk]) << " compared to the bin we are looking at " << bin << "." << std::endl;  
+        std::cout << trackInfo[itrk].second << std::endl;
       }
 
       // Merge duplicate tracks
