@@ -295,7 +295,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
         // Merge a track with its first duplicate found.
         if (dupMap[itrk][jtrk]) {
-          std::cout<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are duplicates"<<std::endl;
+          //std::cout<<tracksinbin[itrk].first<<", "<<tracksinbin[itrk].second<<" and "<<tracksinbin[jtrk].first<<", "<<tracksinbin[jtrk].second<<" are duplicates"<<std::endl;
           // Set preferred track based on seed rank
           int preftrk;
           int rejetrk;
@@ -306,8 +306,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             preftrk = jtrk;
             rejetrk = itrk;
           }
-          std::cout<<"The preferred track is "<<tracksinbin[preftrk].first<<", "<<tracksinbin[preftrk].second<<std::endl;
-          std::cout<<"The rejected track is "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<std::endl;
+          //std::cout<<"The preferred track is "<<tracksinbin[preftrk].first<<", "<<tracksinbin[preftrk].second<<std::endl;
+          //std::cout<<"The rejected track is "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<std::endl;
           // Get a merged stub list
           std::vector<const Stub*> newStubList;
           std::vector<const Stub*> stubsTrk1 = inputstublists_[rejetrk];
@@ -335,7 +335,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
 
           // Mark that rejected track has been merged into another track
           trackInfo[rejetrk].second = true;
-          if (trackInfo[rejetrk].second == true) std::cout<<"Track "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<" has been merged"<<std::endl;
+          //if (trackInfo[rejetrk].second == true) std::cout<<"Track "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<" has been merged"<<std::endl;
         }
       }
     }
@@ -369,7 +369,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         }
       }
     }
-    std::cout<<outputtracks_.size()<<"Loop Number is "<<loopnum<<std::endl;
+    std::cout<<"The number of tracks in output is "<<outputtracks_.size()<<std::endl;
   }
 #endif
 
