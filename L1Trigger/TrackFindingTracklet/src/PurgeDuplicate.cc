@@ -335,7 +335,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
 
           // Mark that rejected track has been merged into another track
           trackInfo[rejetrk].second = true;
-          //if (trackInfo[rejetrk].second == true) std::cout<<"Track "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<" has been merged"<<std::endl;
+          if (trackInfo[rejetrk].second == true) std::cout<<"Track "<<tracksinbin[rejetrk].first<<", "<<tracksinbin[rejetrk].second<<" has been merged"<<std::endl;
         }
       }
     }
