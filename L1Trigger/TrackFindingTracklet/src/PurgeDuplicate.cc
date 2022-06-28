@@ -122,12 +122,12 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<std::pair<int, int>> tracksinbin;
     std::vector<std::pair<int, int>> tracksinall;
     
-    
+    std::cout<<"Inputtrackfits has "<<inputtrackfits_.size()<<" in it"<<std::endl;
     for (unsigned int bin = 0; bin < settings_.overlapbins().size(); bin++) {
       
-      //std::cout<<"The current bin is "<<bin<<std::endl;
+      std::cout<<"The current bin is "<<bin<<std::endl;
       
-      //std::cout<<"The edges of the bin are "<<std::endl;
+      std::cout<<"The edges of the bin are "<<std::endl;
       
       //for (unsigned int k = 0; k < settings_.overlapbins()[bin].size(); k++) {
         //std::cout<<settings_.overlapbins()[bin][k]<<std::endl;
@@ -157,10 +157,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           if (findBin(findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)), bin)) {  
             tracksinbin.emplace_back(i,j);
             //std::cout<<"Pass!"<<std::endl;
-            //std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
-            //for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
-              //std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
-            //}
+            std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
+            for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
+              std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
+            }
             Tracklet* aTrack = inputtrackfits_[i]->getTrack(j);
             inputtracklets_.push_back(inputtrackfits_[i]->getTrack(j));
             //std::cout<<"There are "<<inputtracklets_.size()<<" tracks in this bin"<<std::endl;
@@ -212,7 +212,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         }
       }
       for (unsigned int i = 0; i < tracksinbin.size(); i++) {
-       // std::cout<<"Tracks in this bin is "<<tracksinbin[i].first<<", "<<tracksinbin[i].second<<std::endl;
+        std::cout<<"Tracks in this bin is "<<tracksinbin[i].first<<", "<<tracksinbin[i].second<<std::endl;
       }
 
       if (inputtracklets_.empty())
