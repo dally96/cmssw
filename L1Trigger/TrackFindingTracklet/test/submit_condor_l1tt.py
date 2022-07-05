@@ -21,7 +21,7 @@ args = parser.parse_args()
 
 
 script_loc = os.path.realpath(args.analyzer)
-
+print(script_loc)
 base_out = '%s/%s' %(args.outdir, args.addtag)
 filelist_loc = os.path.realpath(base_out) + '/'
 os.makedirs('%s/scripts'%base_out)
@@ -92,7 +92,6 @@ voms-proxy-info -all
 voms-proxy-info -all -file $1
 
 setenv ifile $2 
-
 echo {the_command_string}
 {the_command_string}
 mv outputL1Ntuple_$ifile.root {full_eos_out} 
@@ -124,6 +123,9 @@ Log    = {base_out}/outCondor/condor_job_$(Process).log
 Output = {base_out}/outCondor/condor_job_$(Process).out
 Error  = {base_out}/outCondor/condor_job_$(Process).err
 Arguments = $(Proxy_path) $(Process) 
+on_exit_remove = (ExitBySignal == False) && (ExitCode == 0)
+max_retries = 3
+requirements = Machine =!= LastRemoteHost
 +JobFlavour = "longlunch"
 Queue {njobs}'''.format( bname = bname, 
                     base_out = base_out, 

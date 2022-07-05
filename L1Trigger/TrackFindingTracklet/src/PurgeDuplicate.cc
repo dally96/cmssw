@@ -79,6 +79,7 @@ void PurgeDuplicate::addInput(MemoryBase* memory, std::string input) {
 }
 
 void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSector) {
+  std::cout<<"Begin execute now in iSector "<<iSector<<std::endl;
   inputtracklets_.clear();
   inputtracks_.clear();
 
@@ -127,21 +128,21 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       
       std::cout<<"The current bin is "<<bin<<std::endl;
       
-      std::cout<<"The edges of the bin are "<<std::endl;
+      //std::cout<<"The edges of the bin are "<<std::endl;
       
       //for (unsigned int k = 0; k < settings_.overlapbins()[bin].size(); k++) {
         //std::cout<<settings_.overlapbins()[bin][k]<<std::endl;
       //}
 
-      //for (unsigned int i = 0; i < inputtrackfits_.size(); i++) {
-        //for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
-          //std::cout<<"Rinv for this track is "<<inputtrackfits_[i]->getTrack(j)->rinv()<<std::endl;
-          //std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
-          //for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
-            //std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
-          //}
-        //}   
-      //}
+      for (unsigned int i = 0; i < inputtrackfits_.size(); i++) {
+        for (unsigned int j = 0; j < inputtrackfits_[i]->nStublists(); j++) {
+          std::cout<<"Rinv for this track is "<<inputtrackfits_[i]->getTrack(j)->rinv()<<std::endl;
+          std::cout<<"Rinv bins for this track "<<i<<", "<<j<<" is"<<std::endl;
+          for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
+            std::cout<< findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
+          }
+        }   
+      }
       // Get vectors from TrackFit and save them
       // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
       // inputstublists: L1Stubs for that track
@@ -216,7 +217,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       }
 
       if (inputtracklets_.empty())
-        return;
+        continue;
       unsigned int numStublists = inputstublists_.size();
       //std::cout<<"The number of tracks in this bin is "<<numStublists<<std::endl;
 
@@ -476,7 +477,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         outputtracks_.push_back(*outtrack);
       }
     }
-    std::cout<<"The total number of tracks in output is "<<outputtracks_.size()<<std::endl;
+    std::cout<<"The total number of tracks in output is "<<outputtracks_.size()<<" in iSector "<<iSector<<std::endl;
   }
 
 #endif

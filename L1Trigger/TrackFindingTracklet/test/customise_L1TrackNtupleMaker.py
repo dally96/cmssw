@@ -2,13 +2,14 @@
 # define basic process
 ############################################################
 import FWCore.ParameterSet.VarParsing as VarParsing
+import os 
 options = VarParsing.VarParsing ('analysis')
 
 options.outputFile = 'outputHLT.root'
 options.inputFiles = 'infile.root'
 options.parseArguments()
 
-
+print(os.environ)
 from L1TrackNtupleMaker_cfg import *
 
 process.TFileService = cms.Service("TFileService", fileName = cms.string(options.outputFile), closeFileFast = cms.untracked.bool(True))
