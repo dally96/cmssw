@@ -915,7 +915,7 @@ namespace trklet {
 
 #ifdef USEHYBRID
     // Duplicate track removal algo. VALUE HERE OVERRIDDEN BY PYTHON CFG
-    std::string removalType_{"merge"};
+    std::string removalType_{""};
     // "CompareBest" (recommended) Compares only the best stub in each track for each region (best = smallest phi residual)
     // and will merge the two tracks if stubs are shared in three or more regions
     // "CompareAll" Compares all stubs in a region, looking for matches, and will merge the two tracks if stubs are shared in three or more regions

@@ -5,8 +5,8 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 import os
+print(os.environ)
 process = cms.Process("L1TrackNtuple")
-
 ############################################################
 # edit options here
 ############################################################
