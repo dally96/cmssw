@@ -78,6 +78,7 @@ void PurgeDuplicate::addInput(MemoryBase* memory, std::string input) {
   throw cms::Exception("BadConfig") << __FILE__ << " " << __LINE__ << " could not find input: " << input;
 }
 
+
 void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSector) {
   std::cout<<"Begin execute now in iSector "<<iSector<<std::endl;
   inputtracklets_.clear();
@@ -87,6 +88,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
   inputstublists_.clear();
   mergedstubidslists_.clear();
 
+  settings_.setNumbins(5);
 
   if (settings_.removalType() != "merge") {
     for (auto& inputtrackfit : inputtrackfits_) {
@@ -122,7 +124,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<Tracklet*> inputtrackletsall;
     std::vector<std::pair<int, int>> tracksinbin;
     std::vector<std::pair<int, int>> tracksinall;
-    
     std::cout<<"Inputtrackfits has "<<inputtrackfits_.size()<<" in it"<<std::endl;
     for (unsigned int bin = 0; bin < settings_.overlapbins().size(); bin++) {
       
@@ -663,7 +664,7 @@ int PurgeDuplicate::findRInvBin(Tracklet* trk) {
 }
 
 unsigned int PurgeDuplicate::findShiftedRInvBin(Tracklet* trk) {
-  std::vector<double> rinvbins = settings_.varrinvbins();
+  std::vector<double> rinvbins = settings_.varrinvbins(settings_.numbins());
 
   //Get rinverse of track 
   double rInv = trk->rinv();
@@ -677,6 +678,9 @@ unsigned int PurgeDuplicate::findShiftedRInvBin(Tracklet* trk) {
   else return rIndx;
 }
 
+
+
+
 std::vector<unsigned int> PurgeDuplicate::findOverlapRInvBins(Tracklet* trk) {
   std::vector<std::vector<double>> ol_bins = settings_.overlapbins(); 
   std::vector<unsigned int> bins;
@@ -687,6 +691,11 @@ std::vector<unsigned int> PurgeDuplicate::findOverlapRInvBins(Tracklet* trk) {
     //int rIndx = std::distance(ol_bins[i].begin(),binnumber);
     if (i == 0) {
       if (binnumber == ol_bins[i].begin()) {
+        bins.push_back(i);
+      } else continue;
+    }
+    else if (i == ol_bins.size()-1) {
+      if (binnumber == ol_bins[i].end()) {
         bins.push_back(i);
       } else continue;
     }
