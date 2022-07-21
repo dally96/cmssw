@@ -274,20 +274,14 @@ namespace trklet {
     void setStripLength_PS(double stripLength_PS) { stripLength_PS_ = stripLength_PS; }
     void setStripLength_2S(double stripLength_2S) { stripLength_2S_ = stripLength_2S; }
 
-    double nrinvbins() const { return nrinvbins_; }
-    void setNrinvbins(int nrinvbins) { nrinvbins_= nrinvbins; } 
-
     int numbins() const { return numbins_; }
     void setNumbins(int numbins) { numbins_ = numbins; }
 
     double overlapsize() const { return overlapsize_; }
     void setOverlapsize(double overlapsize) { overlapsize_= overlapsize; }
 
-    std::vector<double> rinvbins() const { return rinvbins_; }
-    std::vector<double> varrinvbins(int numbins) const { return varrinvbins_[numbins-1]; }
+    std::vector<double> varrinvbins(int numbins) const { return varrinvbins_[numbins-1]; }            //Grabs the bin edges for the number of bins you need
     std::vector<std::vector<double>> overlapbins() const { return overlapbins_; }
-    std::vector<double> shiftvarrinvbins() const  { return shiftvarrinvbins_; }
-    void setRinvbins(std::vector<double> rinvbins) { defaultrinvbins() = rinvbins; }
 
     std::string skimfile() const { return skimfile_; }
     void setSkimfile(std::string skimfile) { skimfile_ = skimfile; }
@@ -955,7 +949,6 @@ namespace trklet {
 
     std::string skimfile_{""};  //if not empty events will be written out in ascii format to this file
 
-    int nrinvbins_{1000};
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
     int numbins_{6};
@@ -970,23 +963,8 @@ namespace trklet {
     double stripLength_PS_{0.1467};
     double stripLength_2S_{5.0250};
 
-    // Create 12 bins that will sort momentum
-    std::vector<double> defaultrinvbins() {
-      double rinvbinwidth = 2 * rinvcut()/nrinvbins();
-      std::vector<double> rinv;
-      double negrinvcut = -1 * rinvcut();
-      for (int i = 0; i<nrinvbins(); i++) {
-        double rinvbinedges = negrinvcut + (i+1) * rinvbinwidth;
-        rinv.push_back(rinvbinedges);
-      } 
-      return rinv;
-    }
-
-    std::vector<double> rinvbins_ = defaultrinvbins();
-
-
     //Variable bin edges for 1 to 12 bins. 
-    std::vector<std::vector<double>> varrinvbins_=
+    std::vector<std::vector<double>> varrinvbins_{
         {{rinvcut()},                                                                                                                 //1  Bin
          {0, rinvcut()},                                                                                                              //2  Bins
          {-0.003828, 0.003828, rinvcut()},                                                                                            //3  Bins
@@ -998,18 +976,7 @@ namespace trklet {
          {-0.005284, -0.004640, -0.003828, -0.002421, 0.002421, 0.003828, 0.004640, 0.005284, rinvcut()},                             //9  Bins            
          {-0.005347, -0.004774, -0.004099, -0.003140, 0, 0.003140, 0.004099, 0.004774, 0.005347, rinvcut()},                          //10 Bins
          {-0.005392, -0.004880, -0.004299, -0.003550, -0.002193, 0.002193, 0.003550, 0.004299, 0.004880, 0.005392, rinvcut()},        //11 Bins
-         {-0.005433, -0.004968, -0.004459, -0.003828, -0.002911, 0, 0.002911, 0.003828, 0.004459, 0.004968, 0.005433, rinvcut()}};    //12 Bins
-
-    std::vector<double> shiftvarrinvbins() {
-        std::vector<double> rinv;
-        for (long unsigned int i = 0; i < varrinvbins_[numbins_-1].size(); i++) {
-          double rinvbinedges_minus = varrinvbins_[numbins_-1][i] - overlapsize_;
-          double rinvbinedges_plus = varrinvbins_[numbins_-1][i] + overlapsize_;
-          rinv.push_back(rinvbinedges_minus);
-          rinv.push_back(rinvbinedges_plus);
-        }
-        return rinv;
-      }
+         {-0.005433, -0.004968, -0.004459, -0.003828, -0.002911, 0, 0.002911, 0.003828, 0.004459, 0.004968, 0.005433, rinvcut()}}};   //12 Bins
 
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;
@@ -1034,7 +1001,6 @@ namespace trklet {
     }
 
     std::vector<std::vector<double>> overlapbins_= overlapbins();
-    std::vector<double> shiftvarrinvbins_ = shiftvarrinvbins();
  
   };
 
