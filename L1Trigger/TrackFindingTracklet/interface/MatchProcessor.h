@@ -62,7 +62,6 @@ namespace trklet {
     TrackletLUT alphaouter_;
     TrackletLUT rSSinner_;
     TrackletLUT rSSouter_;
-
     TrackletLUT diskRadius_;
 
     int nrbits_;
