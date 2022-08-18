@@ -302,8 +302,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
           if ((findOverlapRInvBins(inputtracklets_[itrk]).size() > 1) &&
               (findVarRInvBin(inputtracklets_[itrk]) != bin)) {
             trackInfo[itrk].second = true;
-            std::cout<<"Rinv of itrk is "<<inputtracklets_[itrk]->rinv()<<std::endl;
-            std::cout<<"itrk is in actual bin "<< findVarRInvBin(inputtracklets_[itrk])<<std::endl;
           }
         }
       }
@@ -323,14 +321,11 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
               rejetrk = itrk;
             }
 
-            std::cout<<"The preftrk "<<preftrk<<" has rinv "<<inputtracklets_[preftrk]->rinv()<<" and is in "<<findOverlapRInvBins(inputtracklets_[preftrk]).size()<<" overlap bins and is in proper bin "<<findVarRInvBin(inputtracklets_[preftrk])<<std::endl;
-
             // If the preffered track is in more than one bin, but not in the proper varrinvbin, then mark as true
             if ((findOverlapRInvBins(inputtracklets_[preftrk]).size() > 1) &&
                 (findVarRInvBin(inputtracklets_[preftrk]) != bin)) {
               trackBinInfo[preftrk] = true;
               trackBinInfo[rejetrk] = true;
-              std::cout<<"Cannibalize preftrk "<<preftrk<<std::endl;
             } else {
               // Get a merged stub list
               std::vector<const Stub*> newStubList;
@@ -386,8 +381,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         }
       }
 
-      std::cout<<"The number of tracks going to output is "<<prefTracks.size()<<std::endl;
-
       // Need to clear all the vectors which will be used in the next bin
       seedRank.clear();
       trackInfo.clear();
@@ -420,7 +413,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
         outtrack->setStubIDpremerge(inputstubidslistsall[itrk]);
         outtrack->setStubIDprefit(mergedstubidslistsall[itrk]);
         outputtracks_.push_back(*outtrack);
-        std::cout<<"The number of tracks that passed KF is "<<outputtracks_.size()<<std::endl;
       }
     }
   }

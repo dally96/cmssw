@@ -1030,7 +1030,7 @@ namespace trklet {
 
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
-    int numbins_{6};
+    int numrinvbins_{6};
     double overlapsize_{0.0004};
 
     unsigned int nStrips_PS_{960};
@@ -1042,6 +1042,7 @@ namespace trklet {
     double stripLength_PS_{0.1467};
     double stripLength_2S_{5.0250};
 
+<<<<<<< HEAD
     //Following values are used for duplicate removal
     //Variable bin edges for 6 bins.
     std::vector<double> varRInvBins_{-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()};
@@ -1051,6 +1052,11 @@ namespace trklet {
     int numTracksComparedPerBin_{64};
 
     double sensorSpacing_2S_{0.18};
+=======
+    //Variable bin edges for 6 bins.
+    std::vector<double> varrinvbins_{
+        {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
+>>>>>>> 9e687321a43 (Changed parts of the code dealing with overlapbins to make it less complex.)
   };
 
   constexpr unsigned int N_TILTED_RINGS = 12;  // # of tilted rings per half-layer in TBPS layers
