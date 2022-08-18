@@ -967,8 +967,8 @@ namespace trklet {
 
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
-    int numrinvbins_{6};
-    double overlapsize_{0.0004};
+    int numrinvbins_{6};     //number of rinv bins to use in DR
+    double overlapsize_{0.0004}; //overlap size for the overlap rinv bins in DR
 
     unsigned int nStrips_PS_{960};
     unsigned int nStrips_2S_{1016};
