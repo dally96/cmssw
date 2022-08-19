@@ -284,7 +284,7 @@ namespace trklet {
     void setOverlapsize(double overlapsize) { overlapsize_ = overlapsize; }
 
     //Grabs the bin edges for the number of bins you need
-    std::vector<double> varrinvbins() const { return varrinvbins_; }  
+    std::vector<double> varrinvbins() const { return varrinvbins_; }
     std::string skimfile() const { return skimfile_; }
     void setSkimfile(std::string skimfile) { skimfile_ = skimfile; }
 
@@ -965,10 +965,10 @@ namespace trklet {
 
     std::string skimfile_{""};  //if not empty events will be written out in ascii format to this file
 
-    double bfield_{3.8112};  //B-field in T
-    double c_{0.299792458};  //speed of light m/ns
-    int numrinvbins_{6};     //number of rinv bins to use in DR
-    double overlapsize_{0.0004}; //overlap size for the overlap rinv bins in DR
+    double bfield_{3.8112};       //B-field in T
+    double c_{0.299792458};       //speed of light m/ns
+    int numrinvbins_{6};          //number of rinv bins to use in DR
+    double overlapsize_{0.0004};  //overlap size for the overlap rinv bins in DR
 
     unsigned int nStrips_PS_{960};
     unsigned int nStrips_2S_{1016};
@@ -980,8 +980,7 @@ namespace trklet {
     double stripLength_2S_{5.0250};
 
     //Variable bin edges for 6 bins.
-    std::vector<double> varrinvbins_{
-        {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
+    std::vector<double> varrinvbins_{{-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
   };
 
   constexpr unsigned int N_TILTED_RINGS = 12;  // # of tilted rings per half-layer in TBPS layers
