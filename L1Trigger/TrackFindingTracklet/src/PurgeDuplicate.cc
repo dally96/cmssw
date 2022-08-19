@@ -391,7 +391,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       mergedstubidslists_.clear();
     }
 
-
     // Make the final track objects, fit with KF, and send to output
     for (unsigned int itrk = 0; itrk < prefTracks.size(); itrk++) {
       Tracklet* tracklet = inputtrackletsall[itrk];
@@ -649,6 +648,7 @@ std::vector<double> PurgeDuplicate::getInventedCoords(unsigned int iSector,
 std::vector<double> PurgeDuplicate::getInventedCoordsExtended(unsigned int iSector,
                                                               const Stub* st,
                                                               const Tracklet* tracklet) const {
+
   int stubLayer = (findLayerDisk(st)).first;
   int stubDisk = (findLayerDisk(st)).second;
 
