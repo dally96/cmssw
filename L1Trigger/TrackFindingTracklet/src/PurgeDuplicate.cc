@@ -648,7 +648,6 @@ std::vector<double> PurgeDuplicate::getInventedCoords(unsigned int iSector,
 std::vector<double> PurgeDuplicate::getInventedCoordsExtended(unsigned int iSector,
                                                               const Stub* st,
                                                               const Tracklet* tracklet) const {
-
   int stubLayer = (findLayerDisk(st)).first;
   int stubDisk = (findLayerDisk(st)).second;
 
