@@ -975,8 +975,8 @@ namespace trklet {
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
     int numrinvbins_{6};
-    int numcompare_{1000};
-    int numtracksperbin_{1000};
+    int numcompare_{16};
+    int numtracksperbin_{108};
     double overlapsize_{0.0002};
 
     unsigned int nStrips_PS_{960};
@@ -990,7 +990,7 @@ namespace trklet {
 
     //Variable bin edges for 6 bins.
     std::vector<double> varrinvbins_{
-         {-rinvcut(), 0, rinvcut()}};
+         {-rinvcut(), -0.00521 , -0.004459, -0.003435, 0, 0.003435, 0.004459, 0.00521, rinvcut()}};
 /*
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;

@@ -123,8 +123,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
     std::vector<unsigned int> prefTracks;  // Stores all the tracks that are sent to the KF from each bin
     std::vector<int> prefTrackFit;  // Stores the track seed that corresponds to the associated track in prefTracks
 
-    long unsigned int numCompare = settings_.numcompare();
-    unsigned int numTracksperbin = settings_.numtracksperbin();
+    const long unsigned int numCompare = settings_.numcompare();
+    const unsigned int numTracksperbin = settings_.numtracksperbin();
 
     for (unsigned int bin = 0; bin < settings_.varrinvbins().size()-1; bin++) {
       // Get vectors from TrackFit and save them
