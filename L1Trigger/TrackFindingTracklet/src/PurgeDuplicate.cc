@@ -141,9 +141,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
 
 
           if (findBin(findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)), bin)) {
-            if (inputtracklets_.size() > numTracksperbin) continue;
-
-            std::cout<<"Number of tracks in this bin is "<<inputtracklets_.size()<<std::endl;
+            if (inputtracklets_.size() >= numTracksperbin) continue;
 
             Tracklet* aTrack = inputtrackfits_[i]->getTrack(j);
             inputtracklets_.push_back(inputtrackfits_[i]->getTrack(j));
@@ -153,6 +151,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             for (unsigned int k = 0; k < findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)).size(); k++) {
               std::cout<<"This track is in bin(s) "<<findOverlapRInvBins(inputtrackfits_[i]->getTrack(j))[k]<<std::endl;
             }
+            std::cout<<"Number of tracks in this bin is "<<inputtracklets_.size()<<std::endl;
 
             std::vector<const Stub*> stublist = inputtrackfits_[i]->getStublist(j);
 
@@ -202,6 +201,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
       if (inputtracklets_.empty())
         continue;
       unsigned int numStublists = inputstublists_.size();
+      std::cout<<"For all purposes the number of tracks in this bin and nonant is; "<<numStublists<<std::endl;
 
       if (settings_.inventStubs()) {
         for (unsigned int itrk = 0; itrk < numStublists; itrk++) {

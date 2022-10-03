@@ -933,7 +933,7 @@ namespace trklet {
 
 #ifdef USEHYBRID
     // Duplicate track removal algo. VALUE HERE OVERRIDDEN BY PYTHON CFG
-    std::string removalType_{"merge"};
+    std::string removalType_{""};
     // "CompareBest" (recommended) Compares only the best stub in each track for each region (best = smallest phi residual)
     // and will merge the two tracks if stubs are shared in three or more regions
     // "CompareAll" Compares all stubs in a region, looking for matches, and will merge the two tracks if stubs are shared in three or more regions
@@ -975,7 +975,7 @@ namespace trklet {
     double bfield_{3.8112};  //B-field in T
     double c_{0.299792458};  //speed of light m/ns
     int numrinvbins_{6};
-    int numcompare_{16};
+    int numcompare_{64};
     int numtracksperbin_{108};
     double overlapsize_{0.0002};
 
@@ -990,7 +990,7 @@ namespace trklet {
 
     //Variable bin edges for 6 bins.
     std::vector<double> varrinvbins_{
-         {-rinvcut(), -0.00521 , -0.004459, -0.003435, 0, 0.003435, 0.004459, 0.00521, rinvcut()}};
+         {-rinvcut(), -0.005284, -0.00464 , -0.003828, -0.002421, 0.002421, 0.003828, 0.00464, 0.005284, rinvcut()}};
 /*
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;
