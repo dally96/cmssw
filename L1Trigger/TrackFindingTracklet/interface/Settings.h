@@ -289,7 +289,6 @@ namespace trklet {
     void setStripLength_PS(double stripLength_PS) { stripLength_PS_ = stripLength_PS; }
     void setStripLength_2S(double stripLength_2S) { stripLength_2S_ = stripLength_2S; }
 
-<<<<<<< HEAD
     //Following functions are used for duplicate removal
     //Function which gets the value corresponding to the overlap size for the overlap rinv bins in DR
     double overlapSize() const { return overlapSize_; }
@@ -297,14 +296,6 @@ namespace trklet {
     unsigned int numTracksComparedPerBin() const { return numTracksComparedPerBin_; }
     //Grabs the bin edges you need for duplicate removal bins
     const std::vector<double> varRInvBins() const { return varRInvBins_; }
-=======
-    double overlapSize() const { return overlapSize_; }
-    long unsigned int numTracksPerBin() const { return numTracksPerBin_; }
-    unsigned int numTracksComparedPerBin() const { return numTracksComparedPerBin_; }
-
-    //Grabs the bin edges you need for duplicate removal bins
-    const std::vector<double>& varRInvBins() const { return varRInvBins_; }
->>>>>>> d3a55e2e96d (Fixed the formatting of new values in Settings.h and PurgeDuplicate.cc)
 
     std::string skimfile() const { return skimfile_; }
     void setSkimfile(std::string skimfile) { skimfile_ = skimfile; }
