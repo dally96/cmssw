@@ -166,7 +166,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             // Best Rank:           L1L2 > L3L4 > D3D4 > D1D2 > L2L3 > L2D1 > L5L6 > L1D1
             // Rank-Informed Guess: L1L2 > L3L4 > L1D1 > L2L3 > L2D1 > D1D2 > L5L6 > D3D4
             unsigned int curSeed = aTrack->seedIndex();
-            if (curSeed == 0) {
+            /*if (curSeed == 0) {
               seedRank.push_back(1);
             } else if (curSeed == 2) {
               seedRank.push_back(2);
@@ -187,7 +187,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
             } else {
               throw cms::Exception("LogError") << __FILE__ << " " << __LINE__ << " Seed " << curSeed
                 << " not found in list, and settings->extended() not set.";
-            }
+            }*/
+            std::vector<int> ranks{1,5,2,7,4,3,8,6};
+            if (settings_.extended()) seedRank.push_back(9);
+            else seedRank.push_back(ranks[curSeed]);
 
             if (stublist.size() != stubidslist.size())
               throw "Number of stubs and stubids don't match up!";
