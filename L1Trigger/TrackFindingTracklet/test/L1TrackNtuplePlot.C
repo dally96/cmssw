@@ -850,6 +850,7 @@ void L1TrackNtuplePlot(TString type,
 
   TH1D* h_rinvRes[nRANGE];
   TH1D* h_rinv[nRANGE];
+  TH1F* h_rinvBins[6];
   TH1F* h_rinvDiv[nRANGE];
 
   const Int_t xbins = 6;
