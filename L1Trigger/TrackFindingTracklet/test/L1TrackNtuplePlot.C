@@ -849,9 +849,18 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_d0[nRANGE];
 
   TH1D* h_rinvRes[nRANGE];
+  TH1D* h_rinv[nRANGE];
   TH1F* h_rinvDiv[nRANGE];
 
+  const Int_t xbins = 6;
+  const Int_t ybins = 10;
+  Double_t xEdges[xbins + 1] = {0, 0.002911, 0.003828, 0.004459, 0.004968, 0.005433, 0.006};
+  Double_t yEdges[ybins + 1] = {0, 0.0003, 0.0006, 0.0009, 0.0012, 0.0015, 0.0018, 0.0021, 0.0024, 0.0027, 0.003};
+  
+
   TH2F* h_rinvResVsRinv = new TH2F("rinvRes", ";rinv [cm^{-1}]; rinv residual (L1 - sim) [cm^{-1}]; L1 tracks", 20, 0, 0.006, 100, -0.0003, 0.0003); 
+  TH2D* h_rinvDist = new TH2D("rinvDist", ";rinv [cm^{-1}]; rinv [cm^{-1}]; L1 tracks", 20, 0, 0.006, 20, 0, 0.0003);
+  TH2D* h_rinvDist_rinvBin = new TH2D("rinvDist_rinvBin", ";rinv [cm^{-1}]; rinv [cm^{-1}]; L1 tracks", xbins, xEdges, ybins, yEdges); 
 
   for (int i = 0; i < nRANGE; i++) {
     h_resVsPt_pt[i] =
@@ -1080,6 +1089,8 @@ void L1TrackNtuplePlot(TString type,
     vector<unsigned int> nTrksPerSector_pt3(9, 0);
     vector<unsigned int> nTrksPerSector_pt4(9, 0);
 
+    double weight = 0.0000555555;
+
     for (int it = 0; it < (int)trk_pt->size(); it++) {
       // ----------------------------------------------------------------------------------------------------------------
       // track properties
@@ -1088,6 +1099,11 @@ void L1TrackNtuplePlot(TString type,
       // Fill number of tracks vs track param
       h_trk_pt->Fill(trk_pt->at(it));
       h_trk_eta->Fill(trk_eta->at(it));
+
+      for (int im = 0; im < nRANGE; im++){
+        h_rinvDist->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.0003 * im), weight);
+        h_rinvDist_rinvBin->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.003 * im), weight);
+      }
 
       // fill all trk chi2 & chi2/dof histograms, including for chi2 r-phi and chi2 r-z
       int ndof = 2 * trk_nstub->at(it) - 4;
@@ -1570,7 +1586,6 @@ void L1TrackNtuplePlot(TString type,
       // fill resolution vs. pt histograms
       
       h_rinvResVsRinv->Fill((0.01*0.299792458*3.8112/tp_pt->at(it)), (0.01*0.299792458*3.8112/matchtrk_pt->at(it)) - (0.01*0.299792458*3.8112/tp_pt->at(it)));
-      
 
       for (int im = 0; im < nRANGE; im++) {
         if ((0.01*0.299792458*3.8112/tp_pt->at(it) > (float)im * 0.0003) && (0.01*0.299792458*3.8112/tp_pt->at(it) < (float)(im + 1) * 0.0003)) {
@@ -1702,6 +1717,7 @@ void L1TrackNtuplePlot(TString type,
     }  // end of matched track loop
     for (int im = 0; im < nRANGE; im++){
       h_rinvRes[im] = h_rinvResVsRinv->ProjectionY("rinvRes_" + rinvrange[im], im+1, im+1);
+      h_rinv[im] = h_rinvDist->ProjectionY("rinv_" + rinvrange[im], im+1, im+1);
     }
   }  // end of event loop
 
@@ -2677,6 +2693,20 @@ void L1TrackNtuplePlot(TString type,
   h_rinvResVsRinv->Draw("colz");
   c.SaveAs(DIR + type + "_rinvResVsRinv.pdf");
 
+  h_rinvDist->SetMinimum(0);
+  h_rinvDist->SetMarkerStyle(20);
+  //h_rinvDist->GetZaxis()->SetRangeUser(0, 0.5);
+  //h_rinvDist->SetMinimum(0);
+  //h_rinvDist->SetMaximum(0.5);
+  h_rinvDist->Draw("colz");
+  c.SaveAs(DIR + type + "_rinvDist.pdf");
+
+
+  h_rinvDist_rinvBin->SetMinimum(0);
+  h_rinvDist_rinvBin->SetMarkerStyle(20);
+  h_rinvDist_rinvBin->Draw("colz text");
+  c.SaveAs(DIR + type + "_rinvDist_rinvBin.pdf");
+
   h2_resVsPt_ptRel_90->SetMinimum(0);
   h2_resVsPt_ptRel_90->SetMarkerStyle(20);
   h2_resVsPt_ptRel_90->Draw("p");
@@ -2691,11 +2721,15 @@ void L1TrackNtuplePlot(TString type,
     h_rinvRes[i]->Draw();
     c.SaveAs(DIR + type + "_rinvRes_" + i + ".pdf");
 
+    h_rinv[i]->SetMinimum(0);
+    h_rinv[i]->Draw();
+    c.SaveAs(DIR + type + "_rinv_" + i + ".pdf");
+
     h_rinvDiv[i] = (TH1F*) h_rinvRes[i]->Clone("h_rinvDiv");
     h_rinvDiv[i]->Divide(h_resVsPt_rinv[i]);
     h_rinvDiv[i]->Draw();
     c.SaveAs(DIR + type + "_rinvDiv_" + i + ".pdf");
-  } 
+  }
 
   h2_resVsPt_rinvRel->SetMinimum(0);
   h2_resVsPt_rinvRel->SetMarkerStyle(20);
