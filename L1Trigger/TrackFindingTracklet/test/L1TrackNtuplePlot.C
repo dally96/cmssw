@@ -852,16 +852,28 @@ void L1TrackNtuplePlot(TString type,
   TH1D* h_rinv[nRANGE];
   TH1F* h_rinvBins[6];
   TH1F* h_rinvDiv[nRANGE];
+  TH1F* h_trkperevent[9][6];
 
   const Int_t xbins = 6;
   const Int_t ybins = 10;
   Double_t xEdges[xbins + 1] = {0, 0.002911, 0.003828, 0.004459, 0.004968, 0.005433, 0.006};
   Double_t yEdges[ybins + 1] = {0, 0.0003, 0.0006, 0.0009, 0.0012, 0.0015, 0.0018, 0.0021, 0.0024, 0.0027, 0.003};
-  
+  TString xnames[xbins] = {"2.91E-3", "3.83E-3", "4.46E-3", "4.97E-3", "5.43E-3", "6.00E-3"}; 
 
   TH2F* h_rinvResVsRinv = new TH2F("rinvRes", ";rinv [cm^{-1}]; rinv residual (L1 - sim) [cm^{-1}]; L1 tracks", 20, 0, 0.006, 100, -0.0003, 0.0003); 
   TH2D* h_rinvDist = new TH2D("rinvDist", ";rinv [cm^{-1}]; rinv [cm^{-1}]; L1 tracks", 20, 0, 0.006, 20, 0, 0.0003);
   TH2D* h_rinvDist_rinvBin = new TH2D("rinvDist_rinvBin", ";rinv [cm^{-1}]; rinv [cm^{-1}]; L1 tracks", xbins, xEdges, ybins, yEdges); 
+
+  for (int i = 0; i < xbins; i++) {
+    h_rinvBins[i] = 
+        new TH1F("rinvBins_" + xnames[i], "rinv bin " + xnames[i] + "; rinv [cm^{-1}]; L1 tracks", 1, xEdges[i], xEdges[i+1]);
+  }
+  
+  for (int s = 0; s < 9; s++) {
+    for (int i = 0; i < xbins; i++) {
+      h_trkperevent[s][i] = 
+          new TH1F("trkperevent_" + xnames[i] + "_sector_" + s, ";Number of tracks per nonant; Number of events", 20, 0, 35);
+  }
 
   for (int i = 0; i < nRANGE; i++) {
     h_resVsPt_pt[i] =
@@ -1047,9 +1059,12 @@ void L1TrackNtuplePlot(TString type,
 
   // ----------------------------------------------------------------------------------------------------------------
   // event loop
+  
+  vector<vector<vector<unsigned long int>>> pTPerBin;
+  pTPerBin.push_back(vector<vector<unsigned long int>>());
+
   for (int i = 0; i < nevt; i++) {
     tree->GetEntry(i, 0);
-
     /*
     // ----------------------------------------------------------------------------------------------------------------
     // sumpt in jets
@@ -1089,6 +1104,9 @@ void L1TrackNtuplePlot(TString type,
     vector<unsigned int> nTrksPerSector_pt2(9, 0);
     vector<unsigned int> nTrksPerSector_pt3(9, 0);
     vector<unsigned int> nTrksPerSector_pt4(9, 0);
+    
+    vector<vector<vector<double>>> pTPerBinPerEvent; 
+    pTPerBinPerEvent.push_back(vector<vector<double>>());
 
     double weight = 0.0000555555;
 
@@ -1102,9 +1120,25 @@ void L1TrackNtuplePlot(TString type,
       h_trk_eta->Fill(trk_eta->at(it));
 
       for (int im = 0; im < nRANGE; im++){
-        h_rinvDist->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.0003 * im), weight);
-        h_rinvDist_rinvBin->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.003 * im), weight);
+        h_rinvDist->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.0003 * im));
+        h_rinvDist_rinvBin->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)), (0.01*0.299792458*3.8112/trk_pt->at(it)) - (0.003 * im));
       }
+      
+      for (int s = 0; s < 9; s++) {
+        pTPerBinPerEvent[s].push_back(vector<double>()); 
+        for (int im = 0; im < xbins; im++) {
+          if (trk_phiSector->at(it) == s) {
+            if (((0.01*0.299792458*3.8112/trk_pt->at(it)) < (float)xEdges[im+1]) && ((0.01*0.299792458*3.8112/trk_pt->at(it) > (float)xEdges[im]))) {   
+              h_rinvBins[im]->Fill((0.01*0.299792458*3.8112/trk_pt->at(it)));
+              pTPerBinPerEvent[s][im].push_back(trk_pt->at(it));
+            }
+          }
+        }
+      }
+      
+      //for (int im = 0; im < xbins; im++) {
+       // std::cout<<"Bin "<<im<<" has size "<<pTPerBinPerEvent[im].size()<<std::endl;
+      //}
 
       // fill all trk chi2 & chi2/dof histograms, including for chi2 r-phi and chi2 r-z
       int ndof = 2 * trk_nstub->at(it) - 4;
@@ -1233,6 +1267,16 @@ void L1TrackNtuplePlot(TString type,
         }
       }
     }
+
+    for (int s = 0; s < 9; s++) {
+      pTPerBin[s].push_back(vector<long unsigned int>());
+      for (int im = 0; im < xbins; im++) {
+        pTPerBin[s][im].push_back(pTPerBinPerEvent[s][im].size());
+      }
+    }  
+    //for (int im = 0; im < xbins; im++) {
+      //std::cout << "The total tracks in this bin is " << std::accumulate(pTPerBin[im].begin(), pTPerBin[im].end(),0) << std::endl;
+    //}
 
     h_ntrk_pt2->Fill(ntrkevt_pt2);
     h_ntrk_pt3->Fill(ntrkevt_pt3);
@@ -2580,9 +2624,8 @@ void L1TrackNtuplePlot(TString type,
   char ctxt[500];
   TCanvas c;
   c.SetRightMargin(0.15);
-  c.Divide(2,1);
-  gSystem->mkdir("TrkPlots");
-  TString DIR = "TrkPlots/";
+  gSystem->mkdir("TrackPlots");
+  TString DIR = "TrackPlots/";
 
   // plots overlaying 68, 90, 99% confidence levels]
 
@@ -2679,6 +2722,15 @@ void L1TrackNtuplePlot(TString type,
   // resoultion vs pt
   // ----------------------------------------------------------------------------------------------------------
 
+  for (int s = 0; s < 9; s++) {
+    for (int im = 0; im < xbins; im++) {
+      for (long unsigned int i = 0; i < pTPerBin[s][im].size(); i++) {
+        h_trkperevent[s][im]->Fill(pTPerBin[s][im][i]);
+      }
+    }
+  }     
+
+
   h2_resVsPt_pt_90->SetMinimum(0);
   h2_resVsPt_pt_90->SetMarkerStyle(20);
   h2_resVsPt_pt_90->Draw("p");
@@ -2713,6 +2765,49 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_ptRel_90->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_ptRel_90.pdf");
 
+  for (int i = 1; i < xbins; i++) {
+    //h_rinvBins[i]->SetMinimum(0);
+    //h_rinvBins[i]->Draw();
+    //c.SaveAs(DIR + type + "_rinvBins_" + i + ".pdf");
+  }
+
+  for (int s = 0; s < 9; s++) {
+    TLegend* leg = new TLegend(0.72,0.7,0.90,0.9);
+
+    h_trkperevent[s][0]->SetMinimum(0);
+    h_trkperevent[s][0]->GetYaxis()->SetRangeUser(0,500);
+    h_trkperevent[s][0]->Draw();
+    h_trkperevent[s][0]->SetLineColor(7);
+    leg->AddEntry(h_trkperevent[s][0], "Bin 1", "f");
+
+    h_trkperevent[s][1]->SetMinimum(0);
+    h_trkperevent[s][1]->SetLineColor(1); 
+    h_trkperevent[s][1]->Draw("SAME");
+    leg->AddEntry(h_trkperevent[s][1], "Bin 2", "f");
+
+    h_trkperevent[s][2]->SetMinimum(0);
+    h_trkperevent[s][2]->SetLineColor(2); 
+    h_trkperevent[s][2]->Draw("SAME");
+    leg->AddEntry(h_trkperevent[s][2], "Bin 3", "f");
+
+    h_trkperevent[s][3]->SetMinimum(0);
+    h_trkperevent[s][3]->SetLineColor(3); 
+    h_trkperevent[s][3]->Draw("SAME");
+    leg->AddEntry(h_trkperevent[s][3], "Bin 4", "f");
+
+    h_trkperevent[s][4]->SetMinimum(0);
+    h_trkperevent[s][4]->SetLineColor(4); 
+    h_trkperevent[s][4]->Draw("SAME");
+    leg->AddEntry(h_trkperevent[s][4], "Bin 5", "f");
+
+    h_trkperevent[s][5]->SetMinimum(0);
+    h_trkperevent[s][5]->SetLineColor(6); 
+    h_trkperevent[s][5]->Draw("SAME");
+    leg->AddEntry(h_trkperevent[s][5], "Bin 6", "f");
+
+    leg->Draw();  
+    c.SaveAs(DIR + type + "_trkperbin_sector_" + s + ".pdf");
+  }
   for (int i = 0; i < nRANGE; i++) {
     h_resVsPt_rinv[i]->SetMinimum(0);
     h_resVsPt_rinv[i]->Draw();

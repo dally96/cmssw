@@ -977,7 +977,7 @@ namespace trklet {
     int numrinvbins_{6};
     int numcompare_{64};
     int numtracksperbin_{108};
-    double overlapsize_{0.0002};
+    double overlapsize_{0.0004};
 
     unsigned int nStrips_PS_{960};
     unsigned int nStrips_2S_{1016};
@@ -990,7 +990,7 @@ namespace trklet {
 
     //Variable bin edges for 6 bins.
     std::vector<double> varrinvbins_{
-         {-rinvcut(), -0.005284, -0.00464 , -0.003828, -0.002421, 0.002421, 0.003828, 0.00464, 0.005284, rinvcut()}};
+         {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
 /*
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;
