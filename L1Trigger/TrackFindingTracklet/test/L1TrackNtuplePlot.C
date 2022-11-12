@@ -873,6 +873,7 @@ void L1TrackNtuplePlot(TString type,
     for (int i = 0; i < xbins; i++) {
       h_trkperevent[s][i] = 
           new TH1F("trkperevent_" + xnames[i] + "_sector_" + s, ";Number of tracks per nonant; Number of events", 20, 0, 35);
+    }
   }
 
   for (int i = 0; i < nRANGE; i++) {
