@@ -289,6 +289,7 @@ namespace trklet {
 
     //Grabs the bin edges for the number of bins you need
     std::vector<double> varrinvbins() const { return varrinvbins_; }  
+    std::vector<double> phiBins() const { return phiBins_; }
     /*
     std::vector<std::vector<double>> overlapbins() const { return overlapbins_; }
     */
@@ -991,6 +992,8 @@ namespace trklet {
     //Variable bin edges for 6 bins.
     std::vector<double> varrinvbins_{
          {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
+
+    std::vector<double> phiBins_{0, 0.5 * dphisectorHG(), dphisectorHG()};
 /*
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;
