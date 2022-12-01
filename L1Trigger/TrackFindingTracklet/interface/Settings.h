@@ -991,9 +991,11 @@ namespace trklet {
 
     //Variable bin edges for 6 bins.
     std::vector<double> varrinvbins_{
-         {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}};
+         {-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()}
+         //{-rinvcut(), rinvcut()}
+         };
 
-    std::vector<double> phiBins_{0, 0.5 * dphisectorHG(), dphisectorHG()};
+    std::vector<double> phiBins_{0.0, 0.5 * dphisectorHG(), dphisectorHG()};
 /*
     std::vector<std::vector<double>> overlapbins() {
       std::vector<std::vector<double>> overlap;

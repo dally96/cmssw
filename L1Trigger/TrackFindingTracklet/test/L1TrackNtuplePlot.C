@@ -57,7 +57,7 @@ void L1TrackNtuplePlot(TString type,
                        float TP_maxEta = 2.4,
                        float TP_maxDxy = 1.0,
                        float TP_maxD0 = 1.0,
-                       bool doDetailedPlots = true) {
+                       bool doDetailedPlots = false) {
   // type:              this is the name of the input file you want to process (minus ".root" extension)
   // type_dir:          this is the directory containing the input file you want to process. Note that this must end with a "/", as in "EventSets/"
   // TP_select_pdgid:   if non-zero, only select TPs with a given PDG ID
@@ -826,6 +826,8 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_rinv_I[nRANGE];
   TH1F* h_resVsPt_rinv_F[nRANGE];
 
+  TH1F* h_resVsRInv_phi[nRANGE];
+
   TH1F* h_resVsPt_ptRel[nRANGE];
   TH1F* h_resVsPt_ptRel_C[nRANGE];
   TH1F* h_resVsPt_ptRel_I[nRANGE];
@@ -895,6 +897,9 @@ void L1TrackNtuplePlot(TString type,
 
     //h_rinvRes[i] = 
         //new TH1D("rinvRes_" + rinvrange[i], ";rinv residual (L1 - sim) [GeV]; L1 tracks / 0.1", 100, -0.0003, 0.0003);
+
+    h_resVsRInv_phi[i] = new TH1F(
+        "resVsRInv_phi" + rinvrange[i], ";phi residual (L1 - sim); L1 tracks / 0.0001", 100, -0.005, 0.005);
 
     h_resVsPt_rinv[i] = new TH1F(
         "resVsPt_rinv_" + rinvrange[i], ";rinv residual (L1 - sim); L1 tracks / 0.1", 100, -0.0003, 0.0003);
@@ -1695,6 +1700,7 @@ void L1TrackNtuplePlot(TString type,
         if ((0.01*0.299792458*3.8112/tp_pt->at(it) > (float)im * 0.0003) && (0.01*0.299792458*3.8112/tp_pt->at(it) < (float)(im + 1) * 0.0003)) {
           h_resVsPt_rinv[im]->Fill(((0.01*0.299792458*3.8112/matchtrk_pt->at(it)) - (0.01*0.299792458*3.8112/tp_pt->at(it)))); 
           h_resVsPt_rinvRel[im]->Fill(((0.01*0.299792458*3.8112/matchtrk_pt->at(it)) - (0.01*0.299792458*3.8112/tp_pt->at(it)))/(0.01*0.299792458*3.8112/tp_pt->at(it))); 
+          h_resVsRInv_phi[im]->Fill(matchtrk_phi->at(it) - tp_phi->at(it));
           //std::cout << "rinvRel at " << it << " is " << ((0.01*0.299792458*3.8112/matchtrk_pt->at(it)) - (0.01*0.299792458*3.8112/tp_pt->at(it)))/(0.01*0.299792458*3.8112/tp_pt->at(it)) << std::endl;        
         }          
 
@@ -1871,6 +1877,9 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h2_resVsPt_rinv_F =
       new TH1F("resVsPt2_rinv_F", ";Tracking particle p_{T} [GeV]; p_{T} resolution / p_{T}", 20, 0, 0.006);
 
+  TH1F* h2_resVsRInv_phi =
+      new TH1F("resVsRInv2_phi", ";Tracking particle rinv [cm^{-1}]; #phi resolution", 20, 0, 0.006);
+
   TH1F* h2_resVsPt_ptRel =
       new TH1F("resVsPt2_ptRel", ";Tracking particle p_{T} [GeV]; p_{T} resolution / p_{T}", 20, 0, 100);
   TH1F* h2_resVsPt_ptRel_C =
@@ -2019,6 +2028,9 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsPt_rinv_I->SetBinError(i + 1, h_resVsPt_rinv_I[i]->GetRMSError());
     h2_resVsPt_rinv_F->SetBinContent(i + 1, h_resVsPt_rinv_F[i]->GetRMS());
     h2_resVsPt_rinv_F->SetBinError(i + 1, h_resVsPt_rinv_F[i]->GetRMSError());
+
+    h2_resVsRInv_phi->SetBinContent(i + 1, h_resVsRInv_phi[i]->GetRMS());
+    h2_resVsRInv_phi->SetBinError(i + 1, h_resVsRInv_phi[i]->GetRMSError());
 
     h2_resVsPt_ptRel->SetBinContent(i + 1, h_resVsPt_ptRel[i]->GetRMS());
     //std::cout<<"ptRelshould then be "<<h_resVsPt_pt[i]->GetRMS()/((i+1)*5)<<" but is "<<h_resVsPt_ptRel[i]->GetRMS()<<std::endl;
@@ -2592,6 +2604,7 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_rinv_I->SetMinimum(0);
   h2_resVsPt_rinv_F->SetMinimum(0);
 
+
   h2_resVsPt_ptRel->SetMinimum(0);
   h2_resVsPt_ptRel_C->SetMinimum(0);
   h2_resVsPt_ptRel_I->SetMinimum(0);
@@ -2818,6 +2831,11 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_rinv->SetMarkerStyle(20);
   h2_resVsPt_rinv->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_rinv.pdf");
+  
+  h2_resVsRInv_phi->SetMinimum(0);
+  h2_resVsRInv_phi->SetMarkerStyle(20);
+  h2_resVsRInv_phi->Draw("p");
+  c.SaveAs(DIR + type + "_resVsRInv_phi.pdf");
 
   h_rinvResVsRinv->SetMinimum(0);
   h_rinvResVsRinv->SetMarkerStyle(20);
@@ -2892,7 +2910,7 @@ void L1TrackNtuplePlot(TString type,
   h_trkperevent_allsect[5]->SetMarkerColor(6);
   leg->AddEntry(h_trkperevent_allsect[5], "Bin 6", "f");
   leg->Draw();  
-  c.SetLogy();
+  //c.SetLogy();
   c.SaveAs(DIR + type + "_trkperbin_allsector.pdf");
 
   for (int s = 0; s < 9; s++) {
@@ -2966,6 +2984,10 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_phi_90->SetMarkerStyle(20);
   h2_resVsPt_phi_90->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_phi_90.pdf");
+
+  h2_resVsPt_phi->SetMarkerStyle(20);
+  h2_resVsPt_phi->Draw("p");
+  c.SaveAs(DIR + type + "_resVsPt_phi.pdf");
 
   h2_resVsPt_eta_90->SetMinimum(0);
   h2_resVsPt_eta_90->SetMarkerStyle(20);
@@ -3090,7 +3112,7 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsPt_z0_I->Write();
     h2_resVsPt_z0_F->Write();
 
-    h2_resVsPt_phi->Write();
+    //h2_resVsPt_phi->Write();
     h2_resVsPt_phi_C->Write();
     h2_resVsPt_phi_I->Write();
     h2_resVsPt_phi_F->Write();

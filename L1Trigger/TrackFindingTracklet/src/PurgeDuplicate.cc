@@ -831,7 +831,15 @@ unsigned int PurgeDuplicate::findVarRInvBin(Tracklet* trk) {
 
 // Tells us the variable bin to which a track would belong
 unsigned int PurgeDuplicate::findPhiBin(Tracklet* trk) {
+//unsigned int PurgeDuplicate::findPhiBin() {}
   std::vector<double> phibins = settings_.phiBins();
+
+  std::cout << "The phi bin edges are ";
+  for (unsigned int i = 0; i < phibins.size(); i++) { 
+    std::cout << phibins[i] << ", ";
+  }  
+  std::cout << std::endl;
+
 
   //Get phi0 of track
   double phi = trk->phi0();
