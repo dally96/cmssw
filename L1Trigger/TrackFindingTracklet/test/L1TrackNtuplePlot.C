@@ -835,6 +835,8 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_eta[nRANGE];
   TH1F* h_resVsPt_d0[nRANGE];
 
+  TH2F* h_phiResVsRinv = new TH2F("phiResVsRinv", ";rinv [1/cm]; #phi residual (L1 - sim) [rad]", 20, 0, 0.006, 100, -0.005, 0.005);
+
   for (int i = 0; i < nRANGE; i++) {
     h_resVsPt_pt[i] =
         new TH1F("resVsPt_pt_" + ptrange[i], ";p_{T} residual (L1 - sim) [GeV]; L1 tracks / 0.1", 100, -5.0, 5.0);
@@ -1529,6 +1531,9 @@ void L1TrackNtuplePlot(TString type,
 
       // ----------------------------------------------------------------------------------------------------------------
       // fill resolution vs. pt histograms
+      
+      h_phiResVsRinv->Fill((0.01*0.299792458*3.8112/tp_pt->at(it)), matchtrk_phi->at(it) - tp_phi->at(it));
+
       for (int im = 0; im < nRANGE; im++) {
         if ((tp_pt->at(it) > (float)im * 5.0) && (tp_pt->at(it) < (float)(im + 1) * 5.0)) {
           h_resVsPt_pt[im]->Fill(matchtrk_pt->at(it) - tp_pt->at(it));
@@ -2546,6 +2551,10 @@ void L1TrackNtuplePlot(TString type,
   // ----------------------------------------------------------------------------------------------------------
   // resoultion vs pt
   // ----------------------------------------------------------------------------------------------------------
+
+  h_phiResVsRinv->SetMinimum(0);
+  h_phiResVsRinv->Draw("colz");
+  c.SaveAs(DIR + type + "_phiResVsRinv.pdf"); 
 
   h2_resVsPt_pt_90->SetMinimum(0);
   h2_resVsPt_pt_90->SetMarkerStyle(20);

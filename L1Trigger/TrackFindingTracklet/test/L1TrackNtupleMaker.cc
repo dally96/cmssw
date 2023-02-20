@@ -219,6 +219,8 @@ private:
   std::vector<float>* m_matchtrk_phi;
   std::vector<float>* m_matchtrk_d0;  //this variable is only filled if L1Tk_nPar==5
   std::vector<float>* m_matchtrk_z0;
+  std::vector<float>* m_matchtrk_charge;
+  std::vector<float>* m_matchtrk_rad;
   std::vector<float>* m_matchtrk_chi2;
   std::vector<float>* m_matchtrk_chi2rphi;
   std::vector<float>* m_matchtrk_chi2rz;
@@ -229,6 +231,7 @@ private:
   std::vector<int>* m_matchtrk_dhits;
   std::vector<int>* m_matchtrk_seed;
   std::vector<int>* m_matchtrk_hitpattern;
+  std::vector<unsigned int>* m_matchtrk_phiSector;
   std::vector<int>* m_matchtrk_injet;
   std::vector<int>* m_matchtrk_injet_highpt;
   std::vector<int>* m_matchtrk_injet_vhighpt;
@@ -400,6 +403,8 @@ void L1TrackNtupleMaker::beginJob() {
   m_matchtrk_eta = new std::vector<float>;
   m_matchtrk_phi = new std::vector<float>;
   m_matchtrk_z0 = new std::vector<float>;
+  m_matchtrk_charge = new std::vector<float>;
+  m_matchtrk_rad = new std::vector<float>;
   m_matchtrk_d0 = new std::vector<float>;
   m_matchtrk_chi2 = new std::vector<float>;
   m_matchtrk_chi2rphi = new std::vector<float>;
@@ -411,6 +416,7 @@ void L1TrackNtupleMaker::beginJob() {
   m_matchtrk_lhits = new std::vector<int>;
   m_matchtrk_seed = new std::vector<int>;
   m_matchtrk_hitpattern = new std::vector<int>;
+  m_matchtrk_phiSector = new std::vector<unsigned int>;
   m_matchtrk_injet = new std::vector<int>;
   m_matchtrk_injet_highpt = new std::vector<int>;
   m_matchtrk_injet_vhighpt = new std::vector<int>;
@@ -512,6 +518,8 @@ void L1TrackNtupleMaker::beginJob() {
   eventTree->Branch("matchtrk_eta", &m_matchtrk_eta);
   eventTree->Branch("matchtrk_phi", &m_matchtrk_phi);
   eventTree->Branch("matchtrk_z0", &m_matchtrk_z0);
+  eventTree->Branch("matchtrk_charge", &m_matchtrk_charge);
+  eventTree->Branch("matchtrk_rad", &m_matchtrk_rad);
   eventTree->Branch("matchtrk_d0", &m_matchtrk_d0);
   eventTree->Branch("matchtrk_chi2", &m_matchtrk_chi2);
   eventTree->Branch("matchtrk_chi2rphi", &m_matchtrk_chi2rphi);
@@ -523,6 +531,7 @@ void L1TrackNtupleMaker::beginJob() {
   eventTree->Branch("matchtrk_dhits", &m_matchtrk_dhits);
   eventTree->Branch("matchtrk_seed", &m_matchtrk_seed);
   eventTree->Branch("matchtrk_hitpattern", &m_matchtrk_hitpattern);
+  eventTree->Branch("matchtrk_phiSector", &m_matchtrk_phiSector);
   if (TrackingInJets) {
     eventTree->Branch("matchtrk_injet", &m_matchtrk_injet);
     eventTree->Branch("matchtrk_injet_highpt", &m_matchtrk_injet_highpt);
@@ -644,6 +653,8 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
   m_matchtrk_eta->clear();
   m_matchtrk_phi->clear();
   m_matchtrk_z0->clear();
+  m_matchtrk_charge->clear();
+  m_matchtrk_rad->clear();
   m_matchtrk_d0->clear();
   m_matchtrk_chi2->clear();
   m_matchtrk_chi2rphi->clear();
@@ -655,6 +666,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
   m_matchtrk_dhits->clear();
   m_matchtrk_seed->clear();
   m_matchtrk_hitpattern->clear();
+  m_matchtrk_phiSector->clear();
   m_matchtrk_injet->clear();
   m_matchtrk_injet_highpt->clear();
   m_matchtrk_injet_vhighpt->clear();
@@ -934,6 +946,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       int tmp_trk_nLost2Sstub_hitpattern = hph.numMissing2S();
       int tmp_trk_nLoststub_V1_hitpattern = hph.numMissingInterior1();
       int tmp_trk_nLoststub_V2_hitpattern = hph.numMissingInterior2();
+
 
       float tmp_trk_d0 = -999;
       if (L1Tk_nPar == 5) {
@@ -1437,6 +1450,8 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     float tmp_matchtrk_eta = -999;
     float tmp_matchtrk_phi = -999;
     float tmp_matchtrk_z0 = -999;
+    float tmp_matchtrk_charge = -999;
+    float tmp_matchtrk_rad = -999;
     float tmp_matchtrk_d0 = -999;
     float tmp_matchtrk_chi2 = -999;
     float tmp_matchtrk_chi2rphi = -999;
@@ -1448,6 +1463,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     int tmp_matchtrk_lhits = -999;
     int tmp_matchtrk_seed = -999;
     int tmp_matchtrk_hitpattern = -999;
+    unsigned int tmp_matchtrk_phiSector = -999; 
 
     if (nMatch > 1 && DebugMode)
       edm::LogVerbatim("Tracklet") << "WARNING *** 2 or more matches to genuine L1 tracks ***";
@@ -1457,6 +1473,14 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       tmp_matchtrk_eta = matchedTracks.at(i_track)->momentum().eta();
       tmp_matchtrk_phi = matchedTracks.at(i_track)->momentum().phi();
       tmp_matchtrk_z0 = matchedTracks.at(i_track)->z0();
+
+      edm::Ptr<TrackingParticle> my_tp = MCTruthTTTrackHandle->findTrackingParticlePtr(matchedTracks.at(i_track));
+      tmp_matchtrk_charge = my_tp->charge();
+      float b_field = bFieldHandle.product()->inTesla(GlobalPoint(0, 0, 0)).z();
+      float c_converted = CLHEP::c_light / 1.0E5;
+      float r2_inv = my_tp->charge() * c_converted * b_field / tmp_matchtrk_pt / 2.0;
+      float r2 = 1 / r2_inv;
+      tmp_matchtrk_rad = r2 ;
 
       if (L1Tk_nPar == 5) {
         float tmp_matchtrk_x0 = matchedTracks.at(i_track)->POCA().x();
@@ -1472,6 +1496,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       tmp_matchtrk_nstub = (int)matchedTracks.at(i_track)->getStubRefs().size();
       tmp_matchtrk_seed = (int)matchedTracks.at(i_track)->trackSeedType();
       tmp_matchtrk_hitpattern = (int)matchedTracks.at(i_track)->hitPattern();
+      tmp_matchtrk_phiSector = (unsigned int)matchedTracks.at(i_track)->phiSector();
 
       // ------------------------------------------------------------------------------------------
 
@@ -1523,6 +1548,8 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     m_matchtrk_eta->push_back(tmp_matchtrk_eta);
     m_matchtrk_phi->push_back(tmp_matchtrk_phi);
     m_matchtrk_z0->push_back(tmp_matchtrk_z0);
+    m_matchtrk_charge->push_back(tmp_matchtrk_charge);
+    m_matchtrk_rad->push_back(tmp_matchtrk_rad);
     m_matchtrk_d0->push_back(tmp_matchtrk_d0);
     m_matchtrk_chi2->push_back(tmp_matchtrk_chi2);
     m_matchtrk_chi2rphi->push_back(tmp_matchtrk_chi2rphi);
@@ -1534,6 +1561,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     m_matchtrk_lhits->push_back(tmp_matchtrk_lhits);
     m_matchtrk_seed->push_back(tmp_matchtrk_seed);
     m_matchtrk_hitpattern->push_back(tmp_matchtrk_hitpattern);
+    m_matchtrk_phiSector->push_back(tmp_matchtrk_phiSector);
 
     // ----------------------------------------------------------------------------------------------
     // for tracking in jets
