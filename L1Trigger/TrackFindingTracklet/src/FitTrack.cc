@@ -115,7 +115,7 @@ void FitTrack::trackFitKF(Tracklet* tracklet,
         }
       }
     }
-
+    
     // For merge removal, loop through the resulting list of stubs to calculate their stubids
     if (settings_.removalType() == "merge") {
       for (const auto& it : trackstublist) {
@@ -131,6 +131,9 @@ void FitTrack::trackFitKF(Tracklet* tracklet,
     } else {
       // Track fit only called here if not running duplicate removal
       // before fit. (e.g. If skipping duplicate removal).
+
+      std::cout << "This track's rinv is " << tracklet->rinv() << std::endl;
+      std::cout << "This track's phi 0 is " << tracklet->phi0() << std::endl;
       HybridFit hybridFitter(iSector_, settings_, globals_);
       hybridFitter.Fit(tracklet, trackstublist);
     }

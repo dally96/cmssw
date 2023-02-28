@@ -148,14 +148,20 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks_, unsigned int iSe
               //std::cout << findOverlapPhiBins(inputtrackfits_[i]->getTrack(j))[indx] << " ";
             //std::cout << std::endl; 
             //}
+
+            Tracklet* bTrack = inputtrackfits_[i]->getTrack(j);
+            std::cout << "This track's rinv is " << bTrack->rinv() << std::endl;
+            std::cout << "This track's phi 0 is " << bTrack->phi0() << std::endl;
+
             if (isTrackInBin(findOverlapRInvBins(inputtrackfits_[i]->getTrack(j)), bin)) {
               if (!isTrackInBin(findOverlapPhiBins(inputtrackfits_[i]->getTrack(j)), phiBin)) 
               //if (phiBin != findPhiBin(inputtrackfits_[i]->getTrack(j)))
                 continue;
-              if (inputtracklets_.size() >= settings_.maxStep("DR"))
-                continue;
+              //if (inputtracklets_.size() >= settings_.maxStep("DR"))
+                //continue;
               Tracklet* aTrack = inputtrackfits_[i]->getTrack(j);
               inputtracklets_.push_back(inputtrackfits_[i]->getTrack(j));
+              std::cout << "In sector " << iSector << " the number of tracklets is " << inputtracklets_.size() << std::endl; 
               std::vector<const Stub*> stublist = inputtrackfits_[i]->getStublist(j);
               inputstublists_.push_back(stublist);
               std::vector<std::pair<int, int>> stubidslist = inputtrackfits_[i]->getStubidslist(j);
