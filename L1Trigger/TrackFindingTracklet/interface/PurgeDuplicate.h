@@ -48,12 +48,12 @@ namespace trklet {
     std::vector<const Stub*> getInventedSeedingStub(unsigned int,
                                                     const Tracklet*,
                                                     const std::vector<const Stub*>&) const;
-    // return the regular rinvbins which contain the input tracklet
-    unsigned int findVarRInvBin(const Tracklet* trk) const;
-    // return the regular phibins which contain the input tracklet
+    // return the regular rinv bins which contain the input tracklet
+    unsigned int findRinvBin(const Tracklet* trk) const;
+    // return the regular phi bins which contain the input tracklet
     unsigned int findPhiBin(const Tracklet* trk) const;
-    // return the overlap rinvbins which contain the input tracklet
-    std::vector<unsigned int> findOverlapRInvBins(const Tracklet* trk) const;
+    // return the overlap rinv bins which contain the input tracklet
+    std::vector<unsigned int> findOverlapRinvBins(const Tracklet* trk) const;
     // return the overlap phi bins which contain the input tracklet
     std::vector<unsigned int> findOverlapPhiBins(const Tracklet* trk) const;
     // sort the tracklets into the correct bin by comparing the overlap rinv bin(s) the tracklets are in to the current bin
