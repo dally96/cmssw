@@ -1045,7 +1045,7 @@ namespace trklet {
     double stripLength_2S_{5.0250};
 
     //Following values are used for duplicate removal
-    //Variable rinv bin edges for 6 bins.
+    //Rinv bin edges for 6 bins.
     std::vector<double> rinvBins_{-rinvcut(), -0.004968, -0.003828, 0, 0.003828, 0.004968, rinvcut()};
     //Phi bin edges for 2 bins.
     std::vector<double> phiBins_{0, dphisectorHG() / 2, dphisectorHG()};
@@ -1053,7 +1053,6 @@ namespace trklet {
     double rinvOverlapSize_{0.0004};
     //Overlap size for the overlap phi bins in DR
     double phiOverlapSize_{M_PI / 360};
-    //double phiOverlapSize_{0};
     //The maximum number of tracks that are compared to all the other tracks per rinv bin
     int numTracksComparedPerBin_{32};
 
