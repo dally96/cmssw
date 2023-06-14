@@ -383,6 +383,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 // Mark that rejected track has been merged into another track
                 trackInfo[rejetrk].second = true;
               }
+              trackInfo[jtrk].second = true;
             }
           }
         }
