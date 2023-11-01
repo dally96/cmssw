@@ -427,7 +427,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
       }
     }
     
-    std::cout << "The number of tracks sent to the KF in this bin and sector is " << prefTracks.size() << std::endl; 
+    //std::cout << "The number of tracks sent to the KF in this bin and sector is " << prefTracks.size() << std::endl; 
     int nKFTrack = 0;
     // Make the final track objects, fit with KF, and send to output
     for (unsigned int itrk = 0; itrk < prefTracks.size(); itrk++) {
@@ -443,6 +443,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         // Add fitted Track to output (later converted to TTTrack)
         Track* outtrack = tracklet->getTrack();
         outtrack->setSector(iSector);
+        //std::cout << "The pt of KF fit track is " << outtrack->pt(settings_) << std::endl;
+        //std::cout << "The eta of KF fit track is " << outtrack->eta(settings_) << std::endl;
+        //std::cout << "The phi of KF fit track is " << outtrack->phi0(settings_) << std::endl;
+        //std::cout << "The number of stubs of KF fit track is " << trackstublist.size() << std::endl;
         // Also store fitted track as more detailed Tracklet object.
         outputtracklets_[prefTrackFit[itrk]]->addTrack(tracklet);
 
@@ -455,7 +459,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
        nKFTrack++; 
       }
     }
-    std::cout << "The number of tracks rejected by KF in this bin and sector is " << nKFTrack << std::endl;
+    //std::cout << "The number of tracks rejected by KF in this bin and sector is " << nKFTrack << std::endl;
   }
 
 #endif

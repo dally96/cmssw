@@ -10,6 +10,7 @@
 #include "TStyle.h"
 #include "TLatex.h"
 #include "TFile.h"
+#include "TLine.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TBranch.h"
@@ -24,6 +25,7 @@
 #include "TMath.h"
 #include <TError.h>
 #include "TSystem.h"
+#include "THStack.h"
 
 #include <iostream>
 #include <string>
@@ -56,7 +58,7 @@ void L1TrackNtuplePlot(TString type,
                        float TP_maxEta = 2.4,
                        float TP_maxDxy = 1.0,
                        float TP_maxD0 = 1.0,
-                       bool doDetailedPlots = false) {
+                       bool doDetailedPlots = true) {
   // type:              this is the name of the input file you want to process (minus ".root" extension)
   // type_dir:          this is the directory containing the input file you want to process. Note that this must end with a "/", as in "EventSets/"
   // TP_select_pdgid:   if non-zero, only select TPs with a given PDG ID
@@ -78,6 +80,7 @@ void L1TrackNtuplePlot(TString type,
 
   // ----------------------------------------------------------------------------------------------------------------
   // define input options
+  Double_t  pt_binsExtended[21]  = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
 
   // these are the LOOSE cuts, baseline scenario for efficiency and rate plots ==> configure as appropriate
   int L1Tk_minNstub = 4;
@@ -198,6 +201,7 @@ void L1TrackNtuplePlot(TString type,
   vector<int>* trk_fake;
   vector<int>* trk_genuine;
   vector<int>* trk_loose;
+  vector<int>* trk_combinatoric;
 
   TBranch* b_tp_pt;
   TBranch* b_tp_eta;
@@ -254,6 +258,7 @@ void L1TrackNtuplePlot(TString type,
   TBranch* b_trk_fake;
   TBranch* b_trk_genuine;
   TBranch* b_trk_loose;
+  TBranch* b_trk_combinatoric;
 
   tp_pt = 0;
   tp_eta = 0;
@@ -310,6 +315,7 @@ void L1TrackNtuplePlot(TString type,
   trk_fake = 0;
   trk_genuine = 0;
   trk_loose = 0;
+  trk_combinatoric = 0;
 
   tree->SetBranchAddress("tp_pt", &tp_pt, &b_tp_pt);
   tree->SetBranchAddress("tp_eta", &tp_eta, &b_tp_eta);
@@ -392,6 +398,7 @@ void L1TrackNtuplePlot(TString type,
   tree->SetBranchAddress("trk_fake", &trk_fake, &b_trk_fake);
   tree->SetBranchAddress("trk_genuine", &trk_genuine, &b_trk_genuine);
   tree->SetBranchAddress("trk_loose", &trk_loose, &b_trk_loose);
+  tree->SetBranchAddress("trk_combinatoric", &trk_combinatoric, &b_trk_combinatoric);
   if (TP_select_injet > 0) {
     tree->SetBranchAddress("trk_injet", &trk_injet, &b_trk_injet);
     tree->SetBranchAddress("trk_injet_highpt", &trk_injet_highpt, &b_trk_injet_highpt);
@@ -415,7 +422,7 @@ void L1TrackNtuplePlot(TString type,
   // ----------------------------------------------------------------------------------------------------------------
   // for efficiencies
 
-  TH1F* h_tp_pt = new TH1F("tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+  TH1F* h_tp_pt = new TH1F("tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 20, pt_binsExtended); 
   TH1F* h_tp_pt_L = new TH1F("tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_LC = new TH1F("tp_pt_LC", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_H = new TH1F("tp_pt_H", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 92, 8.0, 100.0);
@@ -427,7 +434,7 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_tp_eta_5 = new TH1F("tp_eta_5", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
 
   TH1F* h_match_tp_pt =
-      new TH1F("match_tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+      new TH1F("match_tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 20, pt_binsExtended); 
   TH1F* h_match_tp_pt_L =
       new TH1F("match_tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_match_tp_pt_LC =
@@ -509,6 +516,7 @@ void L1TrackNtuplePlot(TString type,
                                  "6.5-7",
                                  "7-7.5",
                                  "7.5-8"};
+  Double_t  pt_bins[18]  = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25};
 
   TH1F* h_absResVsPt_pt[nRANGE];
   TH1F* h_absResVsPt_ptRel[nRANGE];
@@ -703,18 +711,20 @@ void L1TrackNtuplePlot(TString type,
   // ----------------------------------------------------------------------------------------------------------------
   // total track rates
 
-  TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
-  TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
-  TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 17, pt_bins);
+  TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 200, 0, 100);
+  TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 200, 0, 100);
+  TH1F* h_trk_fake_vspt = new TH1F("trk_fake_vspt", ";Track p_{T} [GeV]; ", 200, 0, 100);
+  TH1F* h_trk_combinatoric_vspt = new TH1F("trk_combinatoric_vspt", ";Track p_{T} [GeV]; ", 200, 0, 100);
+  THStack* hs_trk_all_vspt = new THStack("hs_trk_all_vspt", ";Track p_{T} [GeV]; Fraction of total tracks");
+  THStack* hs_trk_allcombi_vspt = new THStack("hs_trk_allcombi_vspt", ";Track p_{T} [GeV]; Fraction of total tracks");
   TH1F* h_trk_notloose_vspt = new TH1F(
-      "trk_notloose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);  //(same as "fake" according to the trk_fake labeling)
+      "trk_notloose_vspt", ";Track p_{T} [GeV]; ", 17, pt_bins);  //(same as "fake" according to the trk_fake labeling)
   TH1F* h_trk_notgenuine_vspt = new TH1F("trk_notgenuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_duplicate_vspt = new TH1F("trk_duplicate_vspt",
                                         ";Track p_{T} [GeV]; ",
-                                        50,
-                                        0,
-                                        25);  //where a TP is genuinely matched to more than one L1 track
-  TH1F* h_tp_vspt = new TH1F("tp_vspt", ";TP p_{T} [GeV]; ", 50, 0, 25);
+                                        17, pt_bins);  //where a TP is genuinely matched to more than one L1 track
+  TH1F* h_tp_vspt = new TH1F("tp_vspt", ";TP p_{T} [GeV]; ", 17, pt_bins);
 
   // ----------------------------------------------------------------------------------------------------------------
 
@@ -759,6 +769,7 @@ void L1TrackNtuplePlot(TString type,
       "match_tp_absd0_eta2_pt3", ";Tracking particle d_{0} [cm]; Tracking particles / 0.04 cm", 50, 0, maxD0plot);
 
   TH1F* h_match_trk_nstub = new TH1F("match_trk_nstub", ";Number of stubs; L1 tracks / 1.0", 15, 0, 15);
+  TH1F* h_match_trk_seed  = new TH1F("match_trk_seed", ":Seed type; L1 tracks", 8, -0.5, 7.5);
   TH1F* h_match_trk_nstub_C = new TH1F("match_trk_nstub_C", ";Number of stubs; L1 tracks / 1.0", 15, 0, 15);
   TH1F* h_match_trk_nstub_I = new TH1F("match_trk_nstub_I", ";Number of stubs; L1 tracks / 1.0", 15, 0, 15);
   TH1F* h_match_trk_nstub_F = new TH1F("match_trk_nstub_F", ";Number of stubs; L1 tracks / 1.0", 15, 0, 15);
@@ -1077,6 +1088,15 @@ void L1TrackNtuplePlot(TString type,
       h_trk_pt->Fill(trk_pt->at(it));
       h_trk_eta->Fill(trk_eta->at(it));
 
+      if (trk_genuine->at(it) == 1) {
+        h_trk_genuine_vspt->Fill(trk_pt->at(it));
+      }
+      if ((trk_genuine->at(it) == 0) && (trk_loose->at(it) == 1)) {
+        h_trk_loose_vspt->Fill(trk_pt->at(it));
+      }
+      if ((trk_genuine->at(it) == 0) && (trk_loose->at(it) == 0)) {
+        h_trk_fake_vspt->Fill(trk_pt->at(it));
+      }
       // fill all trk chi2 & chi2/dof histograms, including for chi2 r-phi and chi2 r-z
       float chi2 = trk_chi2->at(it);
       float chi2dof = trk_chi2_dof->at(it);
@@ -1150,19 +1170,22 @@ void L1TrackNtuplePlot(TString type,
       if (trk_pt->at(it) > 4.0)
         ++nTrksPerSector_pt4.at(trk_phiSector->at(it) % 9);
 
+      
+
+
       if (trk_pt->at(it) > 2.0) {
         ntrk_pt2++;
         ntrkevt_pt2++;
         h_trk_all_vspt->Fill(trk_pt->at(it));
         if (trk_genuine->at(it) == 1) {
           ntrkevt_genuine_pt2++;
-          h_trk_genuine_vspt->Fill(trk_pt->at(it));
+          //h_trk_genuine_vspt->Fill(trk_pt->at(it));
         } else
           h_trk_notgenuine_vspt->Fill(trk_pt->at(it));
-        if (trk_loose->at(it) == 1)
-          h_trk_loose_vspt->Fill(trk_pt->at(it));
-        else
-          h_trk_notloose_vspt->Fill(trk_pt->at(it));
+        //if (trk_loose->at(it) == 1)
+          //h_trk_loose_vspt->Fill(trk_pt->at(it));
+        //else
+          //h_trk_notloose_vspt->Fill(trk_pt->at(it));
       }
       if (trk_pt->at(it) > 3.0) {
         ntrk_pt3++;
@@ -1489,6 +1512,10 @@ void L1TrackNtuplePlot(TString type,
 
       // fill nstub histograms
       h_match_trk_nstub->Fill(matchtrk_nstub->at(it));
+      h_match_trk_seed->Fill(matchtrk_seed->at(it));
+      if (matchtrk_seed->at(it) < 0) {
+        std::cout << "Matched track not have seed" << std::endl;
+      }
       if (std::abs(tp_eta->at(it)) < 0.8)
         h_match_trk_nstub_C->Fill(matchtrk_nstub->at(it));
       else if (std::abs(tp_eta->at(it)) < 1.6 && std::abs(tp_eta->at(it)) >= 0.8)
@@ -2831,6 +2858,7 @@ void L1TrackNtuplePlot(TString type,
 
   if (doDetailedPlots) {
     h_match_trk_nstub->Write();
+    h_match_trk_seed->Write();
     h_match_trk_nstub_C->Write();
     h_match_trk_nstub_I->Write();
     h_match_trk_nstub_F->Write();
@@ -2894,10 +2922,10 @@ void L1TrackNtuplePlot(TString type,
   // ----------------------------------------------------------------------------------------------------------------
 
   // rebin pt/phi plots
-  h_tp_pt->Rebin(2);
-  h_match_tp_pt->Rebin(2);
-  h_tp_phi->Rebin(2);
-  h_match_tp_phi->Rebin(2);
+  //h_tp_pt->Rebin(2);
+  //h_match_tp_pt->Rebin(2);
+  //h_tp_phi->Rebin(2);
+  //h_match_tp_phi->Rebin(2);
 
   h_tp_pt_L->Rebin(2);
   h_match_tp_pt_L->Rebin(2);
@@ -3039,6 +3067,8 @@ void L1TrackNtuplePlot(TString type,
   h_eff_absd0_eta2_pt3->SetName("eff_absd0_eta2_pt3");
   h_eff_absd0_eta2_pt3->GetYaxis()->SetTitle("Efficiency");
   h_eff_absd0_eta2_pt3->Divide(h_match_tp_absd0_eta2_pt3, h_tp_absd0_eta2_pt3, 1.0, 1.0, "B");
+  
+  
 
   // set the axis range
   h_eff_pt->SetAxisRange(0, 1.1, "Y");
@@ -3064,6 +3094,11 @@ void L1TrackNtuplePlot(TString type,
   gPad->SetGridy();
 
   // draw and save plots
+  
+  h_match_trk_seed->Draw();
+  c.SaveAs(DIR + type + "matchtrk_seed.pdf");
+  
+
   h_eff_pt->Draw();
   h_eff_pt->Write();
   c.SaveAs(DIR + type + "_eff_pt.pdf");
@@ -3420,6 +3455,8 @@ void L1TrackNtuplePlot(TString type,
   h_trk_all_vspt->Sumw2();
   h_trk_loose_vspt->Sumw2();
   h_trk_genuine_vspt->Sumw2();
+  h_trk_fake_vspt->Sumw2();
+  h_trk_combinatoric_vspt->Sumw2();
   h_trk_notloose_vspt->Sumw2();
   h_trk_notgenuine_vspt->Sumw2();
   h_trk_duplicate_vspt->Sumw2();
@@ -3445,22 +3482,71 @@ void L1TrackNtuplePlot(TString type,
   h_notloose_pt->Draw();
   c.SaveAs(DIR + type + "_notloose.pdf");
 
-  // fraction of DUPLICATE tracks (genuine and not matched)
-  TH1F* h_duplicatefrac_pt = (TH1F*)h_trk_duplicate_vspt->Clone();
-  h_duplicatefrac_pt->SetName("duplicatefrac_pt");
-  h_duplicatefrac_pt->GetYaxis()->SetTitle("Duplicate fraction");
-  h_duplicatefrac_pt->Divide(h_trk_duplicate_vspt, h_trk_all_vspt, 1.0, 1.0, "B");
+  h_trk_genuine_vspt->Divide(h_trk_genuine_vspt, h_trk_pt, 1.0, 1.0, "B");
+  h_trk_loose_vspt->Divide(h_trk_loose_vspt, h_trk_pt, 1.0, 1.0, "B");
+  h_trk_fake_vspt->Divide(h_trk_fake_vspt, h_trk_pt, 1.0, 1.0, "B");
 
-  h_duplicatefrac_pt->Write();
-  h_duplicatefrac_pt->Draw();
-  c.SaveAs(DIR + type + "_duplicatefrac.pdf");
+  h_trk_genuine_vspt->SetFillColor(kRed);
+  h_trk_loose_vspt->SetFillColor(kBlue);
+  h_trk_fake_vspt->SetFillColor(kMagenta);
+
+  hs_trk_all_vspt->Add(h_trk_genuine_vspt);
+  hs_trk_all_vspt->Add(h_trk_loose_vspt);
+  hs_trk_all_vspt->Add(h_trk_fake_vspt);
+
+  TLegend* all_legend = new TLegend();
+  all_legend->AddEntry(h_trk_genuine_vspt, "genuine");
+  all_legend->AddEntry(h_trk_loose_vspt, "loosely genuine");
+  all_legend->AddEntry(h_trk_fake_vspt, "not either");
+  all_legend->Draw();
+
+  hs_trk_all_vspt->Draw("HIST");
+  hs_trk_all_vspt->SetMinimum(0.9);
+  hs_trk_all_vspt->SetMaximum(1.1);
+  hs_trk_all_vspt->GetXaxis()->SetRangeUser(0, 25);
+  TLine* line = new TLine(gPad->GetUxmin(), 1, gPad->GetUxmax(), 1);
+  line->SetLineColor(kGray);
+  line->Draw();
+  hs_trk_all_vspt->Write();
+  //c.SetLogy(1);
+  c.SaveAs(DIR + type + "_hs_trk_all_vspt.pdf");
+  //c.SetLogy(0);
+  
+
+  //hs_trk_allcombi_vspt->Add(h_trk_genuine_vspt);
+  //hs_trk_allcombi_vspt->Add(h_trk_loose_vspt);
+  //hs_trk_allcombi_vspt->Add(h_trk_fake_vspt);
+  //hs_trk_allcombi_vspt->Add(h_trk_combinatoric_vspt);
+
+
+  //hs_trk_allcombi_vspt->Draw("HIST");
+  //hs_trk_allcombi_vspt->SetMinimum(0.9);
+  //hs_trk_allcombi_vspt->SetMaximum(1.1);
+  //hs_trk_allcombi_vspt->GetXaxis()->SetRangeUser(0, 25);
+  //TLine* line2 = new TLine(gPad->GetUxmin(), 1, gPad->GetUxmax(), 1);
+  //line2->SetLineColor(kGray);
+  //line2->Draw();
+  //hs_trk_allcombi_vspt->Write();
+  ////c.SetLogy(1);
+  //c.SaveAs(DIR + type + "_hs_trk_allcombi_vspt.pdf");
+  //c.SetLogy(0);
+
+  // fraction of DUPLICATE tracks (genuine and not matched)
+  //TH1F* h_duplicatefrac_pt = (TH1F*)h_trk_duplicate_vspt->Clone();
+  //h_duplicatefrac_pt->SetName("duplicatefrac_pt");
+  //h_duplicatefrac_pt->GetYaxis()->SetTitle("Duplicate fraction");
+  //h_duplicatefrac_pt->Divide(h_trk_duplicate_vspt, h_trk_all_vspt, 1.0, 1.0, "B");
+
+  //h_duplicatefrac_pt->Write();
+  //h_duplicatefrac_pt->Draw();
+  //c.SaveAs(DIR + type + "_duplicatefrac.pdf");
 
   // ---------------------------------------------------------------------------------------------------------
   // total track rates vs pt
 
   h_trk_all_vspt->Scale(1.0 / nevt);
-  h_trk_loose_vspt->Scale(1.0 / nevt);
-  h_trk_genuine_vspt->Scale(1.0 / nevt);
+  //h_trk_loose_vspt->Scale(1.0 / nevt);
+  //h_trk_genuine_vspt->Scale(1.0 / nevt);
   h_trk_notloose_vspt->Scale(1.0 / nevt);
   h_trk_notgenuine_vspt->Scale(1.0 / nevt);
   h_trk_duplicate_vspt->Scale(1.0 / nevt);
@@ -3486,14 +3572,14 @@ void L1TrackNtuplePlot(TString type,
   h_trk_all_vspt->Draw("same,hist");
   h_tp_vspt->Draw("same,hist");
   h_trk_notgenuine_vspt->Draw("same,hist");
-  //h_trk_duplicate_vspt->Draw("same,hist");
+  h_trk_duplicate_vspt->Draw("same,hist");
 
   h_trk_all_vspt->Write();
-  h_trk_loose_vspt->Write();
-  h_trk_genuine_vspt->Write();
+  //h_trk_loose_vspt->Write();
+  //h_trk_genuine_vspt->Write();
   h_trk_notloose_vspt->Write();
   h_trk_notgenuine_vspt->Write();
-  h_trk_duplicate_vspt->Write();
+  //h_trk_duplicate_vspt->Write();
   h_tp_vspt->Write();
 
   char txt[500];
