@@ -211,14 +211,20 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           // If itrk is not a duplicate, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
           if (dupTrk == false) {
             CM += 1;
-          } 
+          }
+          std::cout << "For track " << itrk << " is it a duplicate: " << dupTrk << std::endl; 
           // If itrk is a duplicate, then continue
           if (dupTrk == true) 
             continue;
+          std::cout << "If track " << itrk << " was not a duplicate, then it should print here" << std::endl;
           // If the number of tracks able to be compared is more than the number of comparison modules, continue
           if (CM > settings_.numTracksComparedPerBin())
             continue;
+          std::cout << "If the number of CM doesn't exceed 32 it should print here: " << CM << std::endl;
           for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
+            std::cout << "Now to check if jtrk " << jtrk << " was a duplicate and if it was was it merged into another track: " << trackInfo[jtrk].second << std::endl;
+            if (trackInfo[jtrk].second == false) continue;
+            std::cout << "If jtrk " << jtrk << " wasn't merged into another track print here" << std::endl; 
             // Get primary track stubids = (layer, unique stub index within layer)
             const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
@@ -278,33 +284,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               dupMap[itrk][jtrk] = true;
               dupMap[jtrk][itrk] = true;
             }
-          }
-        }
 
-        // Check to see if the track is a duplicate
-        for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
-          for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
-            if (dupMap[itrk][jtrk]) {
-              noMerge[itrk] = true;
-            }
-          }
-        }
-
-        // If the track isn't a duplicate, and if it's in more than one bin, and it is not in the proper rinv or phi bin, then mark it so it won't be sent to output
-        for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
-          if (noMerge[itrk] == false) {
-            if (((findOverlapRinvBins(inputtracklets_[itrk]).size() > 1) &&
-                 (findRinvBin(inputtracklets_[itrk]) != bin)) ||
-                ((findOverlapPhiBins(inputtracklets_[itrk]).size() > 1) &&
-                 findPhiBin(inputtracklets_[itrk]) != phiBin)) {
-              trackInfo[itrk].second = true;
-            }
-          }
-        }
-        // Merge duplicate tracks
-        for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
-          for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
-            // Merge a track with its first duplicate found.
             if (dupMap[itrk][jtrk]) {
               // Set preferred track based on seed rank
               int preftrk;
@@ -364,6 +344,26 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 // Mark that rejected track has been merged into another track
                 trackInfo[rejetrk].second = true;
               }
+            }
+          }
+        }
+
+        // Check to see if the track is a duplicate
+        for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+          if (std::find(dupMap[itrk].begin(), dupMap[itrk].end(), true)  != dupMap[itrk].end()) {
+            noMerge[itrk] = true;
+          }
+        }
+        
+
+        // If the track isn't a duplicate, and if it's in more than one bin, and it is not in the proper rinv or phi bin, then mark it so it won't be sent to output
+        for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+          if (noMerge[itrk] == false) {
+            if (((findOverlapRinvBins(inputtracklets_[itrk]).size() > 1) &&
+                 (findRinvBin(inputtracklets_[itrk]) != bin)) ||
+                ((findOverlapPhiBins(inputtracklets_[itrk]).size() > 1) &&
+                 findPhiBin(inputtracklets_[itrk]) != phiBin)) {
+              trackInfo[itrk].second = true;
             }
           }
         }
