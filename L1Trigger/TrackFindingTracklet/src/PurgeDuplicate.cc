@@ -185,7 +185,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         }
 
         // Initialize all-false 2D array of tracks being duplicates to other tracks
-        bool dupMap[numStublists][numStublists];  // Ends up symmetric
+        std::vector<std::vector<bool>> dupMap;  // Ends up symmetric
         for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
           for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
             dupMap[itrk][jtrk] = false;
@@ -205,11 +205,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           // Create a flag to check if itrk is a duplicate track
           bool dupTrk = false;
           //Check the tracks before it, if it's a duplicate, mark the flag true
-          for (unsigned int ktrk = 0; ktrk < itrk; ktrk++) {
-            if (dupMap[itrk][ktrk] == true) {
+          if (std::find(dupMap[itrk].begin(), dupMap[itrk].end(), true)  != dupMap[itrk].end()) {
               dupTrk = true;
-              break;
-            }
           }
           // If itrk is not a duplicate, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
           if (dupTrk == false) {
@@ -263,35 +260,9 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 layStubidsTrk2[i] = -1;
               }
               // For each stub on the first track, find the stub with the best residual and store its index in the layStubidsTrk1 array
-              for (unsigned int stcount = 0; stcount < stubsTrk1.size(); stcount++) {
-                int i = stubsTrk1[stcount].first;  // layer/disk
-                bool barrel = (i > 0 && i < 10);
-                bool endcapA = (i > 10);
-                bool endcapB = (i < 0);
-                int lay = barrel * (i - 1) + endcapA * (i - 5) - endcapB * i;  // encode in range 0-15
-                double nres = getPhiRes(inputtracklets_[itrk], fullStubslistsTrk1[stcount]);
-                double ores = 0;
-                if (layStubidsTrk1[lay] != -1)
-                  ores = getPhiRes(inputtracklets_[itrk], fullStubslistsTrk1[layStubidsTrk1[lay]]);
-                if (layStubidsTrk1[lay] == -1 || nres < ores) {
-                  layStubidsTrk1[lay] = stcount;
-                }
-              }
+              doCompareBest(stubsTrk1, fullStubslistsTrk1, layStubidsTrk1, itrk);
               // For each stub on the second track, find the stub with the best residual and store its index in the layStubidsTrk1 array
-              for (unsigned int stcount = 0; stcount < stubsTrk2.size(); stcount++) {
-                int i = stubsTrk2[stcount].first;  // layer/disk
-                bool barrel = (i > 0 && i < 10);
-                bool endcapA = (i > 10);
-                bool endcapB = (i < 0);
-                int lay = barrel * (i - 1) + endcapA * (i - 5) - endcapB * i;  // encode in range 0-15
-                double nres = getPhiRes(inputtracklets_[jtrk], fullStubslistsTrk2[stcount]);
-                double ores = 0;
-                if (layStubidsTrk2[lay] != -1)
-                  ores = getPhiRes(inputtracklets_[jtrk], fullStubslistsTrk2[layStubidsTrk2[lay]]);
-                if (layStubidsTrk2[lay] == -1 || nres < ores) {
-                  layStubidsTrk2[lay] = stcount;
-                }
-              }
+              doCompareBest(stubsTrk2, fullStubslistsTrk2, layStubidsTrk2, jtrk);
               // For all 16 layers (6 layers and 10 disks), count the number of layers who's best stub on both tracks are the same
               for (int i = 0; i < 16; i++) {
                 int t1i = layStubidsTrk1[i];
@@ -844,4 +815,21 @@ bool PurgeDuplicate::isTrackInBin(const std::vector<unsigned int>& vec, unsigned
   auto result = std::find(vec.begin(), vec.end(), num);
   bool found = (result != vec.end());
   return found;
+}
+
+void PurgeDuplicate::doCompareBest(const std::vector<std::pair<int, int>>& stubsTrk, const std::vector<const Stub*>& fullStubslistsTrk, int layStubidsTrk[], unsigned int itrk) {
+  for (unsigned int stcount = 0; stcount < stubsTrk.size(); stcount++) {
+    int i = stubsTrk[stcount].first;  // layer/disk
+    bool barrel = (i > 0 && i < 10);
+    bool endcapA = (i > 10);
+    bool endcapB = (i < 0);
+    int lay = barrel * (i - 1) + endcapA * (i - 5) - endcapB * i;  // encode in range 0-15
+    double nres = getPhiRes(inputtracklets_[itrk], fullStubslistsTrk[stcount]);
+    double ores = 0;
+    if (layStubidsTrk[lay] != -1)
+      ores = getPhiRes(inputtracklets_[itrk], fullStubslistsTrk[layStubidsTrk[lay]]);
+    if (layStubidsTrk[lay] == -1 || nres < ores) {
+      layStubidsTrk[lay] = stcount;
+    }
+  }
 }
