@@ -185,12 +185,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         }
 
         // Initialize all-false 2D array of tracks being duplicates to other tracks
-        std::vector<std::vector<bool>> dupMap;  // Ends up symmetric
-        for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
-          for (unsigned int jtrk = 0; jtrk < numStublists; jtrk++) {
-            dupMap[itrk][jtrk] = false;
-          }
-        }
+        std::vector<std::vector<bool>> dupMap(numStublists, std::vector<bool>(numStublists, false));  // Ends up symmetric
 
         // Used to check if a track is in two bins, is not a duplicate in either bin, so is sent out twice
         bool noMerge[numStublists];
@@ -208,23 +203,19 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           if (std::find(dupMap[itrk].begin(), dupMap[itrk].end(), true)  != dupMap[itrk].end()) {
               dupTrk = true;
           }
-          // If itrk is not a duplicate, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
-          if (dupTrk == false) {
+          // If itrk is not a duplicate, or if it is a duplicate, but was not the merged track, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
+          if ((dupTrk == false) && (trackInfo[itrk].second == false) {
             CM += 1;
           }
-          std::cout << "For track " << itrk << " is it a duplicate: " << dupTrk << std::endl; 
-          // If itrk is a duplicate, then continue
-          if (dupTrk == true) 
+          // If itrk is a duplicate and it is the merged track, then continue
+          if ((dupTrk == true) && (trackInfo[itrk].second == true))
             continue;
-          std::cout << "If track " << itrk << " was not a duplicate, then it should print here" << std::endl;
           // If the number of tracks able to be compared is more than the number of comparison modules, continue
           if (CM > settings_.numTracksComparedPerBin())
             continue;
-          std::cout << "If the number of CM doesn't exceed 32 it should print here: " << CM << std::endl;
           for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
-            std::cout << "Now to check if jtrk " << jtrk << " was a duplicate and if it was was it merged into another track: " << trackInfo[jtrk].second << std::endl;
-            if (trackInfo[jtrk].second == false) continue;
-            std::cout << "If jtrk " << jtrk << " wasn't merged into another track print here" << std::endl; 
+            // If jtrk has already been merged into another track, continue
+            if (trackInfo[jtrk].second == true) continue;
             // Get primary track stubids = (layer, unique stub index within layer)
             const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
@@ -286,6 +277,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             }
 
             if (dupMap[itrk][jtrk]) {
+              std::cout << "Tracks " << itrk << " and " << jtrk << " are duplicates" << std::endl;
               // Set preferred track based on seed rank
               int preftrk;
               int rejetrk;
