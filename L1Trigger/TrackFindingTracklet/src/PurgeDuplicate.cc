@@ -204,18 +204,20 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               dupTrk = true;
           }
           // If itrk is not a duplicate, or if it is a duplicate, but was not the merged track, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
-          if ((dupTrk == false) && (trackInfo[itrk].second == false) {
+          if ((dupTrk == false) && (trackInfo[itrk].second == false)) {
             CM += 1;
           }
           // If itrk is a duplicate and it is the merged track, then continue
-          if ((dupTrk == true) && (trackInfo[itrk].second == true))
+          if ((dupTrk == true) && (trackInfo[itrk].second == true)) {
             continue;
+          }
           // If the number of tracks able to be compared is more than the number of comparison modules, continue
-          if (CM > settings_.numTracksComparedPerBin())
+          if (CM > settings_.numTracksComparedPerBin()) {
             continue;
+          }
           for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
             // If jtrk has already been merged into another track, continue
-            if (trackInfo[jtrk].second == true) continue;
+            //if (trackInfo[jtrk].second == true) continue;
             // Get primary track stubids = (layer, unique stub index within layer)
             const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
@@ -277,17 +279,16 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             }
 
             if (dupMap[itrk][jtrk]) {
-              std::cout << "Tracks " << itrk << " and " << jtrk << " are duplicates" << std::endl;
               // Set preferred track based on seed rank
               int preftrk;
               int rejetrk;
-              if (seedRank[itrk] < seedRank[jtrk]) {
-                preftrk = itrk;
-                rejetrk = jtrk;
-              } else {
-                preftrk = jtrk;
-                rejetrk = itrk;
-              }
+              //if (seedRank[itrk] < seedRank[jtrk]) {
+              preftrk = itrk;
+              rejetrk = jtrk;
+              //} else {
+              //  preftrk = jtrk;
+              //  rejetrk = itrk;
+              //}
 
               // If the preffered track is in more than one bin, but not in the proper rinv or phi bin, then mark as true
               if (((findOverlapRinvBins(inputtracklets_[preftrk]).size() > 1) &&
@@ -332,6 +333,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 }
                 // Overwrite stubidslist of preferred track with merged list
                 mergedstubidslists_[preftrk] = newStubidsList;
+                inputstubidslists_[preftrk] = newStubidsList;
 
                 // Mark that rejected track has been merged into another track
                 trackInfo[rejetrk].second = true;
@@ -543,6 +545,7 @@ double PurgeDuplicate::getPhiRes(Tracklet* curTracklet, const Stub* curStub) con
   double phires;
   // Get phi position of stub
   stubphi = curStub->l1tstub()->phi();
+  std::cout<<"Stubphi is " << stubphi << std::endl;
   // Get layer that the stub is in (Layer 1->6, Disk 1->5)
   int Layer = curStub->layerdisk() + 1;
   if (Layer > N_LAYER) {
