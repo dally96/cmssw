@@ -56,7 +56,7 @@ void L1TrackNtuplePlot(TString type,
                        float TP_maxEta = 2.4,
                        float TP_maxDxy = 1.0,
                        float TP_maxD0 = 1.0,
-                       bool doDetailedPlots = false) {
+                       bool doDetailedPlots = true) {
   // type:              this is the name of the input file you want to process (minus ".root" extension)
   // type_dir:          this is the directory containing the input file you want to process. Note that this must end with a "/", as in "EventSets/"
   // TP_select_pdgid:   if non-zero, only select TPs with a given PDG ID
@@ -83,6 +83,9 @@ void L1TrackNtuplePlot(TString type,
   int L1Tk_minNstub = 4;
   float L1Tk_maxChi2 = 999999;
   float L1Tk_maxChi2dof = 999999.;
+
+  float c_speed = 0.299792458; //speed of light m/ns
+  float bfield = 3.8112;
 
   // TIGHT cuts (separate plots / rates) ==> configure as appropriate
   // this is currently set up as an either or for performance plots, to not duplicate a ton of code.
@@ -488,11 +491,17 @@ void L1TrackNtuplePlot(TString type,
 
   unsigned int nBinsZ0Res = 100;
   double maxZ0Res = 4.0;
+
+  Double_t pt_binsExtended[21] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
   // ----------------------------------------------
 
   const int nRANGE = 20;
   TString ptrange[nRANGE] = {"0-5",   "5-10",  "10-15", "15-20", "20-25", "25-30", "30-35", "35-40", "40-45", "45-50",
                              "50-55", "55-60", "60-65", "65-70", "70-75", "75-80", "80-85", "85-90", "90-95", "95-100"};
+
+  TString rinvrange[nRANGE] = {"0-3E-4", "3E-4-6E-4", "6E-4-9E-4", "9E-4-12E-4", "12E-4-15E-4", "15E-4-18E-4", "18E-4-21E-4", "21E-4-24E-4", "24E-4-27E-4", "27E-4-30E-4",
+                               "30-33E-4", "33E-4-36E-4", "36E-4-39E-4", "39E-4-42E-4", "42E-4-45E-4", "45E-4-48E-4", "48E-4-51E-4", "51E-4-54E-4", "54E-4-57E-4", "57E-4-60E-4"};
+
 
   const float pt_resmin = 1.5;
   const int nRANGE_L = 13;
@@ -704,16 +713,21 @@ void L1TrackNtuplePlot(TString type,
   // total track rates
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_all_vspt_extended = new TH1F("trk_all_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
   TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_notloose_vspt = new TH1F(
       "trk_notloose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);  //(same as "fake" according to the trk_fake labeling)
   TH1F* h_trk_notgenuine_vspt = new TH1F("trk_notgenuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+//  TH1F* h_trk_duplicate_vspt = new TH1F("trk_duplicate_vspt",
+//                                        ";Track p_{T} [GeV]; ",
+//                                        50,
+//                                        0,
+//                                        25);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_trk_duplicate_vspt = new TH1F("trk_duplicate_vspt",
                                         ";Track p_{T} [GeV]; ",
-                                        50,
-                                        0,
-                                        25);  //where a TP is genuinely matched to more than one L1 track
+                                        20,
+                                        pt_binsExtended);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_tp_vspt = new TH1F("tp_vspt", ";TP p_{T} [GeV]; ", 50, 0, 25);
 
   // ----------------------------------------------------------------------------------------------------------------
@@ -849,6 +863,8 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_ptRel_I[nRANGE];
   TH1F* h_resVsPt_ptRel_F[nRANGE];
 
+  TH1F* h_resVsRInv_pt[nRANGE];
+
   TH1F* h_resVsPt_z0[nRANGE];
   TH1F* h_resVsPt_z0_C[nRANGE];
   TH1F* h_resVsPt_z0_I[nRANGE];
@@ -859,8 +875,21 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_phi_I[nRANGE];
   TH1F* h_resVsPt_phi_F[nRANGE];
 
+  TH1F* h_resVsRInv_phi[nRANGE];
+  TH1F* h_resVsRInv_rInv[nRANGE];
+  
   TH1F* h_resVsPt_eta[nRANGE];
   TH1F* h_resVsPt_d0[nRANGE];
+
+  for (int i = 0; i < nRANGE; i++) {
+    h_resVsRInv_pt[i] = 
+        new TH1F("resVsRInv_pt_" + rinvrange[i], ";p_{T} residual (L1 - sim) [GeV]; L1 tracks", 100, -5, -5);
+    h_resVsRInv_phi[i] = 
+        new TH1F("resVsRInv_phi_" + rinvrange[i], ";#phi residual (L1 - sim) [rad]; L1 tracks", 100, -0.005, 0.005);
+    h_resVsRInv_rInv[i] = 
+        new TH1F("resVsRInv_rInv_" + rinvrange[i], ";rInv residual (L1 - sim) [cm^{-1}]; L1 tracks", 100, -0.0005, 0.0005);
+  }
+
 
   for (int i = 0; i < nRANGE; i++) {
     h_resVsPt_pt[i] =
@@ -1154,6 +1183,7 @@ void L1TrackNtuplePlot(TString type,
         ntrk_pt2++;
         ntrkevt_pt2++;
         h_trk_all_vspt->Fill(trk_pt->at(it));
+        h_trk_all_vspt_extended->Fill(trk_pt->at(it));
         if (trk_genuine->at(it) == 1) {
           ntrkevt_genuine_pt2++;
           h_trk_genuine_vspt->Fill(trk_pt->at(it));
@@ -1553,6 +1583,15 @@ void L1TrackNtuplePlot(TString type,
 
       // ----------------------------------------------------------------------------------------------------------------
       // fill resolution vs. pt histograms
+      
+      for (int im = 0; im < nRANGE; im++) { 
+        if ((((0.01 * c_speed * bfield) / tp_pt->at(it)) > (float)im * 3E-4) && (((0.01 * c_speed * bfield) / tp_pt->at(it)) < (float)(im + 1) * 3E-4)) {
+          h_resVsRInv_pt[im]->Fill(matchtrk_pt->at(it) - tp_pt->at(it));     
+          h_resVsRInv_phi[im]->Fill(matchtrk_phi->at(it) - tp_phi->at(it));     
+          h_resVsRInv_rInv[im]->Fill(((0.01 * c_speed * bfield) / matchtrk_pt->at(it)) - ((0.01 * c_speed * bfield) / tp_pt->at(it)));     
+        }
+      }
+      
       for (int im = 0; im < nRANGE; im++) {
         if ((tp_pt->at(it) > (float)im * 5.0) && (tp_pt->at(it) < (float)(im + 1) * 5.0)) {
           h_resVsPt_pt[im]->Fill(matchtrk_pt->at(it) - tp_pt->at(it));
@@ -1705,6 +1744,13 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h2_resVsPt_pt_F =
       new TH1F("resVsPt2_pt_F", ";Tracking particle p_{T} [GeV]; p_{T} resolution [GeV]", 20, 0, 100);
 
+  TH1F* h2_resVsRInv_pt =
+      new TH1F("resVsRInv2_pt", ";Tracking particle RInv [cm^{-1}]; p_{T} resolution [GeV]", 20, 0, 6E-3);
+  TH1F* h2_resVsRInv_phi =
+      new TH1F("resVsRInv2_phi", ";Tracking particle RInv [cm^{-1}]; #phi  resolution [rad]", 20, 0, 6E-3);
+  TH1F* h2_resVsRInv_rInv =
+      new TH1F("resVsRInv2_rInv", ";Tracking particle RInv [cm^{-1}]; rInv resolution [cm^{-1}]", 20, 0, 6E-3);
+
   TH1F* h2_resVsPt_ptRel =
       new TH1F("resVsPt2_ptRel", ";Tracking particle p_{T} [GeV]; p_{T} resolution / p_{T}", 20, 0, 100);
   TH1F* h2_resVsPt_ptRel_C =
@@ -1817,6 +1863,15 @@ void L1TrackNtuplePlot(TString type,
       new TH1F("resVsPt2_eta_L_99", ";Tracking particle p_{T} [GeV]; #eta resolution", nRANGE_L, pt_resmin, 8);
   TH1F* h2_resVsPt_d0_L_99 =
       new TH1F("resVsPt2_d0_L_99", ";Tracking particle p_{T} [GeV]; d_{0} resolution [cm]", nRANGE_L, pt_resmin, 8);
+  
+  for (int i = 0; i < nRANGE; i++) {
+    h2_resVsRInv_pt->SetBinContent(i + 1, h_resVsRInv_pt[i]->GetRMS());
+    h2_resVsRInv_pt->SetBinError(i + 1, h_resVsRInv_pt[i]->GetRMSError());
+    h2_resVsRInv_phi->SetBinContent(i + 1, h_resVsRInv_phi[i]->GetRMS());
+    h2_resVsRInv_phi->SetBinError(i + 1, h_resVsRInv_phi[i]->GetRMSError());
+    h2_resVsRInv_rInv->SetBinContent(i + 1, h_resVsRInv_rInv[i]->GetRMS());
+    h2_resVsRInv_rInv->SetBinError(i + 1, h_resVsRInv_rInv[i]->GetRMSError());
+  }
 
   for (int i = 0; i < nRANGE; i++) {
     // set bin content and error
@@ -2383,6 +2438,17 @@ void L1TrackNtuplePlot(TString type,
 
   // set minimum to zero
   h2_resVsPt_pt->SetMinimum(0);
+
+  h2_resVsRInv_pt->SetMinimum(0);
+  h2_resVsRInv_phi->SetMinimum(0);
+  h2_resVsRInv_rInv->SetMinimum(0);
+  
+  for (int i = 0; i < nRANGE; i++) {
+    h_resVsRInv_pt[i]->SetMinimum(0);
+    h_resVsRInv_phi[i]->SetMinimum(0);
+    h_resVsRInv_rInv[i]->SetMinimum(0);
+  }
+
   h2_resVsPt_pt_C->SetMinimum(0);
   h2_resVsPt_pt_I->SetMinimum(0);
   h2_resVsPt_pt_F->SetMinimum(0);
@@ -2473,7 +2539,7 @@ void L1TrackNtuplePlot(TString type,
   char ctxt[500];
   TCanvas c;
 
-  gSystem->mkdir("TrkPlots");
+  //gSystem->mkdir("TrkPlots");
   TString DIR = "TrkPlots/";
 
   // plots overlaying 68, 90, 99% confidence levels]
@@ -2576,6 +2642,37 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_pt_90->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_pt_90.pdf");
 
+  h2_resVsPt_pt->SetMarkerStyle(20);
+  h2_resVsPt_pt->Draw("p");
+  c.SaveAs(DIR + type + "_resVsPt_pt.pdf");
+
+  h2_resVsRInv_pt->SetMarkerStyle(20);
+  h2_resVsRInv_pt->Draw("p");
+  c.SaveAs(DIR + type + "_resVsRInv_pt.pdf");
+
+  h2_resVsRInv_phi->SetMarkerStyle(20);
+  h2_resVsRInv_phi->Draw("p");
+  c.SaveAs(DIR + type + "_resVsRInv_phi.pdf");
+
+  h2_resVsRInv_rInv->SetMarkerStyle(20);
+  h2_resVsRInv_rInv->Draw("p");
+  c.SaveAs(DIR + type + "_resVsRInv_rInv.pdf");
+
+  for (int i = 0; i < nRANGE; i++) { 
+    h_resVsRInv_pt[i]->SetMarkerStyle(20);
+    h_resVsRInv_pt[i]->Draw("p");
+    c.SaveAs(DIR + type + "_resVsRInv_pt" + rinvrange[i] + ".pdf");
+    
+    h_resVsRInv_phi[i]->SetMarkerStyle(20);
+    h_resVsRInv_phi[i]->Draw("p");
+    c.SaveAs(DIR + type + "_resVsRInv_phi" + rinvrange[i] + ".pdf");
+
+    h_resVsRInv_rInv[i]->SetMarkerStyle(20);
+    h_resVsRInv_rInv[i]->Draw("p");
+    c.SaveAs(DIR + type + "_resVsRInv_rInv" + rinvrange[i] + ".pdf");
+    
+  } 
+
   h2_resVsPt_ptRel_90->SetMinimum(0);
   h2_resVsPt_ptRel_90->SetMarkerStyle(20);
   h2_resVsPt_ptRel_90->Draw("p");
@@ -2619,6 +2716,10 @@ void L1TrackNtuplePlot(TString type,
 
   if (doDetailedPlots) {
     h2_resVsPt_eta->Write();
+
+    h2_resVsRInv_pt->Write();
+    h2_resVsRInv_phi->Write();
+    h2_resVsRInv_rInv->Write();
 
     h2_resVsPt_pt->Write();
     h2_resVsPt_pt_C->Write();
@@ -3422,7 +3523,7 @@ void L1TrackNtuplePlot(TString type,
   h_trk_genuine_vspt->Sumw2();
   h_trk_notloose_vspt->Sumw2();
   h_trk_notgenuine_vspt->Sumw2();
-  h_trk_duplicate_vspt->Sumw2();
+  //h_trk_duplicate_vspt->Sumw2();
   h_tp_vspt->Sumw2();
 
   // fraction of not genuine tracks
@@ -3449,7 +3550,7 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_duplicatefrac_pt = (TH1F*)h_trk_duplicate_vspt->Clone();
   h_duplicatefrac_pt->SetName("duplicatefrac_pt");
   h_duplicatefrac_pt->GetYaxis()->SetTitle("Duplicate fraction");
-  h_duplicatefrac_pt->Divide(h_trk_duplicate_vspt, h_trk_all_vspt, 1.0, 1.0, "B");
+  h_duplicatefrac_pt->Divide(h_trk_duplicate_vspt, h_trk_all_vspt_extended, 1.0, 1.0, "B");
 
   h_duplicatefrac_pt->Write();
   h_duplicatefrac_pt->Draw();
