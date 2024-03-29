@@ -206,11 +206,10 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               dupTrk = true;
           }
           // If itrk is not a duplicate, or if it is a duplicate, but was not the merged track, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
+          // If itrk is a duplicate and it is the merged track, then continue
           if ((dupTrk == false)) {
             CM += 1;
-          }
-          // If itrk is a duplicate and it is the merged track, then continue
-          if ((dupTrk == true)) {
+          } else ((dupTrk == true)) {
             continue;
           }
           // If the number of tracks able to be compared is more than the number of comparison modules, continue
