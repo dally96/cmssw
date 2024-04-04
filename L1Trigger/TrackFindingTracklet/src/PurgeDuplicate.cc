@@ -387,6 +387,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         inputstublists_.clear();
         inputstubidslists_.clear();
         mergedstubidslists_.clear();
+        comparestubidslists_.clear();
       }
     }
 
