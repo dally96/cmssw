@@ -70,14 +70,31 @@ variables = [
     #('combinatoric_pt' , 'Track p_{T}'                  , 'combinatoric fraction',   50   , (  0   , 100   ), (0.00 , 0.13), 'combinatoricfraction',   (0.2 , 0.35, 0.75, 0.88),  (0.501, 1.05 )), 
   #  ('eff_pt_L'            , 'p_{T}'               , ytitlee,    40   , (  0   , 8), (0   , 1.1),     'effVsPt_L',      (0.7 , 0.85, 0.25, 0.38),  (0.501, 1.05 )), 
     ('eff_eta'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0.8  , 1.0),    'effVsEta',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L1L2'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L1L2',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L2L3'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L2L3',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L3L4'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L3L4',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L5L6'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L5L6',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_D1D2'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_D1D2',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_D3D4'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_D3D4',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L1D1'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L1D1',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L2D1'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L2D1',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L2L3L4'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L2L3L4',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L4L5L6'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L4L5L6',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_L2L3D1'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_L2L3D1',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
+    ('eff_eta_D1D2L2'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_D1D2L2',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
     ('eff_pt'            , 'p_{T}'               , ytitlee,    20   , pt_binsExtended, (0.85   , 1),     'effVsPt',      (0.6 , 0.75, 0.25, 0.38),  (0.501, 1.05 )), 
     ('eff_phi'           , '#phi'                , ytitlee,    144   , (-3.2, 3.2), (0.8, 1.0),            'effVsPhi',     (0.6 , 0.85, 0.25, 0.38),  (0.501, 1.05 )),
 # # #  ('eff_d0'            , 'd0'                  , ytitlee,    50   , ( -10. ,  10. ), (0.   , 1.),    'effVsD0',       (0.2 , 0.5, 0.75, 0.88),  (0.5  , 1.05  )),
 # # #  ('eff_z0'            , 'z0'                  , ytitlee,    50   , ( -10. ,  10. ), (0.   , 1.),    'effVsZ0',       (0.2 , 0.5, 0.75, 0.88),  (0.5  , 1.05  )),
-  ('duplicatefrac_pt' , 'p_{T} [GeV]'          , 'duplicate fraction',    17   , pt_binsExtended, (0.   , .15),    'dupVsPt',       (0.2 , 0.4, 0.35, 0.48),  (0.5  , 1.05  )),
+  ('duplicatefrac_pt' , 'p_{T} [GeV]'          , 'duplicate fraction',    17   , pt_binsExtended, (0.   , .08),    'dupVsPt',       (0.2 , 0.4, 0.55, 0.68),  (0.5  , 1.05  )),
+  ('duplicatefrac_phi' , '#phi [rad]'          , 'duplicate fraction',    64   , (-3.2, 3.2), (0.   , .08),    'dupVsPhi',       (0.5 , 0.7, 0.65, 0.88),  (0.5  , 1.05  )),
+  ('duplicatefrac_rinv' , 'rInv [cm^{-1}]'          , 'duplicate fraction',    60   , (0, 6E-3), (0.   , .08),    'dupVsRInv',       (0.5 , 0.7, 0.65, 0.88),  (0.5  , 1.05  )),
   ('resVsRInv2_pt', 'rInv [cm^{-1}]'            , 'p_{T} resolution [GeV]',     20,     (0, 6E-3),    (0, 2E1),                 'resVsRInv_pt', (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
   ('resVsRInv2_phi', 'rInv [cm^{-1}]'            , '#phi resolution [rad]',     20,     (0, 6E-3),    (0, 0.003),                 'resVsRInv_phi', (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
   ('resVsRInv2_rInv', 'rInv [cm^{-1}]'            , 'rInv resolution [cm^{-1}]',     20,     (0, 6E-3),    (0, 0.12E-3),          'resVsRInv_phi', (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
+  ('resVsEta_rInv', "#eta", "rInv resolution [cm^{-1}]", 64, (-3.2, 3.2), (0.   , .08), "resVsEta_rInv", (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
+  ('resVsEta_phi', "#eta", "#phi resolution [rad]",  64, (-3.2, 3.2), (0.   , 3E-3), "resVsEta_phi", (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
+  ('resVsEta_pt', "#eta", "p_{T} resolution [GeV]",  64, (-3.2, 3.2), (0.   , 0.25), "resVsEta_pt", (0.6 , 0.85, 0.25, 0.38), (0.5, 1.05 )),
   #('notgenuine_pt' , 'p_{T} [GeV]'          , 'not genuine fraction',    200   , ( 0. ,  100 ), (0.   , .15),    'notgenfrac',       (0.2 , 0.5, 0.75, 0.88),  (0.5  , 1.05  )),
   #('trk_chi2_dof',  'chi^{2}/ndof', 'A.U.', 100, (0, 10), (0, 0.2), 'chi2_dof', (0.5 , 0.9, 0.5, 0.65), (0.501, 1.05)),
   #("duplicate_pt",      'p_{T} [GeV]',          'A.U.',                   200,     (0, 100), (0, 10000), 'dup', (0.7 , 0.85, 0.5, 0.65), (0.5  , 1.05  )),
@@ -163,7 +180,8 @@ if options.leg:
         if (var[2] == "A.U."):
           k.Scale(1/k.GetEntries())  
         k.Draw(drawOption)
-        ROOT.gPad.SetLogy(0)
+        #if ("rinv" in var[0]):
+         # bin1 = ROOT.TLine(
         #c1.Update()
         #c1.Modified()
 

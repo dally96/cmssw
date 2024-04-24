@@ -108,7 +108,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 # Use skipEvents to select particular single events for test vectors
 #process.source.skipEvents = cms.untracked.uint32(11)
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('ExtendedTracking_withoutBins_seedRankBugFix.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('ExtendedTracking_withBins_seedRankBugFix_SectorFix.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
