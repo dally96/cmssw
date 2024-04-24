@@ -24,6 +24,7 @@
 #include "TMath.h"
 #include <TError.h>
 #include "TSystem.h"
+#include "TLine.h"
 
 #include <iostream>
 #include <string>
@@ -417,8 +418,10 @@ void L1TrackNtuplePlot(TString type,
 
   // ----------------------------------------------------------------------------------------------------------------
   // for efficiencies
+  Double_t pt_binsExtended[21] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
 
   TH1F* h_tp_pt = new TH1F("tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+  TH1F* h_tp_pt_ext = new TH1F("tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 20, pt_binsExtended);
   TH1F* h_tp_pt_L = new TH1F("tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_LC = new TH1F("tp_pt_LC", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_H = new TH1F("tp_pt_H", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 92, 8.0, 100.0);
@@ -428,9 +431,12 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_tp_eta_23 = new TH1F("tp_eta_23", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
   TH1F* h_tp_eta_35 = new TH1F("tp_eta_35", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
   TH1F* h_tp_eta_5 = new TH1F("tp_eta_5", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
+  TH1F* h_tp_rInv = new TH1F("tp_rInv", ";Tracking particle rInv [cm^{-1}]; Tracking particles / 0.0001 cm^{-1}", 60, 0, 6E-3);
 
   TH1F* h_match_tp_pt =
       new TH1F("match_tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+  TH1F* h_match_tp_pt_ext =
+      new TH1F("match_tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 20, pt_binsExtended);
   TH1F* h_match_tp_pt_L =
       new TH1F("match_tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_match_tp_pt_LC =
@@ -438,6 +444,18 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_match_tp_pt_H =
       new TH1F("match_tp_pt_H", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 92, 8.0, 100.0);
   TH1F* h_match_tp_eta = new TH1F("match_tp_eta", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
+  TH1F* h_match_tp_rInv = new TH1F("match_tp_rInv", ";Tracking particle rInv [cm^{-1}]; Tracking particles / 0.0001 cm^{-1}", 60, 0, 6E-3);
+
+  const int nSEED = 12;
+  TString seeds[nSEED] = { "L1L2", "L2L3", "L3L4", "L5L6", "D1D2", "D3D4", "L1D1", "L2D1", "L2L3L4", "L4L5L6", "L2L3D1", "D1D2L2" };
+  
+  TH1F* h_match_tp_eta_seed[nSEED]; 
+
+  for (int seed = 0; seed < nSEED; seed++) {
+    h_match_tp_eta_seed[seed] = 
+      new TH1F("match_tp_eta_seed", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);   
+  }
+  
   TH1F* h_match_tp_eta_L =
       new TH1F("match_tp_eta_L", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
   TH1F* h_match_tp_eta_H =
@@ -492,7 +510,7 @@ void L1TrackNtuplePlot(TString type,
   unsigned int nBinsZ0Res = 100;
   double maxZ0Res = 4.0;
 
-  Double_t pt_binsExtended[21] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
+  //Double_t pt_binsExtended[21] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
   // ----------------------------------------------
 
   const int nRANGE = 20;
@@ -675,9 +693,16 @@ void L1TrackNtuplePlot(TString type,
   TString phirange[nPHIRANGE] = {"-3.0", "-2.8", "-2.6", "-2.4", "-2.2", "-2.0", "-1.8", "-1.6", "-1.4", "-1.2", "-1.0",
                                  "-0.8", "-0.6", "-0.4", "-0.2", "0.0",  "0.2",  "0.4",  "0.6",  "0.8",  "1.0",  "1.2",
                                  "1.4",  "1.6",  "1.8",  "2.0",  "2.2",  "2.4",  "2.6",  "2.8",  "3.0",  "3.2"};
-
+  const int nPHIRANGE_Ext = 256;
+  std::vector<double> phirange_ext; 
+  
+  for (int i = 0; i < nPHIRANGE_Ext; i++) {
+    phirange_ext.push_back(-3.2 + i * (6.4/256));
+  }
+  
   TH1F* h_absResVsPhi_pt[nPHIRANGE];
   TH1F* h_absResVsPhi_ptRel[nPHIRANGE];
+  TH1F* h_resVsPhi_eta[nPHIRANGE_Ext];
 
   for (int i = 0; i < nPHIRANGE; i++) {
     h_absResVsPhi_pt[i] = new TH1F(
@@ -687,6 +712,12 @@ void L1TrackNtuplePlot(TString type,
                                       nBinsPtRelRes,
                                       0,
                                       maxPtRelRes);
+  }
+
+  for (int i = 0; i < nPHIRANGE_Ext; i++) {
+    h_resVsPhi_eta[i] =
+        new TH1F("resVsPhi_eta", ";#eta residual (L1 - sim); L1 tracks / 0.0002", 100, -0.01, 0.01);
+    h_resVsPhi_eta[i]->SetName(Form("resVsPhi_eta_%i", i));
   }
 
   // ----------------------------------------------------------------------------------------------------------------
@@ -713,6 +744,8 @@ void L1TrackNtuplePlot(TString type,
   // total track rates
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 70, -0.35, 0.35);
+  TH1F* h_trk_all_vsrinv = new TH1F("trk_all_vsrinv", ";Track rInv [cm^{-1}]; ", 60, 0, 0.6E-3);
   TH1F* h_trk_all_vspt_extended = new TH1F("trk_all_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
   TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
@@ -728,6 +761,14 @@ void L1TrackNtuplePlot(TString type,
                                         ";Track p_{T} [GeV]; ",
                                         20,
                                         pt_binsExtended);  //where a TP is genuinely matched to more than one L1 track
+  TH1F* h_trk_duplicate_vsphi = new TH1F("trk_duplicate_vsphi",
+                                        ";Track #phi [rad]; ",
+                                        70,
+                                        -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
+  TH1F* h_trk_duplicate_vsrinv = new TH1F("trk_duplicate_vsrinv",
+                                        ";Track rInv [cm^{-1}]; ",
+                                        60,
+                                        0, 6E-3);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_tp_vspt = new TH1F("tp_vspt", ";TP p_{T} [GeV]; ", 50, 0, 25);
 
   // ----------------------------------------------------------------------------------------------------------------
@@ -751,7 +792,7 @@ void L1TrackNtuplePlot(TString type,
 
   const float maxD0plot = TP_maxD0;
 
-  TH1F* h_tp_phi = new TH1F("tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.1", 64, -3.2, 3.2);
+  TH1F* h_tp_phi = new TH1F("tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.005", 140, -0.35, 0.35);
   TH1F* h_tp_d0 =
       new TH1F("tp_d0", ";Tracking particle d_{0} [cm]; Tracking particles / 0.01 cm", 50, -maxD0plot, maxD0plot);
   TH1F* h_tp_absd0 =
@@ -762,7 +803,7 @@ void L1TrackNtuplePlot(TString type,
       new TH1F("tp_absd0_eta2_pt3", ";Tracking particle |d_{0}| [cm]; Tracking particles / 0.04 cm", 50, 0, maxD0plot);
 
   TH1F* h_match_tp_phi =
-      new TH1F("match_tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.1", 64, -3.2, 3.2);
+      new TH1F("match_tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.005", 140, -0.35, 0.35);
   TH1F* h_match_tp_d0 =
       new TH1F("match_tp_d0", ";Tracking particle d_{0} [cm]; Tracking particles / 0.01 cm", 50, -maxD0plot, maxD0plot);
   TH1F* h_match_tp_absd0 =
@@ -931,6 +972,7 @@ void L1TrackNtuplePlot(TString type,
     h_resVsPt_eta[i] =
         new TH1F("resVsPt_eta_" + ptrange[i], ";#eta residual (L1 - sim); L1 tracks / 0.0002", 100, -0.01, 0.01);
 
+
     h_resVsPt_d0[i] =
         new TH1F("resVsPt_d0_" + ptrange[i], ";d_{0} residual (L1 - sim) [cm]; L1 tracks / 0.0004", 100, -0.02, 0.02);
   }
@@ -949,6 +991,9 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsEta_phi[nETARANGE];
   TH1F* h_resVsEta_phi_L[nETARANGE];
   TH1F* h_resVsEta_phi_H[nETARANGE];
+
+  TH1F* h_resVsEta_pt[nETARANGE];
+  TH1F* h_resVsEta_rInv[nETARANGE];
 
   TH1F* h_resVsEta_ptRel[nETARANGE];
   TH1F* h_resVsEta_ptRel_L[nETARANGE];
@@ -979,6 +1024,11 @@ void L1TrackNtuplePlot(TString type,
         "resVsEta2_phi_L_" + etarange[i], ";#phi residual (L1 - sim) [rad]; L1 tracks / 0.0001", 100, -0.005, 0.005);
     h_resVsEta_phi_H[i] = new TH1F(
         "resVsEta2_phi_H_" + etarange[i], ";#phi residual (L1 - sim) [rad]; L1 tracks / 0.0001", 100, -0.005, 0.005);
+
+    h_resVsEta_pt[i] = new TH1F(
+        "resVsEta2_pt_" + etarange[i], ";p_{T} residual (L1 - sim) [GeV]; L1 tracks / 0.01", 100, -1, 1);
+    h_resVsEta_rInv[i] = new TH1F(
+        "resVsEta2_rInv_" + etarange[i], ";rInv residual (L1 - sim) [cm^{-1}]; L1 tracks / 0.01", 100, -0.0005, 0.0005);
 
     h_resVsEta_ptRel[i] = new TH1F(
         "resVsEta2_ptRel_" + etarange[i], ";p_{T} residual (L1 - sim) / p_{T}; L1 tracks / 0.01", 100, -0.5, 0.5);
@@ -1178,12 +1228,15 @@ void L1TrackNtuplePlot(TString type,
         ++nTrksPerSector_pt3.at(trk_phiSector->at(it) % 9);
       if (trk_pt->at(it) > 4.0)
         ++nTrksPerSector_pt4.at(trk_phiSector->at(it) % 9);
-
+      if (trk_pt->at(it) > TP_minPt) { 
+        h_trk_all_vspt_extended->Fill(trk_pt->at(it));
+        h_trk_all_vsphi->Fill(trk_phi->at(it) - 2 * TMath::Pi() * trk_phiSector->at(it)/9);
+        h_trk_all_vsrinv->Fill((0.01 * c_speed * bfield)/(trk_pt->at(it)));
+      }
       if (trk_pt->at(it) > 2.0) {
         ntrk_pt2++;
         ntrkevt_pt2++;
         h_trk_all_vspt->Fill(trk_pt->at(it));
-        h_trk_all_vspt_extended->Fill(trk_pt->at(it));
         if (trk_genuine->at(it) == 1) {
           ntrkevt_genuine_pt2++;
           h_trk_genuine_vspt->Fill(trk_pt->at(it));
@@ -1286,6 +1339,23 @@ void L1TrackNtuplePlot(TString type,
           if (tp_nmatch->at(it) > 1) {
             for (int inm = 1; inm < tp_nmatch->at(it); inm++)
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
+              h_trk_duplicate_vsrinv->Fill((0.01 * c_speed * bfield)/(matchtrk_pt->at(it)));
+
+              if (matchtrk_phi->at(it) > TMath::Pi()/9) {
+                double mod_phi = matchtrk_phi->at(it);
+                while (mod_phi > TMath::Pi()/9) {
+                  mod_phi -= 2 * TMath::Pi()/9;
+                }
+                h_trk_duplicate_vsphi->Fill(mod_phi);
+              }
+              else if (matchtrk_phi->at(it) < -TMath::Pi()/9) {
+                double mod_phi = matchtrk_phi->at(it);
+                while (mod_phi < -TMath::Pi()/9) { 
+                  mod_phi += 2 * TMath::Pi()/9;
+                }
+                h_trk_duplicate_vsphi->Fill(mod_phi);
+              }
+              //h_trk_duplicate_vsphi->Fill(matchtrk_phi->at(it));
           }
         }
         if (tp_pt->at(it) > 3.0)
@@ -1305,6 +1375,7 @@ void L1TrackNtuplePlot(TString type,
       }
 
       h_tp_pt->Fill(tp_pt->at(it));
+      h_tp_pt_ext->Fill(tp_pt->at(it));
       if (tp_pt->at(it) < 8.0)
         h_tp_pt_L->Fill(tp_pt->at(it));
       else
@@ -1330,7 +1401,22 @@ void L1TrackNtuplePlot(TString type,
           n_all_ptg40++;
 
         h_tp_eta->Fill(tp_eta->at(it));
-        h_tp_phi->Fill(tp_phi->at(it));
+        h_tp_rInv->Fill((0.01 * c_speed * bfield) / tp_pt->at(it));
+        if (tp_phi->at(it) > TMath::Pi()/9) {
+          double mod_phi = tp_phi->at(it);
+          while (mod_phi > TMath::Pi()/9) {
+            mod_phi -= 2 * TMath::Pi()/9;
+          }
+          h_tp_phi->Fill(mod_phi);
+        }
+        else if (tp_phi->at(it) < -TMath::Pi()/9) {
+          double mod_phi = tp_phi->at(it);
+          while (mod_phi < -TMath::Pi()/9) { 
+            mod_phi += 2 * TMath::Pi()/9;
+          }
+          h_tp_phi->Fill(mod_phi);
+        }
+        //h_tp_phi->Fill(tp_phi->at(it));
         h_tp_z0->Fill(tp_z0->at(it));
         h_tp_d0->Fill(tp_d0->at(it));
         h_tp_absd0->Fill(std::abs(tp_d0->at(it)));
@@ -1463,6 +1549,7 @@ void L1TrackNtuplePlot(TString type,
 
       // fill matched track histograms
       h_match_tp_pt->Fill(tp_pt->at(it));
+      h_match_tp_pt_ext->Fill(tp_pt->at(it));
       if (tp_pt->at(it) < 8.0)
         h_match_tp_pt_L->Fill(tp_pt->at(it));
       else
@@ -1472,7 +1559,28 @@ void L1TrackNtuplePlot(TString type,
 
       if (tp_pt->at(it) > TP_minPt) {
         h_match_tp_eta->Fill(tp_eta->at(it));
-        h_match_tp_phi->Fill(tp_phi->at(it));
+        h_match_tp_rInv->Fill((0.01 * c_speed * bfield) / tp_pt->at(it));
+          
+        for (int seed = 0; seed < nSEED; seed++) {
+          if (matchtrk_seed->at(it) == seed) {
+            h_match_tp_eta_seed[seed]->Fill(tp_eta->at(it));
+          }
+        } 
+        if (tp_phi->at(it) > TMath::Pi()/9) {
+          double mod_phi = tp_phi->at(it);
+          while (mod_phi > TMath::Pi()/9) {
+            mod_phi -= 2 * TMath::Pi()/9;
+          }
+          h_match_tp_phi->Fill(mod_phi);
+        }
+        else if (tp_phi->at(it) < -TMath::Pi()/9) {
+          double mod_phi = tp_phi->at(it);
+          while (mod_phi < -TMath::Pi()/9) { 
+            mod_phi += 2 * TMath::Pi()/9;
+          }
+          h_match_tp_phi->Fill(mod_phi);
+        }
+        //h_match_tp_phi->Fill(tp_phi->at(it));
         h_match_tp_z0->Fill(tp_z0->at(it));
         h_match_tp_d0->Fill(tp_d0->at(it));
         h_match_tp_absd0->Fill(std::abs(tp_d0->at(it)));
@@ -1646,6 +1754,8 @@ void L1TrackNtuplePlot(TString type,
       for (int im = 0; im < nETARANGE; im++) {
         if ((std::abs(tp_eta->at(it)) > (float)im * 0.1) && (std::abs(tp_eta->at(it)) < (float)(im + 1) * 0.1)) {
           h_resVsEta_ptRel[im]->Fill((matchtrk_pt->at(it) - tp_pt->at(it)) / tp_pt->at(it));
+          h_resVsEta_pt[im]->Fill(matchtrk_pt->at(it) - tp_pt->at(it));
+          h_resVsEta_rInv[im]->Fill(((0.01 * c_speed * bfield) / matchtrk_pt->at(it)) - ((0.01 * c_speed * bfield) / tp_pt->at(it)));
           h_resVsEta_eta[im]->Fill(matchtrk_eta->at(it) - tp_eta->at(it));
           h_resVsEta_phi[im]->Fill(matchtrk_phi->at(it) - tp_phi->at(it));
           h_resVsEta_z0[im]->Fill(matchtrk_z0->at(it) - tp_z0->at(it));
@@ -1700,6 +1810,12 @@ void L1TrackNtuplePlot(TString type,
         if ((tp_phi->at(it) > (float)im * 0.2 - 3.2) && (tp_phi->at(it) < (float)(im + 1) * 0.2 - 3.2)) {
           h_absResVsPhi_pt[im]->Fill(std::abs(matchtrk_pt->at(it) - tp_pt->at(it)));
           h_absResVsPhi_ptRel[im]->Fill(std::abs((matchtrk_pt->at(it) - tp_pt->at(it))) / tp_pt->at(it));
+        }
+      }
+
+      for (int im = 0; im < nPHIRANGE_Ext; im++) {
+        if ((tp_phi->at(it) > (float)im * 0.025 - 3.2) && (tp_phi->at(it) < (float)(im + 1) * 0.025 - 3.2)) {
+          h_resVsPhi_eta[im]->Fill(matchtrk_eta->at(it) - tp_eta->at(it));
         }
       }
 
@@ -1786,6 +1902,7 @@ void L1TrackNtuplePlot(TString type,
       new TH1F("resVsPt2_phi_F", ";Tracking particle p_{T} [GeV]; #phi resolution [rad]", 20, 0, 100);
 
   TH1F* h2_resVsPt_eta = new TH1F("resVsPt2_eta", ";Tracking particle p_{T} [GeV]; #eta resolution", 20, 0, 100);
+  TH1F* h2_resVsPhi_eta = new TH1F("resVsPhi2_eta", ";Tracking particle #phi [rad]; #eta resolution", 256, -3.2, 3.2);
 
   TH1F* h2_resVsPt_d0 = new TH1F("resVsPt2_d0", ";Tracking particle p_{T} [GeV]; d_{0} resolution [cm]", 20, 0, 100);
 
@@ -1999,6 +2116,11 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h2_resVsEta_phi_H =
       new TH1F("resVsEta_phi_H", ";Tracking particle |#eta|; #phi resolution [rad]", nETARANGE, 0, eta_resmax);
 
+  TH1F* h2_resVsEta_pt =
+      new TH1F("resVsEta_pt", ";Tracking particle |#eta|; p_{T} resolution [GeV]", nETARANGE, 0, eta_resmax);
+  TH1F* h2_resVsEta_rInv =
+      new TH1F("resVsEta_rInv", ";Tracking particle |#eta|; rInv resolution [cm^{-1}]", nETARANGE, 0, eta_resmax);
+
   TH1F* h2_resVsEta_ptRel =
       new TH1F("resVsEta_ptRel", ";Tracking particle |#eta|; p_{T} resolution / p_{T}", nETARANGE, 0, eta_resmax);
   TH1F* h2_resVsEta_ptRel_L =
@@ -2165,6 +2287,11 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsEta_phi_L->SetBinError(i + 1, h_resVsEta_phi_L[i]->GetRMSError());
     h2_resVsEta_phi_H->SetBinContent(i + 1, h_resVsEta_phi_H[i]->GetRMS());
     h2_resVsEta_phi_H->SetBinError(i + 1, h_resVsEta_phi_H[i]->GetRMSError());
+
+    h2_resVsEta_pt->SetBinContent(i + 1, h_resVsEta_pt[i]->GetRMS());
+    h2_resVsEta_pt->SetBinError(i + 1, h_resVsEta_pt[i]->GetRMSError());
+    h2_resVsEta_rInv->SetBinContent(i + 1, h_resVsEta_rInv[i]->GetRMS());
+    h2_resVsEta_rInv->SetBinError(i + 1, h_resVsEta_rInv[i]->GetRMSError());
 
     h2_resVsEta_ptRel->SetBinContent(i + 1, h_resVsEta_ptRel[i]->GetRMS());
     h2_resVsEta_ptRel->SetBinError(i + 1, h_resVsEta_ptRel[i]->GetRMSError());
@@ -2436,6 +2563,12 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsPhi_ptRel_99->SetBinContent(i + 1, getIntervalContainingFractionOfEntries(h_absResVsPhi_ptRel[i], 0.99));
   }
 
+  for (int i = 0; i < nPHIRANGE_Ext; i++) {
+    h2_resVsPhi_eta->SetBinContent(i + 1, h_resVsPhi_eta[i]->GetRMS());
+    h2_resVsPhi_eta->SetBinError(i + 1, h_resVsPhi_eta[i]->GetRMSError());
+  }
+
+
   // set minimum to zero
   h2_resVsPt_pt->SetMinimum(0);
 
@@ -2485,6 +2618,9 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsEta_ptRel->SetMinimum(0);
   h2_resVsEta_ptRel_L->SetMinimum(0);
   h2_resVsEta_ptRel_H->SetMinimum(0);
+
+  h2_resVsEta_pt->SetMinimum(0);
+  h2_resVsEta_rInv->SetMinimum(0);
 
   h2_resVsPt_d0->SetMinimum(0);
   h2_resVsEta_d0->SetMinimum(0);
@@ -2539,7 +2675,7 @@ void L1TrackNtuplePlot(TString type,
   char ctxt[500];
   TCanvas c;
 
-  //gSystem->mkdir("TrkPlots");
+  gSystem->mkdir("TrkPlots");
   TString DIR = "TrkPlots/";
 
   // plots overlaying 68, 90, 99% confidence levels]
@@ -2645,6 +2781,26 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_pt->SetMarkerStyle(20);
   h2_resVsPt_pt->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_pt.pdf");
+
+  h2_resVsEta_pt->SetMarkerStyle(20);
+  h2_resVsEta_pt->Draw("p");
+  h2_resVsEta_pt->Write();
+  c.SaveAs(DIR + type + "_resVsEta_pt.pdf");
+
+  for (int i = 0; i < nETARANGE; i++) {
+    h_resVsEta_pt[i]->Draw("HIST");
+    c.SaveAs(DIR + type + "_resVsEta_pt_"+etarange[i]+".pdf");
+  }
+
+  h2_resVsEta_rInv->SetMarkerStyle(20);
+  h2_resVsEta_rInv->Draw("p");
+  h2_resVsEta_rInv->Write();
+  c.SaveAs(DIR + type + "_resVsEta_rInv.pdf");
+
+  h2_resVsEta_phi->SetMarkerStyle(20);
+  h2_resVsEta_phi->Draw("p"); 
+  h2_resVsEta_phi->Write();
+  c.SaveAs(DIR + type + "_resVsEta_phi.pdf");
 
   h2_resVsRInv_pt->SetMarkerStyle(20);
   h2_resVsRInv_pt->Draw("p");
@@ -2924,6 +3080,17 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsPhi_ptRel_90->SetMarkerStyle(20);
     h2_resVsPhi_ptRel_90->Draw("p");
     c.SaveAs(DIR + type + "_resVsPhi_ptRel_90.pdf");
+
+    h2_resVsPt_eta->SetMinimum(0);
+    h2_resVsPt_eta->SetMarkerStyle(20);
+    h2_resVsPt_eta->Draw("p");
+    c.SaveAs(DIR + type + "_resVsPt_eta.pdf");
+
+    h2_resVsPhi_eta->SetMinimum(0);
+    h2_resVsPhi_eta->SetMarkerStyle(20);
+    h2_resVsPhi_eta->Draw("p");
+    c.SaveAs(DIR + type + "_resVsPhi_eta.pdf");
+    
   }
 
   // ----------------------------------------------------------------------------------------------------------------
@@ -2997,8 +3164,8 @@ void L1TrackNtuplePlot(TString type,
   // rebin pt/phi plots
   h_tp_pt->Rebin(2);
   h_match_tp_pt->Rebin(2);
-  h_tp_phi->Rebin(2);
-  h_match_tp_phi->Rebin(2);
+  //h_tp_phi->Rebin(2);
+  //h_match_tp_phi->Rebin(2);
 
   h_tp_pt_L->Rebin(2);
   h_match_tp_pt_L->Rebin(2);
@@ -3015,12 +3182,12 @@ void L1TrackNtuplePlot(TString type,
   // h_match_tp_eta_H->Rebin(2);
 
   // calculate the efficiency
-  h_match_tp_pt->Sumw2();
-  h_tp_pt->Sumw2();
-  TH1F* h_eff_pt = (TH1F*)h_match_tp_pt->Clone();
+  h_match_tp_pt_ext->Sumw2();
+  h_tp_pt_ext->Sumw2();
+  TH1F* h_eff_pt = (TH1F*)h_match_tp_pt_ext->Clone();
   h_eff_pt->SetName("eff_pt");
   h_eff_pt->GetYaxis()->SetTitle("Efficiency");
-  h_eff_pt->Divide(h_match_tp_pt, h_tp_pt, 1.0, 1.0, "B");
+  h_eff_pt->Divide(h_match_tp_pt_ext, h_tp_pt_ext, 1.0, 1.0, "B");
 
   h_match_tp_pt_L->Sumw2();
   h_tp_pt_L->Sumw2();
@@ -3049,6 +3216,23 @@ void L1TrackNtuplePlot(TString type,
   h_eff_eta->SetName("eff_eta");
   h_eff_eta->GetYaxis()->SetTitle("Efficiency");
   h_eff_eta->Divide(h_match_tp_eta, h_tp_eta, 1.0, 1.0, "B");
+
+  h_match_tp_rInv->Sumw2();
+  h_tp_rInv->Sumw2();
+  TH1F* h_eff_rInv = (TH1F*)h_match_tp_rInv->Clone();
+  h_eff_rInv->SetName("eff_rInv");
+  h_eff_rInv->GetYaxis()->SetTitle("Efficiency");
+  h_eff_rInv->Divide(h_match_tp_rInv, h_tp_rInv, 1.0, 1.0, "B");
+
+  TH1F* h_eff_eta_seed[nSEED];
+  
+  for (int seed = 0; seed < nSEED; seed++) { 
+    h_match_tp_eta_seed[seed]->Sumw2();
+    h_eff_eta_seed[seed] = (TH1F*)h_match_tp_eta_seed[seed]->Clone();
+    h_eff_eta_seed[seed]->SetName("eff_eta_" + seeds[seed]);
+    h_eff_eta_seed[seed]->GetYaxis()->SetTitle("Efficiency"); 
+    h_eff_eta_seed[seed]->Divide(h_match_tp_eta_seed[seed], h_tp_eta, 1.0, 1.0, "B");
+  } 
 
   h_match_tp_eta_L->Sumw2();
   h_tp_eta_L->Sumw2();
@@ -3147,11 +3331,15 @@ void L1TrackNtuplePlot(TString type,
   h_eff_pt_LC->SetAxisRange(0, 1.1, "Y");
   h_eff_pt_H->SetAxisRange(0, 1.1, "Y");
   h_eff_eta->SetAxisRange(0, 1.1, "Y");
+  for (int seed = 0; seed < nSEED; seed++) {
+    h_eff_eta_seed[seed]->SetAxisRange(0, 1.1, "Y");
+  }
   h_eff_eta_L->SetAxisRange(0, 1.1, "Y");
   h_eff_eta_H->SetAxisRange(0, 1.1, "Y");
   h_eff_eta_23->SetAxisRange(0, 1.1, "Y");
   h_eff_eta_35->SetAxisRange(0, 1.1, "Y");
   h_eff_eta_5->SetAxisRange(0, 1.1, "Y");
+  h_eff_rInv->SetAxisRange(0, 1.1, "Y");
   h_eff_phi->SetAxisRange(0, 1.1, "Y");
   h_eff_z0->SetAxisRange(0, 1.1, "Y");
   h_eff_z0_L->SetAxisRange(0, 1.1, "Y");
@@ -3196,6 +3384,34 @@ void L1TrackNtuplePlot(TString type,
   h_eff_eta->Draw();
   h_eff_eta->Write();
   c.SaveAs(DIR + type + "_eff_eta.pdf");
+
+  h_eff_rInv->Draw();
+  h_eff_rInv->Write();
+  TLine* rinv_bin1 = new TLine(0.003828, 0, 0.003828, 1);
+  TLine* rinv_bin2 = new TLine(0.004968, 0, 0.004968, 1);
+  TLine* rinv_bin3 = new TLine(0.01 * c_speed * bfield/1.91, 0, 0.01 * c_speed * bfield/1.91, 1);
+  rinv_bin1->Draw("SAME");
+  rinv_bin2->Draw("SAME");
+  rinv_bin3->Draw("SAME");
+  c.SaveAs(DIR + type + "_eff_rInv.pdf");
+
+  for (int seed = 0; seed < nSEED; seed++) {
+    h_eff_eta_seed[seed]->Draw();
+    h_eff_eta_seed[seed]->Write();
+    c.SaveAs(DIR + type + "_eff_eta_" + seeds[seed] + ".pdf");
+  }
+  TLegend* l_eff_eta_seed = new TLegend();
+  for (int seed = 0; seed < nSEED; seed++) {
+    h_eff_eta_seed[seed]->SetLineColor(seed);
+    h_eff_eta_seed[seed]->SetMarkerColor(seed);
+    l_eff_eta_seed->AddEntry(h_eff_eta_seed[seed], seeds[seed]);
+    if (seed == 0) {
+      h_eff_eta_seed[seed]->Draw();
+    } else {
+      h_eff_eta_seed[seed]->Draw("SAME");
+    }
+  }
+  c.SaveAs("h_eff_eta_allseeds.pdf");
 
   if (type.Contains("Mu")) {
     h_eff_eta->GetYaxis()->SetRangeUser(0.8, 1.01);  // zoomed-in plot
@@ -3243,6 +3459,8 @@ void L1TrackNtuplePlot(TString type,
 
     h_eff_phi->Draw();
     h_eff_phi->Write();
+    TLine* phi_bin1 = new TLine(0, 0, 0, 1);
+    phi_bin1->Draw("same");
     c.SaveAs(DIR + type + "_eff_phi.pdf");
 
     if (type.Contains("Mu")) {
@@ -3554,7 +3772,33 @@ void L1TrackNtuplePlot(TString type,
 
   h_duplicatefrac_pt->Write();
   h_duplicatefrac_pt->Draw();
-  c.SaveAs(DIR + type + "_duplicatefrac.pdf");
+  TLine* bin1 = new TLine(0.01 * c_speed * bfield/0.003828, 0, 0.01 * c_speed * bfield/0.003828, 1);
+  TLine* bin2 = new TLine(0.01 * c_speed * bfield/0.004968, 0, 0.01 * c_speed * bfield/0.004968, 1);
+  TLine* bin3 = new TLine(1.91, 0, 1.91, 1);
+  bin1->Draw("SAME");
+  bin2->Draw("SAME");
+  bin3->Draw("SAME");
+  c.SaveAs(DIR + type + "_duplicatefrac_vspt.pdf");
+
+  TH1F* h_duplicatefrac_phi = (TH1F*)h_trk_duplicate_vsphi->Clone();
+  h_duplicatefrac_phi->SetName("duplicatefrac_phi");
+  h_duplicatefrac_phi->GetYaxis()->SetTitle("Duplicate fraction");
+  h_duplicatefrac_phi->Divide(h_trk_duplicate_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
+
+  h_duplicatefrac_phi->Write();
+  h_duplicatefrac_phi->Draw();
+  TLine* phi_bin = new TLine(0,0,0,1);
+  phi_bin->Draw("same");
+  c.SaveAs(DIR + type + "_duplicatefrac_vsphi.pdf");
+
+  TH1F* h_duplicatefrac_rinv = (TH1F*)h_trk_duplicate_vsrinv->Clone();
+  h_duplicatefrac_rinv->SetName("duplicatefrac_rinv");
+  h_duplicatefrac_rinv->GetYaxis()->SetTitle("Duplicate fraction");
+  h_duplicatefrac_rinv->Divide(h_trk_duplicate_vsrinv, h_trk_all_vsrinv, 1.0, 1.0, "B");
+
+  h_duplicatefrac_rinv->Write();
+  h_duplicatefrac_rinv->Draw();
+  c.SaveAs(DIR + type + "_duplicatefrac_vsrinv.pdf");
 
   // ---------------------------------------------------------------------------------------------------------
   // total track rates vs pt
@@ -3565,6 +3809,7 @@ void L1TrackNtuplePlot(TString type,
   h_trk_notloose_vspt->Scale(1.0 / nevt);
   h_trk_notgenuine_vspt->Scale(1.0 / nevt);
   h_trk_duplicate_vspt->Scale(1.0 / nevt);
+  h_trk_duplicate_vsphi->Scale(1.0 / nevt);
   h_tp_vspt->Scale(1.0 / nevt);
 
   h_tp_vspt->GetYaxis()->SetTitle("Tracks / event");
