@@ -816,7 +816,14 @@ std::vector<unsigned int> PurgeDuplicate::findOverlapPhiBins(const Tracklet* trk
   double phi0 = trk->phi0();
   double rcrit = settings_.rcrit();
   double rinv = trk->rinv();
-  double phi = phi0 - asin(0.5 * rinv * rcrit);
+  double d0 = trk->d0();
+  double phi;
+  if (settings_.extended()) {
+    phi = phi0 - asin(0.5 * rinv * rcrit) + d0/rcrit;
+  }
+  else {
+    phi = phi0 - asin(0.5 * rinv * rcrit);
+  }
 
   const double phiOverlapSize = settings_.phiOverlapSize();
   const std::vector<double>& phiBins = settings_.phiBins();
