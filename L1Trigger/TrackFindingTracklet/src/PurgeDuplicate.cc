@@ -189,6 +189,9 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         // Initialize all-false 2D array of tracks being duplicates to other tracks
         std::vector<std::vector<bool>> dupMap(numStublists, std::vector<bool>(numStublists, false));  // Ends up symmetric
 
+        //Flag to check if track will be merged into another track
+        std::vector<bool> mergedTrack(numStublists, false);
+
         // Used to check if a track is in two bins, is not a duplicate in either bin, so is sent out twice
         bool noMerge[numStublists];
         for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
@@ -202,7 +205,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           // Create a flag to check if itrk is a duplicate track
           bool dupTrk = false;
           //Check the tracks before it, if it's a duplicate, mark the flag true
-          if (std::find(dupMap[itrk].begin(), dupMap[itrk].end(), true)  != dupMap[itrk].end()) {
+          if (mergedTrack[itrk]) {
               dupTrk = true;
           }
           // If itrk is not a duplicate, or if it is a duplicate, but was not the merged track, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
@@ -217,10 +220,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             continue;
           }
           for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
-            // If jtrk has already been merged into another track, continue
-            //if (trackInfo[jtrk].second == true) continue;
             // Get primary track stubids = (layer, unique stub index within layer)
-            const std::vector<std::pair<int, int>>& stubsTrk1 = comparestubidslists_[itrk];
+            const std::vector<std::pair<int, int>>& stubsTrk1 = inputstubidslists_[itrk];
 
             // Get and count secondary track stubids
             const std::vector<std::pair<int, int>>& stubsTrk2 = inputstubidslists_[jtrk];
@@ -281,7 +282,15 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             if (nShareLay >= settings_.minIndStubs()) {  // For number of shared stub merge condition
               dupMap[itrk][jtrk] = true;
               dupMap[jtrk][itrk] = true;
+              if (seedRank[itrk] < seedRank[jtrk]) {
+                mergedTrack[jtrk] = true;
+              }
             }
+          }
+        }
+        
+        for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
+          for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
 
             if (dupMap[itrk][jtrk]) {
               // Set preferred track based on seed rank
