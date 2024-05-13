@@ -744,14 +744,18 @@ void L1TrackNtuplePlot(TString type,
   // total track rates
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
-  TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 70, -0.35, 0.35);
+  TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_all_vsrinv = new TH1F("trk_all_vsrinv", ";Track rInv [cm^{-1}]; ", 60, 0, 0.6E-3);
   TH1F* h_trk_all_vspt_extended = new TH1F("trk_all_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
   TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_genuine_vspt_extended = new TH1F("trk_genuine_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
+  TH1F* h_trk_genuine_vsphi = new TH1F("trk_genuine_vsphi", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_notloose_vspt = new TH1F(
       "trk_notloose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);  //(same as "fake" according to the trk_fake labeling)
   TH1F* h_trk_notgenuine_vspt = new TH1F("trk_notgenuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_notgenuine_vspt_extended = new TH1F("trk_notgenuine_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
+  TH1F* h_trk_notgenuine_vsphi = new TH1F("trk_notgenuine_vsphi", ";Track #phi [rad];", 35, -0.35, 0.35);
 //  TH1F* h_trk_duplicate_vspt = new TH1F("trk_duplicate_vspt",
 //                                        ";Track p_{T} [GeV]; ",
 //                                        50,
@@ -763,7 +767,7 @@ void L1TrackNtuplePlot(TString type,
                                         pt_binsExtended);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_trk_duplicate_vsphi = new TH1F("trk_duplicate_vsphi",
                                         ";Track #phi [rad]; ",
-                                        70,
+                                        35,
                                         -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_trk_duplicate_vsrinv = new TH1F("trk_duplicate_vsrinv",
                                         ";Track rInv [cm^{-1}]; ",
@@ -1230,8 +1234,21 @@ void L1TrackNtuplePlot(TString type,
         ++nTrksPerSector_pt4.at(trk_phiSector->at(it) % 9);
       if (trk_pt->at(it) > TP_minPt) { 
         h_trk_all_vspt_extended->Fill(trk_pt->at(it));
-        h_trk_all_vsphi->Fill(trk_phi->at(it) - 2 * TMath::Pi() * trk_phiSector->at(it)/9);
         h_trk_all_vsrinv->Fill((0.01 * c_speed * bfield)/(trk_pt->at(it)));
+        if (trk_phi->at(it) > TMath::Pi()/9) {
+          double mod_phi = trk_phi->at(it);
+          while (mod_phi > TMath::Pi()/9) {
+            mod_phi -= 2 * TMath::Pi()/9;
+          }
+          h_trk_all_vsphi->Fill(mod_phi);
+        }
+        else if (trk_phi->at(it) < -TMath::Pi()/9) {
+          double mod_phi = trk_phi->at(it);
+          while (mod_phi < -TMath::Pi()/9) { 
+            mod_phi += 2 * TMath::Pi()/9;
+          }
+          h_trk_all_vsphi->Fill(mod_phi);
+        }
       }
       if (trk_pt->at(it) > 2.0) {
         ntrk_pt2++;
@@ -1240,8 +1257,39 @@ void L1TrackNtuplePlot(TString type,
         if (trk_genuine->at(it) == 1) {
           ntrkevt_genuine_pt2++;
           h_trk_genuine_vspt->Fill(trk_pt->at(it));
-        } else
+          h_trk_genuine_vspt_extended->Fill(trk_pt->at(it));
+          if (trk_phi->at(it) > TMath::Pi()/9) {
+            double mod_phi = trk_phi->at(it);
+            while (mod_phi > TMath::Pi()/9) {
+              mod_phi -= 2 * TMath::Pi()/9;
+            }
+            h_trk_genuine_vsphi->Fill(mod_phi);
+          }
+          else if (trk_phi->at(it) < -TMath::Pi()/9) {
+            double mod_phi = trk_phi->at(it);
+            while (mod_phi < -TMath::Pi()/9) { 
+              mod_phi += 2 * TMath::Pi()/9;
+            }
+            h_trk_genuine_vsphi->Fill(mod_phi);
+          }
+        } else {
           h_trk_notgenuine_vspt->Fill(trk_pt->at(it));
+          h_trk_notgenuine_vspt_extended->Fill(trk_pt->at(it));
+          if (trk_phi->at(it) > TMath::Pi()/9) {
+            double mod_phi = trk_phi->at(it);
+            while (mod_phi > TMath::Pi()/9) {
+              mod_phi -= 2 * TMath::Pi()/9;
+            }
+            h_trk_notgenuine_vsphi->Fill(mod_phi);
+          }
+          else if (trk_phi->at(it) < -TMath::Pi()/9) {
+            double mod_phi = trk_phi->at(it);
+            while (mod_phi < -TMath::Pi()/9) { 
+              mod_phi += 2 * TMath::Pi()/9;
+            }
+            h_trk_notgenuine_vsphi->Fill(mod_phi);
+          }
+        }
         if (trk_loose->at(it) == 1)
           h_trk_loose_vspt->Fill(trk_pt->at(it));
         else
@@ -3739,9 +3787,13 @@ void L1TrackNtuplePlot(TString type,
   h_trk_all_vspt->Sumw2();
   h_trk_loose_vspt->Sumw2();
   h_trk_genuine_vspt->Sumw2();
+  h_trk_genuine_vspt_extended->Sumw2();
+  h_trk_genuine_vsphi->Sumw2();
   h_trk_notloose_vspt->Sumw2();
   h_trk_notgenuine_vspt->Sumw2();
-  //h_trk_duplicate_vspt->Sumw2();
+  h_trk_notgenuine_vspt_extended->Sumw2();
+  h_trk_notgenuine_vsphi->Sumw2();
+  h_trk_duplicate_vspt->Sumw2();
   h_tp_vspt->Sumw2();
 
   // fraction of not genuine tracks
@@ -3753,6 +3805,56 @@ void L1TrackNtuplePlot(TString type,
   h_notgenuine_pt->Write();
   h_notgenuine_pt->Draw();
   c.SaveAs(DIR + type + "_notgenuine.pdf");
+
+  // fraction of not genuine tracks
+  TH1F* h_notgenuine_pt_extended = (TH1F*)h_trk_notgenuine_vspt_extended->Clone();
+  h_notgenuine_pt_extended->SetName("notgenuine_pt_extended");
+  h_notgenuine_pt_extended->GetYaxis()->SetTitle("Not genuine fraction");
+  h_notgenuine_pt_extended->Divide(h_trk_notgenuine_vspt_extended, h_trk_all_vspt_extended, 1.0, 1.0, "B");
+
+  h_notgenuine_pt_extended->Write();
+  h_notgenuine_pt_extended->Draw();
+  c.SaveAs(DIR + type + "_notgenuine_extended.pdf");
+
+  // fraction of not genuine tracks
+  TH1F* h_notgenuine_phi = (TH1F*)h_trk_notgenuine_vsphi->Clone();
+  h_notgenuine_phi->SetName("notgenuine_phi");
+  h_notgenuine_phi->GetYaxis()->SetTitle("Not genuine fraction");
+  h_notgenuine_phi->Divide(h_trk_notgenuine_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
+
+  h_notgenuine_phi->Write();
+  h_notgenuine_phi->Draw();
+  c.SaveAs(DIR + type + "_notgenuine_phi.pdf");
+
+  // fraction of genuine tracks
+  TH1F* h_genuine_pt = (TH1F*)h_trk_genuine_vspt->Clone();
+  h_genuine_pt->SetName("genuine_pt");
+  h_genuine_pt->GetYaxis()->SetTitle("genuine fraction");
+  h_genuine_pt->Divide(h_trk_genuine_vspt, h_trk_all_vspt, 1.0, 1.0, "B");
+
+  h_genuine_pt->Write();
+  h_genuine_pt->Draw();
+  c.SaveAs(DIR + type + "_genuine.pdf");
+
+  // fraction of genuine tracks
+  TH1F* h_genuine_pt_extended = (TH1F*)h_trk_genuine_vspt_extended->Clone();
+  h_genuine_pt_extended->SetName("genuine_pt_extended");
+  h_genuine_pt_extended->GetYaxis()->SetTitle("genuine fraction");
+  h_genuine_pt_extended->Divide(h_trk_genuine_vspt_extended, h_trk_all_vspt_extended, 1.0, 1.0, "B");
+
+  h_genuine_pt_extended->Write();
+  h_genuine_pt_extended->Draw();
+  c.SaveAs(DIR + type + "_genuine_extended.pdf");
+
+  // fraction of genuine tracks
+  TH1F* h_genuine_phi = (TH1F*)h_trk_genuine_vsphi->Clone();
+  h_genuine_phi->SetName("genuine_phi");
+  h_genuine_phi->GetYaxis()->SetTitle("genuine fraction");
+  h_genuine_phi->Divide(h_trk_genuine_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
+
+  h_genuine_phi->Write();
+  h_genuine_phi->Draw();
+  c.SaveAs(DIR + type + "_genuine_phi.pdf");
 
   // fraction of not loosely genuine tracks
   TH1F* h_notloose_pt = (TH1F*)h_trk_notloose_vspt->Clone();
