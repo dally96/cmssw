@@ -777,7 +777,7 @@ unsigned int PurgeDuplicate::findPhiBin(const Tracklet* trk) const {
   double d0 = trk->d0();
   double phi;
   if (settings_.extended()) {
-    phi = phi0 - asin(0.5 * rinv * rcrit) + d0/rcrit;
+    phi = phi0 - asin(0.5 * rinv * rcrit) - d0/rcrit;
   }
   else {
     phi = phi0 - asin(0.5 * rinv * rcrit);
@@ -819,7 +819,7 @@ std::vector<unsigned int> PurgeDuplicate::findOverlapPhiBins(const Tracklet* trk
   double d0 = trk->d0();
   double phi;
   if (settings_.extended()) {
-    phi = phi0 - asin(0.5 * rinv * rcrit) + d0/rcrit;
+    phi = phi0 - asin(0.5 * rinv * rcrit) - d0/rcrit;
   }
   else {
     phi = phi0 - asin(0.5 * rinv * rcrit);

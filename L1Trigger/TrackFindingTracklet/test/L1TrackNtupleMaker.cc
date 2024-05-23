@@ -65,6 +65,7 @@
 #include <TROOT.h>
 #include <TCanvas.h>
 #include <TTree.h>
+#include <TMath.h>
 #include <TFile.h>
 #include <TF1.h>
 #include <TH2F.h>
@@ -155,6 +156,7 @@ private:
 
   // all L1 tracks
   std::vector<float>* m_trk_pt;
+  std::vector<float>* m_trk_charge;
   std::vector<float>* m_trk_eta;
   std::vector<float>* m_trk_phi;
   std::vector<float>* m_trk_d0;  // (filled if L1Tk_nPar==5, else 999)
@@ -218,6 +220,7 @@ private:
 
   // *L1 track* properties if m_tp_nmatch > 0
   std::vector<float>* m_matchtrk_pt;
+  std::vector<float>* m_matchtrk_charge;
   std::vector<float>* m_matchtrk_eta;
   std::vector<float>* m_matchtrk_phi;
   std::vector<float>* m_matchtrk_d0;  //this variable is only filled if L1Tk_nPar==5
@@ -332,6 +335,7 @@ void L1TrackNtupleMaker::endJob() {
 
   // clean up
   delete m_trk_pt;
+  delete m_trk_charge;
   delete m_trk_eta;
   delete m_trk_phi;
   delete m_trk_z0;
@@ -393,6 +397,7 @@ void L1TrackNtupleMaker::endJob() {
   delete m_tp_injet_vhighpt;
 
   delete m_matchtrk_pt;
+  delete m_matchtrk_charge;
   delete m_matchtrk_eta;
   delete m_matchtrk_phi;
   delete m_matchtrk_z0;
@@ -453,6 +458,7 @@ void L1TrackNtupleMaker::beginJob() {
 
   // initilize
   m_trk_pt = new std::vector<float>;
+  m_trk_charge = new std::vector<float>;
   m_trk_eta = new std::vector<float>;
   m_trk_phi = new std::vector<float>;
   m_trk_z0 = new std::vector<float>;
@@ -514,6 +520,7 @@ void L1TrackNtupleMaker::beginJob() {
   m_tp_injet_vhighpt = new std::vector<int>;
 
   m_matchtrk_pt = new std::vector<float>;
+  m_matchtrk_charge = new std::vector<float>;
   m_matchtrk_eta = new std::vector<float>;
   m_matchtrk_phi = new std::vector<float>;
   m_matchtrk_z0 = new std::vector<float>;
@@ -567,6 +574,7 @@ void L1TrackNtupleMaker::beginJob() {
 
   if (SaveAllTracks) {
     eventTree->Branch("trk_pt", &m_trk_pt);
+    eventTree->Branch("trk_charge", &m_trk_charge);
     eventTree->Branch("trk_eta", &m_trk_eta);
     eventTree->Branch("trk_phi", &m_trk_phi);
     eventTree->Branch("trk_d0", &m_trk_d0);
@@ -633,6 +641,7 @@ void L1TrackNtupleMaker::beginJob() {
   }
 
   eventTree->Branch("matchtrk_pt", &m_matchtrk_pt);
+  eventTree->Branch("matchtrk_charge", &m_matchtrk_charge);
   eventTree->Branch("matchtrk_eta", &m_matchtrk_eta);
   eventTree->Branch("matchtrk_phi", &m_matchtrk_phi);
   eventTree->Branch("matchtrk_z0", &m_matchtrk_z0);
@@ -710,6 +719,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
   // clear variables
   if (SaveAllTracks) {
     m_trk_pt->clear();
+    m_trk_charge->clear();
     m_trk_eta->clear();
     m_trk_phi->clear();
     m_trk_d0->clear();
@@ -772,6 +782,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
   m_tp_injet_vhighpt->clear();
 
   m_matchtrk_pt->clear();
+  m_matchtrk_charge->clear();
   m_matchtrk_eta->clear();
   m_matchtrk_phi->clear();
   m_matchtrk_z0->clear();
@@ -1049,6 +1060,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       this_l1track++;
 
       float tmp_trk_pt = iterL1Track->momentum().perp();
+      float tmp_trk_charge = TMath::Sign(1,iterL1Track->rInv());
       float tmp_trk_eta = iterL1Track->momentum().eta();
       float tmp_trk_phi = iterL1Track->momentum().phi();
       float tmp_trk_z0 = iterL1Track->z0();  //cm
@@ -1180,6 +1192,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       }
 
       m_trk_pt->push_back(tmp_trk_pt);
+      m_trk_charge->push_back(tmp_trk_charge);
       m_trk_eta->push_back(tmp_trk_eta);
       m_trk_phi->push_back(tmp_trk_phi);
       m_trk_z0->push_back(tmp_trk_z0);
@@ -1591,6 +1604,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     // ----------------------------------------------------------------------------------------------
 
     float tmp_matchtrk_pt = -999;
+    float tmp_matchtrk_charge = -999;
     float tmp_matchtrk_eta = -999;
     float tmp_matchtrk_phi = -999;
     float tmp_matchtrk_z0 = -999;
@@ -1614,6 +1628,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
 
     if (nMatch > 0) {
       tmp_matchtrk_pt = matchedTracks.at(i_track)->momentum().perp();
+      tmp_matchtrk_charge = TMath::Sign(1,matchedTracks.at(i_track)->rInv());
       tmp_matchtrk_eta = matchedTracks.at(i_track)->momentum().eta();
       tmp_matchtrk_phi = matchedTracks.at(i_track)->momentum().phi();
       tmp_matchtrk_z0 = matchedTracks.at(i_track)->z0();
@@ -1687,6 +1702,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     m_tp_charge->push_back(tmp_tp_charge);
 
     m_matchtrk_pt->push_back(tmp_matchtrk_pt);
+    m_matchtrk_charge->push_back(tmp_matchtrk_charge);
     m_matchtrk_eta->push_back(tmp_matchtrk_eta);
     m_matchtrk_phi->push_back(tmp_matchtrk_phi);
     m_matchtrk_z0->push_back(tmp_matchtrk_z0);
