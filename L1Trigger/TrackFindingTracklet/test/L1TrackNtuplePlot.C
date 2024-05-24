@@ -57,7 +57,7 @@ void L1TrackNtuplePlot(TString type,
                        float TP_maxEta = 2.4,
                        float TP_maxDxy = 1.0,
                        float TP_maxD0 = 1.0,
-                       bool doDetailedPlots = true) {
+                       bool doDetailedPlots = false) {
   // type:              this is the name of the input file you want to process (minus ".root" extension)
   // type_dir:          this is the directory containing the input file you want to process. Note that this must end with a "/", as in "EventSets/"
   // TP_select_pdgid:   if non-zero, only select TPs with a given PDG ID
@@ -753,8 +753,8 @@ void L1TrackNtuplePlot(TString type,
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 35, -0.35, 0.35);
-  TH1F* h_trk_all_vsphi_pos = new TH1F("trk_all_vsphi_pos", ";Track #phi [rad]; ", 35, -0.35, 0.35);
-  TH1F* h_trk_all_vsphi_neg = new TH1F("trk_all_vsphi_neg", ";Track #phi [rad]; ", 35, -0.35, 0.35);
+  //TH1F* h_trk_all_vsphi_pos = new TH1F("trk_all_vsphi_pos", ";Track #phi [rad]; ", 35, -0.35, 0.35);
+  //TH1F* h_trk_all_vsphi_neg = new TH1F("trk_all_vsphi_neg", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_all_vsrinv = new TH1F("trk_all_vsrinv", ";Track rInv [cm^{-1}]; ", 60, 0, 0.6E-3);
   TH1F* h_trk_all_vspt_extended = new TH1F("trk_all_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
   TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
@@ -766,8 +766,8 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_trk_notgenuine_vspt = new TH1F("trk_notgenuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_notgenuine_vspt_extended = new TH1F("trk_notgenuine_vspt_extended", ";Track p_{T} [GeV]; ", 20, pt_binsExtended);
   TH1F* h_trk_notgenuine_vsphi = new TH1F("trk_notgenuine_vsphi", ";Track #phi [rad];", 35, -0.35, 0.35);
-  TH1F* h_trk_notgenuine_vsphi_pos = new TH1F("trk_notgenuine_vsphi_pos", ";Track #phi [rad];", 35, -0.35, 0.35);
-  TH1F* h_trk_notgenuine_vsphi_neg = new TH1F("trk_notgenuine_vsphi_neg", ";Track #phi [rad];", 35, -0.35, 0.35);
+  //TH1F* h_trk_notgenuine_vsphi_pos = new TH1F("trk_notgenuine_vsphi_pos", ";Track #phi [rad];", 35, -0.35, 0.35);
+  //TH1F* h_trk_notgenuine_vsphi_neg = new TH1F("trk_notgenuine_vsphi_neg", ";Track #phi [rad];", 35, -0.35, 0.35);
 //  TH1F* h_trk_duplicate_vspt = new TH1F("trk_duplicate_vspt",
 //                                        ";Track p_{T} [GeV]; ",
 //                                        50,
@@ -781,14 +781,14 @@ void L1TrackNtuplePlot(TString type,
                                         ";Track #phi [rad]; ",
                                         35,
                                         -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
-  TH1F* h_trk_duplicate_vsphi_pos = new TH1F("trk_duplicate_vsphi_pos",
-                                        ";Track #phi [rad]; ",
-                                        35,
-                                        -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
-  TH1F* h_trk_duplicate_vsphi_neg = new TH1F("trk_duplicate_vsphi_neg",
-                                        ";Track #phi [rad]; ",
-                                        35,
-                                        -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
+  //TH1F* h_trk_duplicate_vsphi_pos = new TH1F("trk_duplicate_vsphi_pos",
+                                        //";Track #phi [rad]; ",
+                                        //35,
+                                        //-0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
+  //TH1F* h_trk_duplicate_vsphi_neg = new TH1F("trk_duplicate_vsphi_neg",
+                                        //";Track #phi [rad]; ",
+                                        //35,
+                                        //-0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_trk_duplicate_vsrinv = new TH1F("trk_duplicate_vsrinv",
                                         ";Track rInv [cm^{-1}]; ",
                                         60,
@@ -1261,12 +1261,12 @@ void L1TrackNtuplePlot(TString type,
             mod_phi -= 2 * TMath::Pi()/9;
           }
           h_trk_all_vsphi->Fill(mod_phi);
-          if (trk_charge->at(it) > 0) {
-            h_trk_all_vsphi_pos->Fill(mod_phi);
-          }
-          if (trk_charge->at(it) < 0) {
-            h_trk_all_vsphi_neg->Fill(mod_phi);
-          }  
+          //f (trk_charge->at(it) > 0) {
+          // h_trk_all_vsphi_pos->Fill(mod_phi);
+          //
+          //f (trk_charge->at(it) < 0) {
+          // h_trk_all_vsphi_neg->Fill(mod_phi);
+          //  
         }
         else if (trk_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = trk_phi->at(it);
@@ -1274,12 +1274,12 @@ void L1TrackNtuplePlot(TString type,
             mod_phi += 2 * TMath::Pi()/9;
           }
           h_trk_all_vsphi->Fill(mod_phi);
-          if (trk_charge->at(it) > 0) {
-            h_trk_all_vsphi_pos->Fill(mod_phi);
-          }
-          if (trk_charge->at(it) < 0) {
-            h_trk_all_vsphi_neg->Fill(mod_phi);
-          }  
+          //if (trk_charge->at(it) > 0) {
+          //  h_trk_all_vsphi_pos->Fill(mod_phi);
+          //}
+          //if (trk_charge->at(it) < 0) {
+          //  h_trk_all_vsphi_neg->Fill(mod_phi);
+          //}  
         }
       }
       if (trk_pt->at(it) > 2.0) {
@@ -1313,12 +1313,12 @@ void L1TrackNtuplePlot(TString type,
               mod_phi -= 2 * TMath::Pi()/9;
             }
             h_trk_notgenuine_vsphi->Fill(mod_phi);
-            if (trk_charge->at(it) > 0) {
-              h_trk_notgenuine_vsphi_pos->Fill(mod_phi);
-            }
-            if (trk_charge->at(it) < 0) {
-              h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
-            }  
+            //f (trk_charge->at(it) > 0) {
+            // h_trk_notgenuine_vsphi_pos->Fill(mod_phi);
+            //
+            //f (trk_charge->at(it) < 0) {
+            // h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
+            //  
           }
           else if (trk_phi->at(it) < -TMath::Pi()/9) {
             double mod_phi = trk_phi->at(it);
@@ -1326,12 +1326,12 @@ void L1TrackNtuplePlot(TString type,
               mod_phi += 2 * TMath::Pi()/9;
             }
             h_trk_notgenuine_vsphi->Fill(mod_phi);
-            if (trk_charge->at(it) > 0) {
-              h_trk_notgenuine_vsphi_pos->Fill(mod_phi);
-            }
-            if (trk_charge->at(it) < 0) {
-              h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
-            }  
+            //if (trk_charge->at(it) > 0) {
+            //  h_trk_notgenuine_vsphi_pos->Fill(mod_phi);
+            //}
+            //if (trk_charge->at(it) < 0) {
+            //  h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
+            //}  
           }
         }
         if (trk_loose->at(it) == 1)
@@ -1439,12 +1439,12 @@ void L1TrackNtuplePlot(TString type,
                   mod_phi -= 2 * TMath::Pi()/9;
                 }
                 h_trk_duplicate_vsphi->Fill(mod_phi);
-                if (matchtrk_charge->at(it) > 0) {
-                  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
-                }
-                if (matchtrk_charge->at(it) < 0) {
-                  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
-                }
+                //if (matchtrk_charge->at(it) > 0) {
+                //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
+                //}
+                //if (matchtrk_charge->at(it) < 0) {
+                //  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
+                //}
               }
               else if (matchtrk_phi->at(it) < -TMath::Pi()/9) {
                 double mod_phi = matchtrk_phi->at(it);
@@ -1452,12 +1452,12 @@ void L1TrackNtuplePlot(TString type,
                   mod_phi += 2 * TMath::Pi()/9;
                 }
                 h_trk_duplicate_vsphi->Fill(mod_phi);
-                if (matchtrk_charge->at(it) > 0) {
-                  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
-                }
-                if (matchtrk_charge->at(it) < 0) {
-                  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
-                }
+                //if (matchtrk_charge->at(it) > 0) {
+                //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
+                //}
+                //if (matchtrk_charge->at(it) < 0) {
+                //  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
+                //}
               }
               //h_trk_duplicate_vsphi->Fill(matchtrk_phi->at(it));
           }
@@ -3849,12 +3849,12 @@ void L1TrackNtuplePlot(TString type,
   h_trk_notgenuine_vspt->Sumw2();
   h_trk_notgenuine_vspt_extended->Sumw2();
   h_trk_notgenuine_vsphi->Sumw2();
-  h_trk_notgenuine_vsphi_pos->Sumw2();
-  h_trk_notgenuine_vsphi_neg->Sumw2();
+  //h_trk_notgenuine_vsphi_pos->Sumw2();
+  //h_trk_notgenuine_vsphi_neg->Sumw2();
   h_trk_duplicate_vspt->Sumw2();
   h_trk_duplicate_vsphi->Sumw2();
-  h_trk_duplicate_vsphi_pos->Sumw2();
-  h_trk_duplicate_vsphi_neg->Sumw2();
+  //h_trk_duplicate_vsphi_pos->Sumw2();
+  //h_trk_duplicate_vsphi_neg->Sumw2();
   h_tp_vspt->Sumw2();
 
   // fraction of not genuine tracks
@@ -3878,37 +3878,37 @@ void L1TrackNtuplePlot(TString type,
   c.SaveAs(DIR + type + "_notgenuine_extended.pdf");
 
   // fraction of not genuine tracks
-  //TH1F* h_notgenuine_phi = (TH1F*)h_trk_notgenuine_vsphi->Clone();
-  //h_notgenuine_phi->SetName("notgenuine_phi");
-  //h_notgenuine_phi->GetYaxis()->SetTitle("Not genuine fraction");
-  //h_notgenuine_phi->Divide(h_trk_notgenuine_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
+  TH1F* h_notgenuine_phi = (TH1F*)h_trk_notgenuine_vsphi->Clone();
+  h_notgenuine_phi->SetName("notgenuine_phi");
+  h_notgenuine_phi->GetYaxis()->SetTitle("Not genuine fraction");
+  h_notgenuine_phi->Divide(h_trk_notgenuine_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
 
-  //h_notgenuine_phi->Write();
-  //h_notgenuine_phi->Draw();
-  //c.SaveAs(DIR + type + "_notgenuine_phi.pdf");
+  h_notgenuine_phi->Write();
+  h_notgenuine_phi->Draw();
+  c.SaveAs(DIR + type + "_notgenuine_phi.pdf");
 
   // fraction of not genuine tracks
-  TLegend* l_notgenuine_phi = new TLegend();
-  TH1F* h_notgenuine_phi_pos = (TH1F*)h_trk_notgenuine_vsphi_pos->Clone();
-  h_notgenuine_phi_pos->GetYaxis()->SetTitle("Not genuine fraction (charge dependent)");
-  h_notgenuine_phi_pos->Divide(h_trk_notgenuine_vsphi_pos, h_trk_all_vsphi_pos, 1.0, 1.0, "B");
+  //TLegend* l_notgenuine_phi = new TLegend();
+  //TH1F* h_notgenuine_phi_pos = (TH1F*)h_trk_notgenuine_vsphi_pos->Clone();
+  //h_notgenuine_phi_pos->GetYaxis()->SetTitle("Not genuine fraction (charge dependent)");
+  //h_notgenuine_phi_pos->Divide(h_trk_notgenuine_vsphi_pos, h_trk_all_vsphi_pos, 1.0, 1.0, "B");
 
-  TH1F* h_notgenuine_phi_neg = (TH1F*)h_trk_notgenuine_vsphi_neg->Clone();
-  h_notgenuine_phi_pos->SetName("notgenuine_phi");
-  h_notgenuine_phi_neg->Divide(h_trk_notgenuine_vsphi_neg, h_trk_all_vsphi_neg, 1.0, 1.0, "B");
-  h_notgenuine_phi_neg->SetMarkerColor(kRed);
-  h_notgenuine_phi_neg->SetLineColor(kRed);
+  //TH1F* h_notgenuine_phi_neg = (TH1F*)h_trk_notgenuine_vsphi_neg->Clone();
+  //h_notgenuine_phi_pos->SetName("notgenuine_phi_neg");
+  //h_notgenuine_phi_neg->Divide(h_trk_notgenuine_vsphi_neg, h_trk_all_vsphi_neg, 1.0, 1.0, "B");
+  //h_notgenuine_phi_neg->SetMarkerColor(kRed);
+  //h_notgenuine_phi_neg->SetLineColor(kRed);
 
 
-  l_notgenuine_phi->AddEntry(h_notgenuine_phi_pos, "Positively charged tracks");
-  l_notgenuine_phi->AddEntry(h_notgenuine_phi_neg, "Negatively charged tracks");
+  //l_notgenuine_phi->AddEntry(h_notgenuine_phi_pos, "Positively charged tracks");
+  //l_notgenuine_phi->AddEntry(h_notgenuine_phi_neg, "Negatively charged tracks");
 
-  h_notgenuine_phi_pos->Write();
-  h_notgenuine_phi_pos->Draw();
-  h_notgenuine_phi_neg->Write();
-  h_notgenuine_phi_neg->Draw("same");
-  l_notgenuine_phi->Draw();
-  c.SaveAs(DIR + type + "_notgenuine_phi.pdf");
+  //h_notgenuine_phi_pos->Write();
+  //h_notgenuine_phi_pos->Draw();
+  //h_notgenuine_phi_neg->Write();
+  //h_notgenuine_phi_neg->Draw("same");
+  //l_notgenuine_phi->Draw();
+  //c.SaveAs(DIR + type + "_notgenuine_phi.pdf");
 
   // fraction of genuine tracks
   TH1F* h_genuine_pt = (TH1F*)h_trk_genuine_vspt->Clone();
@@ -3966,37 +3966,36 @@ void L1TrackNtuplePlot(TString type,
   bin3->Draw("SAME");
   c.SaveAs(DIR + type + "_duplicatefrac_vspt.pdf");
 
-  //TH1F* h_duplicatefrac_phi = (TH1F*)h_trk_duplicate_vsphi->Clone();
-  //h_duplicatefrac_phi->SetName("duplicatefrac_phi");
-  //h_duplicatefrac_phi->GetYaxis()->SetTitle("Duplicate fraction");
-  //h_duplicatefrac_phi->Divide(h_trk_duplicate_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
+  TH1F* h_duplicatefrac_phi = (TH1F*)h_trk_duplicate_vsphi->Clone();
+  h_duplicatefrac_phi->SetName("duplicatefrac_phi");
+  h_duplicatefrac_phi->GetYaxis()->SetTitle("Duplicate fraction");
+  h_duplicatefrac_phi->Divide(h_trk_duplicate_vsphi, h_trk_all_vsphi, 1.0, 1.0, "B");
 
-  //h_duplicatefrac_phi->Write();
-  //h_duplicatefrac_phi->Draw();
-  //TLine* phi_bin = new TLine(0,0,0,1);
-  //phi_bin->Draw("same");
-  //c.SaveAs(DIR + type + "_duplicatefrac_vsphi.pdf");
-
-  TLegend* l_duplicatefrac_phi = new TLegend();
-  TH1F* h_duplicatefrac_phi_pos = (TH1F*)h_trk_duplicate_vsphi_pos->Clone();
-  h_duplicatefrac_phi_pos->GetYaxis()->SetTitle("Duplicate fraction (charge dependent)");
-  h_duplicatefrac_phi_pos->Divide(h_trk_duplicate_vsphi_pos, h_trk_all_vsphi_pos, 1.0, 1.0, "B");
-
-  TH1F* h_duplicatefrac_phi_neg = (TH1F*)h_trk_duplicate_vsphi_neg->Clone();
-  h_duplicatefrac_phi_pos->SetName("duplicatefrac_phi");
-  h_duplicatefrac_phi_neg->Divide(h_trk_duplicate_vsphi_neg, h_trk_all_vsphi_neg, 1.0, 1.0, "B");
-  h_duplicatefrac_phi_neg->SetMarkerColor(kRed);
-  h_duplicatefrac_phi_neg->SetLineColor(kRed);
-
-  l_duplicatefrac_phi->AddEntry(h_duplicatefrac_phi_pos, "Positively charged tracks");
-  l_duplicatefrac_phi->AddEntry(h_duplicatefrac_phi_neg, "Negatively charged tracks");
-
-  h_duplicatefrac_phi_pos->Write();
-  h_duplicatefrac_phi_pos->Draw();
-  h_duplicatefrac_phi_neg->Write();
-  h_duplicatefrac_phi_neg->Draw("same");
-  l_duplicatefrac_phi->Draw();
+  h_duplicatefrac_phi->Write();
+  h_duplicatefrac_phi->Draw();
+  TLine* phi_bin = new TLine(0,0,0,1);
   c.SaveAs(DIR + type + "_duplicatefrac_vsphi.pdf");
+
+  //TLegend* l_duplicatefrac_phi = new TLegend();
+  //TH1F* h_duplicatefrac_phi_pos = (TH1F*)h_trk_duplicate_vsphi_pos->Clone();
+  //h_duplicatefrac_phi_pos->GetYaxis()->SetTitle("Duplicate fraction (charge dependent)");
+  //h_duplicatefrac_phi_pos->Divide(h_trk_duplicate_vsphi_pos, h_trk_all_vsphi_pos, 1.0, 1.0, "B");
+
+  //TH1F* h_duplicatefrac_phi_neg = (TH1F*)h_trk_duplicate_vsphi_neg->Clone();
+  //h_duplicatefrac_phi_pos->SetName("duplicatefrac_phi");
+  //h_duplicatefrac_phi_neg->Divide(h_trk_duplicate_vsphi_neg, h_trk_all_vsphi_neg, 1.0, 1.0, "B");
+  //h_duplicatefrac_phi_neg->SetMarkerColor(kRed);
+  //h_duplicatefrac_phi_neg->SetLineColor(kRed);
+
+  //l_duplicatefrac_phi->AddEntry(h_duplicatefrac_phi_pos, "Positively charged tracks");
+  //l_duplicatefrac_phi->AddEntry(h_duplicatefrac_phi_neg, "Negatively charged tracks");
+
+  //h_duplicatefrac_phi_pos->Write();
+  //h_duplicatefrac_phi_pos->Draw();
+  //h_duplicatefrac_phi_neg->Write();
+  //h_duplicatefrac_phi_neg->Draw("same");
+  //l_duplicatefrac_phi->Draw();
+  //c.SaveAs(DIR + type + "_duplicatefrac_vsphi.pdf");
 
   TH1F* h_duplicatefrac_rinv = (TH1F*)h_trk_duplicate_vsrinv->Clone();
   h_duplicatefrac_rinv->SetName("duplicatefrac_rinv");
