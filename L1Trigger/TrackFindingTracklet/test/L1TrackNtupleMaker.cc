@@ -1100,6 +1100,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
         float tmp_trk_x0 = iterL1Track->POCA().x();
         float tmp_trk_y0 = iterL1Track->POCA().y();
         tmp_trk_d0 = tmp_trk_x0 * sin(tmp_trk_phi) - tmp_trk_y0 * cos(tmp_trk_phi);
+        std::cout << "d0 is " << tmp_trk_d0 << std::endl;
       }
 
       float tmp_trk_chi2 = iterL1Track->chi2();

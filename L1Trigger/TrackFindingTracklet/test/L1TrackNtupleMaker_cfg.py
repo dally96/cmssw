@@ -58,7 +58,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 # input and output
 ############################################################
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
 
 #--- To use MCsamples scripts, defining functions get*data*() for easy MC access,
 #--- follow instructions in https://github.com/cms-L1TK/MCsamples
@@ -81,7 +81,7 @@ if GEOMETRY == "D88":
   #inputMC=getCMSdata(dataName)
 
   # Read specified .root file:
-  inputMC = ["/store/mc/CMSSW_12_6_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_125X_mcRun4_realistic_v5_2026D88PU200RV183v2-v1/30000/0959f326-3f52-48d8-9fcf-65fc41de4e27.root"]
+  inputMC = ["/store/mc/CMSSW_12_6_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_125X_mcRun4_realistic_v5_2026D88PU200RV183v2-v1/30000/0976683f-a9a5-4ba6-aa7d-307235d7448c.root"]
   #inputMC = ["/store/relval/CMSSW_12_6_0/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/125X_mcRun4_realistic_v5_2026D88noPURV183-v1/2590000/176e8b2a-035c-4df1-9a23-f1bfdec9de37.root"]
 
 elif GEOMETRY == "D98":
@@ -108,7 +108,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 # Use skipEvents to select particular single events for test vectors
 #process.source.skipEvents = cms.untracked.uint32(11)
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('ExtenedTracking_withBins_plusCharge_phi-d0_TCD-d0.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('PromptTracking_withBins_plusCharge_100Events.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 

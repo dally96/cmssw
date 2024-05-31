@@ -57,7 +57,7 @@ void L1TrackNtuplePlot(TString type,
                        float TP_maxEta = 2.4,
                        float TP_maxDxy = 1.0,
                        float TP_maxD0 = 1.0,
-                       bool doDetailedPlots = false) {
+                       bool doDetailedPlots = true) {
   // type:              this is the name of the input file you want to process (minus ".root" extension)
   // type_dir:          this is the directory containing the input file you want to process. Note that this must end with a "/", as in "EventSets/"
   // TP_select_pdgid:   if non-zero, only select TPs with a given PDG ID
@@ -753,6 +753,7 @@ void L1TrackNtuplePlot(TString type,
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 35, -0.35, 0.35);
+  TH1F* h_trk_all_vsphi_ext = new TH1F("trk_all_vsphi_ext", ";Track #phi [rad]; ", 120, -3.2, 3.2);
   //TH1F* h_trk_all_vsphi_pos = new TH1F("trk_all_vsphi_pos", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   //TH1F* h_trk_all_vsphi_neg = new TH1F("trk_all_vsphi_neg", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_all_vsrinv = new TH1F("trk_all_vsrinv", ";Track rInv [cm^{-1}]; ", 60, 0, 0.6E-3);
@@ -781,6 +782,10 @@ void L1TrackNtuplePlot(TString type,
                                         ";Track #phi [rad]; ",
                                         35,
                                         -0.35, 0.35);  //where a TP is genuinely matched to more than one L1 track
+  TH1F* h_trk_duplicate_vsphi_ext = new TH1F("trk_duplicate_vsphi",
+                                        ";Track #phi [rad]; ",
+                                        120,
+                                        -3.2, 3.2);  //where a TP is genuinely matched to more than one L1 track
   //TH1F* h_trk_duplicate_vsphi_pos = new TH1F("trk_duplicate_vsphi_pos",
                                         //";Track #phi [rad]; ",
                                         //35,
@@ -1255,6 +1260,7 @@ void L1TrackNtuplePlot(TString type,
       if (trk_pt->at(it) > TP_minPt) { 
         h_trk_all_vspt_extended->Fill(trk_pt->at(it));
         h_trk_all_vsrinv->Fill((0.01 * c_speed * bfield)/(trk_pt->at(it)));
+        h_trk_all_vsphi_ext->Fill(trk_phi->at(it));
         if (trk_phi->at(it) > TMath::Pi()/9) {
           double mod_phi = trk_phi->at(it);
           while (mod_phi > TMath::Pi()/9) {
@@ -1429,15 +1435,18 @@ void L1TrackNtuplePlot(TString type,
           h_tp_vspt->Fill(tp_pt->at(it));
           // duplicate rate
           if (tp_nmatch->at(it) > 1) {
-            for (int inm = 1; inm < tp_nmatch->at(it); inm++)
+            std::cout << "There are " << tp_nmatch->at(it) - 1 << " duplicate tracks" << std::endl;
+            for (int inm = 1; inm < tp_nmatch->at(it); inm++) {
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
               h_trk_duplicate_vsrinv->Fill((0.01 * c_speed * bfield)/(matchtrk_pt->at(it)));
+              h_trk_duplicate_vsphi_ext->Fill(matchtrk_phi->at(it));
 
               if (matchtrk_phi->at(it) > TMath::Pi()/9) {
                 double mod_phi = matchtrk_phi->at(it);
                 while (mod_phi > TMath::Pi()/9) {
                   mod_phi -= 2 * TMath::Pi()/9;
                 }
+                std::cout << "Mod phi should then repeat " << tp_nmatch->at(it) - 1 << " times: " << mod_phi << std::endl;
                 h_trk_duplicate_vsphi->Fill(mod_phi);
                 //if (matchtrk_charge->at(it) > 0) {
                 //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
@@ -1451,6 +1460,7 @@ void L1TrackNtuplePlot(TString type,
                 while (mod_phi < -TMath::Pi()/9) { 
                   mod_phi += 2 * TMath::Pi()/9;
                 }
+                std::cout << "Mod phi should then repeat " << tp_nmatch->at(it) - 1 << " times: " << mod_phi << std::endl;
                 h_trk_duplicate_vsphi->Fill(mod_phi);
                 //if (matchtrk_charge->at(it) > 0) {
                 //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
@@ -1460,6 +1470,7 @@ void L1TrackNtuplePlot(TString type,
                 //}
               }
               //h_trk_duplicate_vsphi->Fill(matchtrk_phi->at(it));
+            }
           }
         }
         if (tp_pt->at(it) > 3.0)
@@ -3841,6 +3852,8 @@ void L1TrackNtuplePlot(TString type,
   // "fake rates"
 
   h_trk_all_vspt->Sumw2();
+  h_trk_all_vsphi->Sumw2();
+  h_trk_all_vsphi_ext->Sumw2();
   h_trk_loose_vspt->Sumw2();
   h_trk_genuine_vspt->Sumw2();
   h_trk_genuine_vspt_extended->Sumw2();
@@ -3853,6 +3866,7 @@ void L1TrackNtuplePlot(TString type,
   //h_trk_notgenuine_vsphi_neg->Sumw2();
   h_trk_duplicate_vspt->Sumw2();
   h_trk_duplicate_vsphi->Sumw2();
+  h_trk_duplicate_vsphi_ext->Sumw2();
   //h_trk_duplicate_vsphi_pos->Sumw2();
   //h_trk_duplicate_vsphi_neg->Sumw2();
   h_tp_vspt->Sumw2();
@@ -3975,6 +3989,51 @@ void L1TrackNtuplePlot(TString type,
   h_duplicatefrac_phi->Draw();
   TLine* phi_bin = new TLine(0,0,0,1);
   c.SaveAs(DIR + type + "_duplicatefrac_vsphi.pdf");
+
+  TH1F* h_duplicatefrac_phi_ext = (TH1F*)h_trk_duplicate_vsphi_ext->Clone();
+  h_duplicatefrac_phi_ext->SetName("duplicatefrac_phi_ext");
+  h_duplicatefrac_phi_ext->GetYaxis()->SetTitle("Duplicate fraction");
+  h_duplicatefrac_phi_ext->Divide(h_trk_duplicate_vsphi_ext, h_trk_all_vsphi_ext, 1.0, 1.0, "B");
+
+  h_duplicatefrac_phi_ext->Write();
+  h_duplicatefrac_phi_ext->Draw();
+  TLine* phi_bin_2 = new TLine(2*TMath::Pi()/9, 0, 2*TMath::Pi()/9, 1);
+  TLine* phi_bin_3 = new TLine(2*TMath::Pi()/9 + 0.1, 0, 2*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin_4 = new TLine(4*TMath::Pi()/9, 0, 4*TMath::Pi()/9, 1);
+  TLine* phi_bin_5 = new TLine(4*TMath::Pi()/9 + 0.1, 0, 4*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin_6 = new TLine(6*TMath::Pi()/9, 0, 6*TMath::Pi()/9, 1);
+  TLine* phi_bin_7 = new TLine(6*TMath::Pi()/9 + 0.1, 0, 6*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin_8 = new TLine(8*TMath::Pi()/9, 0, 8*TMath::Pi()/9, 1);
+  TLine* phi_bin_9 = new TLine(8*TMath::Pi()/9 + 0.1, 0, 8*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin0 = new TLine(0, 0, 0, 1);
+  TLine* phi_bin1 = new TLine(0.1, 0, 0.1, 1);
+  TLine* phi_bin2 = new TLine(-2*TMath::Pi()/9, 0, -2*TMath::Pi()/9, 1);
+  TLine* phi_bin3 = new TLine(-2*TMath::Pi()/9 + 0.1, 0, -2*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin4 = new TLine(-4*TMath::Pi()/9, 0, -4*TMath::Pi()/9, 1);
+  TLine* phi_bin5 = new TLine(-4*TMath::Pi()/9 + 0.1, 0, -4*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin6 = new TLine(-6*TMath::Pi()/9, 0, -6*TMath::Pi()/9, 1);
+  TLine* phi_bin7 = new TLine(-6*TMath::Pi()/9 + 0.1, 0, -6*TMath::Pi()/9 + 0.1, 1);
+  TLine* phi_bin8 = new TLine(-8*TMath::Pi()/9, 0, -8*TMath::Pi()/9, 1);
+  TLine* phi_bin9 = new TLine(-8*TMath::Pi()/9 + 0.1, 0, -8*TMath::Pi()/9 + 0.1, 1);
+  phi_bin0->Draw("SAME");
+  phi_bin1->Draw("SAME");
+  phi_bin2->Draw("SAME");
+  phi_bin3->Draw("SAME");
+  phi_bin4->Draw("SAME");
+  phi_bin5->Draw("SAME");
+  phi_bin6->Draw("SAME");
+  phi_bin7->Draw("SAME");
+  phi_bin8->Draw("SAME");
+  phi_bin9->Draw("SAME");
+  phi_bin_2->Draw("SAME");
+  phi_bin_3->Draw("SAME");
+  phi_bin_4->Draw("SAME");
+  phi_bin_5->Draw("SAME");
+  phi_bin_6->Draw("SAME");
+  phi_bin_7->Draw("SAME");
+  phi_bin_8->Draw("SAME");
+  phi_bin_9->Draw("SAME");
+  c.SaveAs(DIR + type + "_duplicatefrac_vsphi_ext.pdf");
 
   //TLegend* l_duplicatefrac_phi = new TLegend();
   //TH1F* h_duplicatefrac_phi_pos = (TH1F*)h_trk_duplicate_vsphi_pos->Clone();
