@@ -754,6 +754,7 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_all_vsphi = new TH1F("trk_all_vsphi", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_all_vsphi_ext = new TH1F("trk_all_vsphi_ext", ";Track #phi [rad]; ", 120, -3.2, 3.2);
+  TH1F* h_trk_all_vsphi_disp = new TH1F("trk_all_vsphi_disp", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   //TH1F* h_trk_all_vsphi_pos = new TH1F("trk_all_vsphi_pos", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   //TH1F* h_trk_all_vsphi_neg = new TH1F("trk_all_vsphi_neg", ";Track #phi [rad]; ", 35, -0.35, 0.35);
   TH1F* h_trk_all_vsrinv = new TH1F("trk_all_vsrinv", ";Track rInv [cm^{-1}]; ", 60, 0, 0.6E-3);
@@ -822,6 +823,7 @@ void L1TrackNtuplePlot(TString type,
   const float maxD0plot = TP_maxD0;
 
   TH1F* h_tp_phi = new TH1F("tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.02", 35, -0.35, 0.35);
+  TH1F* h_tp_phi_disp = new TH1F("tp_phi_disp", ";Tracking particle #phi [rad]; Tracking particles / 0.02", 35, -0.35, 0.35);
   TH1F* h_tp_d0 =
       new TH1F("tp_d0", ";Tracking particle d_{0} [cm]; Tracking particles / 0.01 cm", 50, -maxD0plot, maxD0plot);
   TH1F* h_tp_absd0 =
@@ -833,6 +835,8 @@ void L1TrackNtuplePlot(TString type,
 
   TH1F* h_match_tp_phi =
       new TH1F("match_tp_phi", ";Tracking particle #phi [rad]; Tracking particles / 0.02", 35, -0.35, 0.35);
+  TH1F* h_match_tp_phi_disp =
+      new TH1F("match_tp_phi_disp", ";Tracking particle #phi [rad]; Tracking particles / 0.02", 35, -0.35, 0.35);
   TH1F* h_match_tp_d0 =
       new TH1F("match_tp_d0", ";Tracking particle d_{0} [cm]; Tracking particles / 0.01 cm", 50, -maxD0plot, maxD0plot);
   TH1F* h_match_tp_absd0 =
@@ -1523,6 +1527,9 @@ void L1TrackNtuplePlot(TString type,
             mod_phi -= 2 * TMath::Pi()/9;
           }
           h_tp_phi->Fill(mod_phi);
+          if (tp_d0->at(it) > 0.01) {
+            h_tp_phi_disp->Fill(mod_phi);
+          }
         }
         else if (tp_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = tp_phi->at(it);
@@ -1530,6 +1537,9 @@ void L1TrackNtuplePlot(TString type,
             mod_phi += 2 * TMath::Pi()/9;
           }
           h_tp_phi->Fill(mod_phi);
+          if (tp_d0->at(it) > 0.01) {
+            h_tp_phi_disp->Fill(mod_phi);
+          }
         }
         //h_tp_phi->Fill(tp_phi->at(it));
         h_tp_z0->Fill(tp_z0->at(it));
@@ -1687,6 +1697,9 @@ void L1TrackNtuplePlot(TString type,
             mod_phi -= 2 * TMath::Pi()/9;
           }
           h_match_tp_phi->Fill(mod_phi);
+          if (tp_d0->at(it) > 0.01) {
+            h_match_tp_phi_disp->Fill(mod_phi);
+          }
         }
         else if (tp_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = tp_phi->at(it);
@@ -1694,6 +1707,9 @@ void L1TrackNtuplePlot(TString type,
             mod_phi += 2 * TMath::Pi()/9;
           }
           h_match_tp_phi->Fill(mod_phi);
+          if (tp_d0->at(it) > 0.01) {
+            h_match_tp_phi_disp->Fill(mod_phi);
+          }
         }
         //h_match_tp_phi->Fill(tp_phi->at(it));
         h_match_tp_z0->Fill(tp_z0->at(it));
@@ -3391,6 +3407,13 @@ void L1TrackNtuplePlot(TString type,
   h_eff_phi->GetYaxis()->SetTitle("Efficiency");
   h_eff_phi->Divide(h_match_tp_phi, h_tp_phi, 1.0, 1.0, "B");
 
+  h_match_tp_phi_disp->Sumw2();
+  h_tp_phi_disp->Sumw2();
+  TH1F* h_eff_phi_disp = (TH1F*)h_match_tp_phi_disp->Clone();
+  h_eff_phi_disp->SetName("eff_phi_disp");
+  h_eff_phi_disp->GetYaxis()->SetTitle("Efficiency");
+  h_eff_phi_disp->Divide(h_match_tp_phi_disp, h_tp_phi_disp, 1.0, 1.0, "B");
+
   h_match_tp_z0->Sumw2();
   h_tp_z0->Sumw2();
   TH1F* h_eff_z0 = (TH1F*)h_match_tp_z0->Clone();
@@ -3577,6 +3600,10 @@ void L1TrackNtuplePlot(TString type,
     TLine* phi_bin1 = new TLine(0, 0, 0, 1);
     phi_bin1->Draw("same");
     c.SaveAs(DIR + type + "_eff_phi.pdf");
+
+    h_eff_phi_disp->Draw();
+    h_eff_phi_disp->Write();
+    c.SaveAs(DIR + type + "_eff_phi_disp.pdf");
 
     if (type.Contains("Mu")) {
       h_eff_phi->GetYaxis()->SetRangeUser(0.8, 1.01);  // zoomed-in plot

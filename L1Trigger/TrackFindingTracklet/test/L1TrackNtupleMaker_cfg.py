@@ -15,15 +15,15 @@ process = cms.Process("L1TrackNtuple")
 ############################################################
 
 # D88 used for CMSSW_12_6 datasets, and D98 recommended for more recent ones.
-GEOMETRY = "D88"
-#GEOMETRY = "D98"
+#GEOMETRY = "D88"
+GEOMETRY = "D98"
 
 # Set L1 tracking algorithm:
 # 'HYBRID' (baseline, 4par fit) or 'HYBRID_DISPLACED' (extended, 5par fit).
 # 'HYBRID_NEWKF' (baseline, 4par fit, with bit-accurate KF emulation),
 # 'HYBRID_REDUCED' to use the "Summer Chain" configuration with reduced inputs.
 # (Or legacy algos 'TMTT' or 'TRACKLET').
-L1TRKALGO = 'HYBRID_DISPLACED'
+L1TRKALGO = 'HYBRID'
 
 WRITE_DATA = False
 
@@ -58,7 +58,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 # input and output
 ############################################################
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(500))
 
 #--- To use MCsamples scripts, defining functions get*data*() for easy MC access,
 #--- follow instructions in https://github.com/cms-L1TK/MCsamples
@@ -108,7 +108,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 # Use skipEvents to select particular single events for test vectors
 #process.source.skipEvents = cms.untracked.uint32(11)
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('PromptTracking_withBins_plusCharge_100Events.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('L1TrkNtuple.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
