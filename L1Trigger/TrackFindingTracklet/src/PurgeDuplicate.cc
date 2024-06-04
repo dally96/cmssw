@@ -355,7 +355,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               //}
             }
           }
-        }
+        
 
         // Check to see if the track is a duplicate
         for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
@@ -376,6 +376,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             }
           }
         }
+      }
+    }
 
         for (unsigned int ktrk = 0; ktrk < numStublists; ktrk++) {
           if ((trackInfo[ktrk].second != true) && (trackBinInfo[ktrk] != true)) {
