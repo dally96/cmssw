@@ -1527,7 +1527,7 @@ void L1TrackNtuplePlot(TString type,
             mod_phi -= 2 * TMath::Pi()/9;
           }
           h_tp_phi->Fill(mod_phi);
-          if (tp_d0->at(it) > 0.01) {
+          if (std::abs(tp_d0->at(it)) > 0.01) {
             h_tp_phi_disp->Fill(mod_phi);
           }
         }
@@ -1537,7 +1537,7 @@ void L1TrackNtuplePlot(TString type,
             mod_phi += 2 * TMath::Pi()/9;
           }
           h_tp_phi->Fill(mod_phi);
-          if (tp_d0->at(it) > 0.01) {
+          if (std::abs(tp_d0->at(it)) > 0.01) {
             h_tp_phi_disp->Fill(mod_phi);
           }
         }
@@ -1697,7 +1697,7 @@ void L1TrackNtuplePlot(TString type,
             mod_phi -= 2 * TMath::Pi()/9;
           }
           h_match_tp_phi->Fill(mod_phi);
-          if (tp_d0->at(it) > 0.01) {
+          if (std::abs(tp_d0->at(it)) > 0.01) {
             h_match_tp_phi_disp->Fill(mod_phi);
           }
         }
@@ -1707,7 +1707,7 @@ void L1TrackNtuplePlot(TString type,
             mod_phi += 2 * TMath::Pi()/9;
           }
           h_match_tp_phi->Fill(mod_phi);
-          if (tp_d0->at(it) > 0.01) {
+          if (std::abs(tp_d0->at(it)) > 0.01) {
             h_match_tp_phi_disp->Fill(mod_phi);
           }
         }

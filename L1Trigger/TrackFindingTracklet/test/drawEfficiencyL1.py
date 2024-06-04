@@ -84,7 +84,7 @@ variables = [
    # ('eff_eta_D1D2L2'           , '#eta'              , ytitlee,   100   , ( -2.4  , 2.4    ), (0  , 1.0),    'effVsEta_D1D2L2',      (0.7 , 0.85, 0.25, 0.38),  (0.5  , 1.05  )),
     ('eff_pt'            , 'p_{T}'               , ytitlee,    20   , pt_binsExtended, (0.85   , 1),     'effVsPt',      (0.6 , 0.75, 0.25, 0.38),  (0.501, 1.05 )), 
     ('eff_phi'           , '#phi'                , ytitlee,    35   , (-3.2, 3.2), (0.9, 1.0),            'effVsPhi',     (0.6 , 0.85, 0.25, 0.38),  (0.501, 1.05 )),
-    ('eff_phi_disp'           , '#phi'                , '#phi efficiency (d_{0} > 0.01 cm)',    35   , (-3.2, 3.2), (0, 1.0),            'effVsPhiDisp',     (0.6 , 0.85, 0.25, 0.38),  (0.501, 1.05 )),
+    ('eff_phi_disp'           , '#phi'                , '#phi efficiency (d_{0} > 0.01 cm)',    35   , (-3.2, 3.2), (0.7, 1.0),            'effVsPhiDisp',     (0.6 , 0.85, 0.25, 0.38),  (0.501, 1.05 )),
 # # #  ('eff_d0'            , 'd0'                  , ytitlee,    50   , ( -10. ,  10. ), (0.   , 1.),    'effVsD0',       (0.2 , 0.5, 0.75, 0.88),  (0.5  , 1.05  )),
 # # #  ('eff_z0'            , 'z0'                  , ytitlee,    50   , ( -10. ,  10. ), (0.   , 1.),    'effVsZ0',       (0.2 , 0.5, 0.75, 0.88),  (0.5  , 1.05  )),
   ('duplicatefrac_pt' , 'p_{T} [GeV]'          , 'duplicate fraction',    17   , pt_binsExtended, (0.   , .08),    'dupVsPt',       (0.2 , 0.4, 0.55, 0.68),  (0.5  , 1.05  )),
