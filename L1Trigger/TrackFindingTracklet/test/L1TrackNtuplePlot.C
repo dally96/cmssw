@@ -1016,6 +1016,21 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_trk_pt = new TH1F("trk_pt", Form(";Track p_{T} (GeV);Tracks / 0.5 GeV"), 200, 0., 100.);
   TH1F* h_trk_eta = new TH1F("trk_eta", Form(";Track #eta;Tracks / 0.026"), 200, -2.6, 2.6);
 
+  TH1F* h_matchtrk_pt = new TH1F("matchtrk_pt", Form(";matchTrack p_{T} (GeV);Tracks / 5 GeV"), 20, 0., 100.);
+  TH1F* h_matchtrk_eta = new TH1F("matchtrk_eta", Form(";matchTrack #eta;Tracks / 0.1"), 52, -2.6, 2.6);
+  TH1F* h_matchtrk_nstub = new TH1F("matchtrk_nstub", Form(";matchTrack nstub; Tracks"), 10, 0, 10);
+  TH1F* h_matchtrk_z0 = new TH1F("matchtrk_z0", Form(";matchTrack z_{0} (cm); Tracks / 0.1 cm"), 100, 0, 10);
+  TH1F* h_matchtrk_nmatch = new TH1F* ("matchtrk_nmatch", Form(";matchTrack nmatch; Tracks"), 7, 0, 7);  
+
+  TH1F* h_matchtp_pt = new TH1F("matchtp_pt", Form(";matchtp  p_{T} (GeV); TP / 5 GeV"), 20, 0, 100);
+  TH1F* h_matchtp_eta = new TH1F("matchtp_eta", Form(";matchtp #eta; TP / 0.1"), 52, -2.6, 2.6);
+  TH1F* h_matchtp_phi = new TH1F("matchtp_phi", Form(";matchtp #phi; TP / 0.1"), 64, -3.2, 3.2);
+  TH1F* h_matchtp_pdgid = new TH1F("matchtp_pdgid", Form(";matchtp pdgId; TP"), 6000, 0, 6000);
+
+
+
+
+
   // ----------------------------------------------------------------------------------------------------------------
   //        * * * * *     S T A R T   O F   A C T U A L   R U N N I N G   O N   E V E N T S     * * * * *
   // ----------------------------------------------------------------------------------------------------------------
@@ -1254,7 +1269,16 @@ void L1TrackNtuplePlot(TString type,
           h_tp_vspt->Fill(tp_pt->at(it));
           // duplicate rate
           if (tp_nmatch->at(it) > 1) {
+            h_matchtp_pt->Fill(tp_pt->at(it));
+            h_matchtp_eta->Fill(tp_eta->at(it));
+            h_matchtp_phi->Fill(tp_phi->at(it));
+            h_matchtp_pdgid->Fill(tp_pdgid->at(it));
+            h_matchtrk_nmatch->Fill(tp_nmatch->at(it));
             for (int inm = 1; inm < tp_nmatch->at(it); inm++)
+              h_matchtrk_pt->Fill(matchtrk_pt->at(it));
+              h_matchtrk_eta->Fill(matchtrk_eta->at(it));
+              h_matchtrk_nstub->Fill(matchtrk_nstub->at(it)); 
+              h_matchtrk_z0->Fill(matchtrk_z0->at(it)); 
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
           }
         }
@@ -3631,6 +3655,37 @@ void L1TrackNtuplePlot(TString type,
     c.SaveAs(DIR + type + "_trk_eta.pdf");
     h_trk_pt->Draw();
     c.SaveAs(DIR + type + "_trk_pt.pdf");
+
+    h_matchtp_pt->Write();
+    h_matchtp_eta->Write();
+    h_matchtp_phi->Write();
+    h_matchtp_pdgid->Write();
+    h_matchtrk_nmatch->Write();
+
+    h_matchtp_pt->Draw();
+    c.SaveAs(DIR + type + "_matchtp_pt.pdf");
+    h_matchtp_eta->Draw();
+    c.SaveAs(DIR + type + "_matchtp_eta.pdf");
+    h_matchtp_phi->Draw();
+    c.SaveAs(DIR + type + "_matchtp_phi.pdf");
+    h_matchtp_pdgid->Draw();
+    c.SaveAs(DIR + type + "_matchtp_pdgid.pdf");
+    h_matchtrk_nmatch->Draw();
+    c.SaveAs(DIR + type + "_matchtp_nmatch.pdf");
+
+    h_matchtrk_pt->Write();
+    h_matchtrk_eta->Write();
+    h_matchtrk_nstub->Write(); 
+    h_matchtrk_z0->Write(); 
+
+    h_matchtrk_pt->Draw();
+    c.SaveAs(DIR + type + "_matchtrk_pt.pdf");
+    h_matchtrk_eta->Draw();
+    c.SaveAs(DIR + type + "_matchtrk_eta.pdf");
+    h_matchtrk_nstub->Draw(); 
+    c.SaveAs(DIR + type + "_matchtrk_nstub.pdf");
+    h_matchtrk_z0->Draw(); 
+    c.SaveAs(DIR + type + "_matchtrk_z0.pdf");
   }
 
   fout->Close();
