@@ -1128,6 +1128,17 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_trk_pt = new TH1F("trk_pt", Form(";Track p_{T} (GeV);Tracks / 0.5 GeV"), 200, 0., 100.);
   TH1F* h_trk_eta = new TH1F("trk_eta", Form(";Track #eta;Tracks / 0.026"), 200, -2.6, 2.6);
 
+  TH1F* h_matchtrk_pt = new TH1F("matchtrk_pt", Form(";matchTrack p_{T} (GeV);Tracks / 5 GeV"), 20, 0., 100.);
+  TH1F* h_matchtrk_eta = new TH1F("matchtrk_eta", Form(";matchTrack #eta;Tracks / 0.1"), 52, -2.6, 2.6);
+  TH1F* h_matchtrk_nstub = new TH1F("matchtrk_nstub", Form(";matchTrack nstub; Tracks"), 10, 0, 10);
+  TH1F* h_matchtrk_z0 = new TH1F("matchtrk_z0", Form(";matchTrack z_{0} (cm); Tracks / 0.1 cm"), 100, 0, 10);
+  TH1F* h_matchtrk_nmatch = new TH1F("matchtrk_nmatch", Form(";matchTrack nmatch; Tracks"), 7, 0, 7);  
+
+  TH1F* h_matchtp_pt = new TH1F("matchtp_pt", Form(";matchtp  p_{T} (GeV); TP / 5 GeV"), 20, 0, 100);
+  TH1F* h_matchtp_eta = new TH1F("matchtp_eta", Form(";matchtp #eta; TP / 0.1"), 52, -2.6, 2.6);
+  TH1F* h_matchtp_phi = new TH1F("matchtp_phi", Form(";matchtp #phi; TP / 0.1"), 64, -3.2, 3.2);
+  TH1F* h_matchtp_pdgid = new TH1F("matchtp_pdgid", Form(";matchtp pdgId; TP"), 2400, 0, 2400);
+
   // ----------------------------------------------------------------------------------------------------------------
   //        * * * * *     S T A R T   O F   A C T U A L   R U N N I N G   O N   E V E N T S     * * * * *
   // ----------------------------------------------------------------------------------------------------------------
@@ -1278,7 +1289,7 @@ void L1TrackNtuplePlot(TString type,
           // h_trk_all_vsphi_neg->Fill(mod_phi);
           //  
         }
-        else if (trk_phi->at(it) < -TMath::Pi()/9) {
+        if (trk_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = trk_phi->at(it);
           while (mod_phi < -TMath::Pi()/9) { 
             mod_phi += 2 * TMath::Pi()/9;
@@ -1290,6 +1301,9 @@ void L1TrackNtuplePlot(TString type,
           //if (trk_charge->at(it) < 0) {
           //  h_trk_all_vsphi_neg->Fill(mod_phi);
           //}  
+        }
+        else {
+          h_trk_all_vsphi->Fill(trk_phi->at(it));
         }
       }
       if (trk_pt->at(it) > 2.0) {
@@ -1307,12 +1321,15 @@ void L1TrackNtuplePlot(TString type,
             }
             h_trk_genuine_vsphi->Fill(mod_phi);
           }
-          else if (trk_phi->at(it) < -TMath::Pi()/9) {
+          if (trk_phi->at(it) < -TMath::Pi()/9) {
             double mod_phi = trk_phi->at(it);
             while (mod_phi < -TMath::Pi()/9) { 
               mod_phi += 2 * TMath::Pi()/9;
             }
             h_trk_genuine_vsphi->Fill(mod_phi);
+          }
+          else {
+            h_trk_genuine_vsphi->Fill(trk_phi->at(it));
           }
         } else {
           h_trk_notgenuine_vspt->Fill(trk_pt->at(it));
@@ -1330,7 +1347,7 @@ void L1TrackNtuplePlot(TString type,
             // h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
             //  
           }
-          else if (trk_phi->at(it) < -TMath::Pi()/9) {
+          if (trk_phi->at(it) < -TMath::Pi()/9) {
             double mod_phi = trk_phi->at(it);
             while (mod_phi < -TMath::Pi()/9) { 
               mod_phi += 2 * TMath::Pi()/9;
@@ -1342,6 +1359,9 @@ void L1TrackNtuplePlot(TString type,
             //if (trk_charge->at(it) < 0) {
             //  h_trk_notgenuine_vsphi_neg->Fill(mod_phi);
             //}  
+          }
+          else {
+            h_trk_notgenuine_vsphi->Fill(trk_phi->at(it));
           }
         }
         if (trk_loose->at(it) == 1)
@@ -1439,8 +1459,43 @@ void L1TrackNtuplePlot(TString type,
           h_tp_vspt->Fill(tp_pt->at(it));
           // duplicate rate
           if (tp_nmatch->at(it) > 1) {
-            std::cout << "There are " << tp_nmatch->at(it) - 1 << " duplicate tracks" << std::endl;
+            if (tp_phi->at(it) > TMath::Pi()/9) {
+              double mod_phi = tp_phi->at(it);
+              while (mod_phi > TMath::Pi()/9) {
+                mod_phi -= 2 * TMath::Pi()/9;
+              }
+              if ((mod_phi > -0.1) && (mod_phi < 0)){
+                h_matchtp_pt->Fill(tp_pt->at(it));
+                h_matchtp_eta->Fill(tp_eta->at(it));
+                h_matchtp_phi->Fill(tp_phi->at(it));
+                h_matchtp_pdgid->Fill(std::abs(tp_pdgid->at(it)));
+                h_matchtrk_nmatch->Fill(tp_nmatch->at(it));
+              }
+            }
+            else if (tp_phi->at(it) < -TMath::Pi()/9) {
+              double mod_phi = tp_phi->at(it);
+              while (mod_phi < -TMath::Pi()/9) {
+                mod_phi += 2 * TMath::Pi()/9;
+              }
+              if ((mod_phi > -0.1) && (mod_phi < 0)){
+                h_matchtp_pt->Fill(tp_pt->at(it));
+                h_matchtp_eta->Fill(tp_eta->at(it));
+                h_matchtp_phi->Fill(tp_phi->at(it));
+                h_matchtp_pdgid->Fill(tp_pdgid->at(it));
+                h_matchtrk_nmatch->Fill(tp_nmatch->at(it));
+              }
+            }
+            else if ((tp_phi->at(it) > -0.1) && (tp_phi->at(it) < 0)) {
+              h_matchtp_pt->Fill(tp_pt->at(it));
+              h_matchtp_eta->Fill(tp_eta->at(it));
+              h_matchtp_phi->Fill(tp_phi->at(it));
+              h_matchtp_pdgid->Fill(tp_pdgid->at(it));
+              h_matchtrk_nmatch->Fill(tp_nmatch->at(it));
+            }
+              
+
             for (int inm = 1; inm < tp_nmatch->at(it); inm++) {
+
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
               h_trk_duplicate_vsrinv->Fill((0.01 * c_speed * bfield)/(matchtrk_pt->at(it)));
               h_trk_duplicate_vsphi_ext->Fill(matchtrk_phi->at(it));
@@ -1450,8 +1505,13 @@ void L1TrackNtuplePlot(TString type,
                 while (mod_phi > TMath::Pi()/9) {
                   mod_phi -= 2 * TMath::Pi()/9;
                 }
-                std::cout << "Mod phi should then repeat " << tp_nmatch->at(it) - 1 << " times: " << mod_phi << std::endl;
                 h_trk_duplicate_vsphi->Fill(mod_phi);
+                if ((mod_phi > -0.1) && (mod_phi < 0)){
+                  h_matchtrk_pt->Fill(matchtrk_pt->at(it));
+                  h_matchtrk_eta->Fill(matchtrk_eta->at(it));
+                  h_matchtrk_nstub->Fill(matchtrk_nstub->at(it)); 
+                  h_matchtrk_z0->Fill(matchtrk_z0->at(it));
+                }
                 //if (matchtrk_charge->at(it) > 0) {
                 //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
                 //}
@@ -1459,20 +1519,35 @@ void L1TrackNtuplePlot(TString type,
                 //  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
                 //}
               }
-              else if (matchtrk_phi->at(it) < -TMath::Pi()/9) {
+              if (matchtrk_phi->at(it) < -TMath::Pi()/9) {
                 double mod_phi = matchtrk_phi->at(it);
                 while (mod_phi < -TMath::Pi()/9) { 
                   mod_phi += 2 * TMath::Pi()/9;
                 }
-                std::cout << "Mod phi should then repeat " << tp_nmatch->at(it) - 1 << " times: " << mod_phi << std::endl;
                 h_trk_duplicate_vsphi->Fill(mod_phi);
+                if ((mod_phi > -0.1) && (mod_phi < 0)){
+                  h_matchtrk_pt->Fill(matchtrk_pt->at(it));
+                  h_matchtrk_eta->Fill(matchtrk_eta->at(it));
+                  h_matchtrk_nstub->Fill(matchtrk_nstub->at(it)); 
+                  h_matchtrk_z0->Fill(matchtrk_z0->at(it));
+                }
+              }
+              else {
+                h_trk_duplicate_vsphi->Fill(matchtrk_phi->at(it));
+                if ((matchtrk_phi->at(it) > -0.1) && (matchtrk_phi->at(it) < 0)){
+                  h_matchtrk_pt->Fill(matchtrk_pt->at(it));
+                  h_matchtrk_eta->Fill(matchtrk_eta->at(it));
+                  h_matchtrk_nstub->Fill(matchtrk_nstub->at(it)); 
+                  h_matchtrk_z0->Fill(matchtrk_z0->at(it));
+                }
+              }
                 //if (matchtrk_charge->at(it) > 0) {
                 //  h_trk_duplicate_vsphi_pos->Fill(mod_phi);
                 //}
                 //if (matchtrk_charge->at(it) < 0) {
                 //  h_trk_duplicate_vsphi_neg->Fill(mod_phi);
                 //}
-              }
+              
               //h_trk_duplicate_vsphi->Fill(matchtrk_phi->at(it));
             }
           }
@@ -1493,6 +1568,7 @@ void L1TrackNtuplePlot(TString type,
           continue;
       }
 
+      std::cout << "tp_do is " << tp_d0->at(it) << std::endl;
       h_tp_pt->Fill(tp_pt->at(it));
       h_tp_pt_ext->Fill(tp_pt->at(it));
       if (tp_pt->at(it) < 8.0)
@@ -1505,7 +1581,7 @@ void L1TrackNtuplePlot(TString type,
       if (tp_pt->at(it) > TP_minPt) {
         if (std::abs(tp_eta->at(it)) < 1.0)
           n_all_eta1p0++;
-        else if (std::abs(tp_eta->at(it)) < 1.75)
+        if (std::abs(tp_eta->at(it)) < 1.75)
           n_all_eta1p75++;
         else
           n_all_eta2p5++;
@@ -1531,7 +1607,7 @@ void L1TrackNtuplePlot(TString type,
             h_tp_phi_disp->Fill(mod_phi);
           }
         }
-        else if (tp_phi->at(it) < -TMath::Pi()/9) {
+        if (tp_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = tp_phi->at(it);
           while (mod_phi < -TMath::Pi()/9) { 
             mod_phi += 2 * TMath::Pi()/9;
@@ -1540,6 +1616,12 @@ void L1TrackNtuplePlot(TString type,
           if (std::abs(tp_d0->at(it)) > 0.01) {
             h_tp_phi_disp->Fill(mod_phi);
           }
+        }
+        else {
+          h_tp_phi->Fill(tp_phi->at(it));
+          if (std::abs(tp_d0->at(it)) > 0.01) {
+            h_tp_phi_disp->Fill(tp_phi->at(it));
+          }   
         }
         //h_tp_phi->Fill(tp_phi->at(it));
         h_tp_z0->Fill(tp_z0->at(it));
@@ -1552,7 +1634,7 @@ void L1TrackNtuplePlot(TString type,
 
         if (tp_pt->at(it) < 3.0)
           h_tp_eta_23->Fill(tp_eta->at(it));
-        else if (tp_pt->at(it) < 5.0)
+        if (tp_pt->at(it) < 5.0)
           h_tp_eta_35->Fill(tp_eta->at(it));
         else
           h_tp_eta_5->Fill(tp_eta->at(it));
@@ -1632,7 +1714,7 @@ void L1TrackNtuplePlot(TString type,
           }
         }
         // intermediate eta
-        else if (std::abs(tp_eta->at(it)) < 1.6 && std::abs(tp_eta->at(it)) >= 0.8) {
+        if (std::abs(tp_eta->at(it)) < 1.6 && std::abs(tp_eta->at(it)) >= 0.8) {
           if (tp_pt->at(it) < 8.0) {
             h_match_trk_chi2_I_L->Fill(chi2);
             h_match_trk_chi2_dof_I_L->Fill(chi2dof);
@@ -1642,7 +1724,7 @@ void L1TrackNtuplePlot(TString type,
           }
         }
         // forward eta
-        else if (std::abs(tp_eta->at(it)) >= 1.6) {
+        if (std::abs(tp_eta->at(it)) >= 1.6) {
           if (tp_pt->at(it) < 8.0) {
             h_match_trk_chi2_F_L->Fill(chi2);
             h_match_trk_chi2_dof_F_L->Fill(chi2dof);
@@ -1701,7 +1783,7 @@ void L1TrackNtuplePlot(TString type,
             h_match_tp_phi_disp->Fill(mod_phi);
           }
         }
-        else if (tp_phi->at(it) < -TMath::Pi()/9) {
+        if (tp_phi->at(it) < -TMath::Pi()/9) {
           double mod_phi = tp_phi->at(it);
           while (mod_phi < -TMath::Pi()/9) { 
             mod_phi += 2 * TMath::Pi()/9;
@@ -1709,6 +1791,12 @@ void L1TrackNtuplePlot(TString type,
           h_match_tp_phi->Fill(mod_phi);
           if (std::abs(tp_d0->at(it)) > 0.01) {
             h_match_tp_phi_disp->Fill(mod_phi);
+          }
+        }
+        else {
+          h_match_tp_phi->Fill(tp_phi->at(it));
+          if (std::abs(tp_d0->at(it)) > 0.01) {
+            h_match_tp_phi_disp->Fill(tp_phi->at(it));
           }
         }
         //h_match_tp_phi->Fill(tp_phi->at(it));
@@ -4269,6 +4357,37 @@ void L1TrackNtuplePlot(TString type,
     c.SaveAs(DIR + type + "_trk_eta.pdf");
     h_trk_pt->Draw();
     c.SaveAs(DIR + type + "_trk_pt.pdf");
+
+    h_matchtp_pt->Write();
+    h_matchtp_eta->Write();
+    h_matchtp_phi->Write();
+    h_matchtp_pdgid->Write();
+    h_matchtrk_nmatch->Write();
+
+    h_matchtp_pt->Draw();
+    c.SaveAs(DIR + type + "_matchtp_pt.pdf");
+    h_matchtp_eta->Draw();
+    c.SaveAs(DIR + type + "_matchtp_eta.pdf");
+    h_matchtp_phi->Draw();
+    c.SaveAs(DIR + type + "_matchtp_phi.pdf");
+    h_matchtp_pdgid->Draw();
+    c.SaveAs(DIR + type + "_matchtp_pdgid.pdf");
+    h_matchtrk_nmatch->Draw();
+    c.SaveAs(DIR + type + "_matchtp_nmatch.pdf");
+
+    h_matchtrk_pt->Write();
+    h_matchtrk_eta->Write();
+    h_matchtrk_nstub->Write(); 
+    h_matchtrk_z0->Write(); 
+
+    h_matchtrk_pt->Draw();
+    c.SaveAs(DIR + type + "_matchtrk_pt.pdf");
+    h_matchtrk_eta->Draw();
+    c.SaveAs(DIR + type + "_matchtrk_eta.pdf");
+    h_matchtrk_nstub->Draw(); 
+    c.SaveAs(DIR + type + "_matchtrk_nstub.pdf");
+    h_matchtrk_z0->Draw(); 
+    c.SaveAs(DIR + type + "_matchtrk_z0.pdf");
   }
 
   fout->Close();
