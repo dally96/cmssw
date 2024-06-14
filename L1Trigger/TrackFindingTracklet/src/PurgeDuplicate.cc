@@ -86,6 +86,11 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
   inputstublists_.clear();
   mergedstubidslists_.clear();
 
+  sortedinputtracklets_.clear();
+  sortedinputstublists_.clear();
+  sortedinputstubidslists_.clear();
+  sortedmergedstubidslists_.clear();
+
   if (settings_.removalType() != "merge") {
     for (auto& inputtrackfit : inputtrackfits_) {
       if (inputtrackfit->nTracks() == 0)
@@ -197,6 +202,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           sortedinputstublists_.push_back(inputstublists_[seedRankIdx[i]]);
           sortedinputstubidslists_.push_back(inputstubidslists_[seedRankIdx[i]]);
           sortedinputtracklets_.push_back(inputtracklets_[seedRankIdx[i]]);
+          sortedmergedstubidslists_.push_back(mergedstubidslists_[seedRankIdx[i]]);
         }  
 
         if (settings_.inventStubs()) {
@@ -311,61 +317,60 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
 
             if (dupMap[seedRankIdx[itrk]][seedRankIdx[jtrk]]) {
               // Set preferred track based on seed rank
-              //int preftrk;
-              //int rejetrk;
-              //if (inputtracklets_[itrk]->chiSqfit() < inputtracklets_[jtrk]->chiSqfit()) {
-              //if (seedRank[itrk] < seedRank[jtrk]) {
-              //  preftrk = itrk;
-              //  rejetrk = jtrk;
-              //} else {
-              //  preftrk = jtrk;
-              //  rejetrk = itrk;
-              //}
+              int preftrk;
+              int rejetrk;
+              if (seedRank[seedRankIdx[itrk]] < seedRank[seedRankIdx[jtrk]]) {
+                preftrk = itrk;
+                rejetrk = jtrk;
+              } else {
+                preftrk = jtrk;
+                rejetrk = itrk;
+              }
 
               // If the preffered track is in more than one bin, but not in the proper rinv or phi bin, then mark as true
-              if (((findOverlapRinvBins(inputtracklets_[seedRankIdx[itrk]]).size() > 1) &&
-                   (findRinvBin(inputtracklets_[seedRankIdx[itrk]]) != bin)) ||
-                  ((findOverlapPhiBins(inputtracklets_[seedRankIdx[itrk]]).size() > 1) &&
-                   (findPhiBin(inputtracklets_[seedRankIdx[itrk]]) != phiBin))) {
+              if (((findOverlapRinvBins(sortedinputtracklets_[itrk]).size() > 1) &&
+                   (findRinvBin(sortedinputtracklets_[itrk]) != bin)) ||
+                  ((findOverlapPhiBins(sortedinputtracklets_[itrk]).size() > 1) &&
+                   (findPhiBin(sortedinputtracklets_[itrk]) != phiBin))) {
                 trackBinInfo[seedRankIdx[itrk]] = true;
                 trackBinInfo[seedRankIdx[jtrk]] = true;
               } else {
                 // Get a merged stub list
-                //std::vector<const Stub*> newStubList;
-                //std::vector<const Stub*> stubsTrk1 = inputstublists_[preftrk];
-                //std::vector<const Stub*> stubsTrk2 = inputstublists_[rejetrk];
-                //std::vector<unsigned int> stubsTrk1indices;
-                //std::vector<unsigned int> stubsTrk2indices;
-                //for (unsigned int stub1it = 0; stub1it < stubsTrk1.size(); stub1it++) {
-                //  stubsTrk1indices.push_back(stubsTrk1[stub1it]->l1tstub()->uniqueIndex());
-                //}
-                //for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
-                //  stubsTrk2indices.push_back(stubsTrk2[stub2it]->l1tstub()->uniqueIndex());
-                //}
-                //newStubList = stubsTrk1;
-                //for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
-                //  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
-                //      stubsTrk1indices.end()) {
-                //    newStubList.push_back(stubsTrk2[stub2it]);
-                //  }
-                //}
-                ////   Overwrite stublist of preferred track with merged list
-                //inputstublists_[preftrk] = newStubList;
+                std::vector<const Stub*> newStubList;
+                std::vector<const Stub*> stubsTrk1 = sortedinputstublists_[preftrk];
+                std::vector<const Stub*> stubsTrk2 = sortedinputstublists_[rejetrk];
+                std::vector<unsigned int> stubsTrk1indices;
+                std::vector<unsigned int> stubsTrk2indices;
+                for (unsigned int stub1it = 0; stub1it < stubsTrk1.size(); stub1it++) {
+                  stubsTrk1indices.push_back(stubsTrk1[stub1it]->l1tstub()->uniqueIndex());
+                }
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  stubsTrk2indices.push_back(stubsTrk2[stub2it]->l1tstub()->uniqueIndex());
+                }
+                newStubList = stubsTrk1;
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
+                      stubsTrk1indices.end()) {
+                    newStubList.push_back(stubsTrk2[stub2it]);
+                  }
+                }
+                //   Overwrite stublist of preferred track with merged list
+                sortedinputstublists_[preftrk] = newStubList;
 
-                //std::vector<std::pair<int, int>> newStubidsList;
-                //std::vector<std::pair<int, int>> stubidsTrk1 = mergedstubidslists_[preftrk];
-                //std::vector<std::pair<int, int>> stubidsTrk2 = mergedstubidslists_[rejetrk];
-                //newStubidsList = stubidsTrk1;
+                std::vector<std::pair<int, int>> newStubidsList;
+                std::vector<std::pair<int, int>> stubidsTrk1 = sortedmergedstubidslists_[preftrk];
+                std::vector<std::pair<int, int>> stubidsTrk2 = sortedmergedstubidslists_[rejetrk];
+                newStubidsList = stubidsTrk1;
 
-                //for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
-                //  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
-                //      stubsTrk1indices.end()) {
-                //    newStubidsList.push_back(stubidsTrk2[stub2it]);
-                //  }
-                //}
-                //// Overwrite stubidslist of preferred track with merged list
-                //mergedstubidslists_[preftrk] = newStubidsList;
-                //comparestubidslists_[preftrk] = newStubidsList;
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
+                      stubsTrk1indices.end()) {
+                    newStubidsList.push_back(stubidsTrk2[stub2it]);
+                  }
+                }
+                // Overwrite stubidslist of preferred track with merged list
+                sortedmergedstubidslists_[preftrk] = newStubidsList;
+                comparestubidslists_[preftrk] = newStubidsList;
 
                 // Mark that rejected track has been merged into another track
                 trackInfo[seedRankIdx[jtrk]].second = true;
@@ -421,6 +426,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         sortedinputstublists_.clear();
         sortedinputstubidslists_.clear();
         mergedstubidslists_.clear();
+        sortedmergedstubidslists_.clear();
         comparestubidslists_.clear();
       }
     }
