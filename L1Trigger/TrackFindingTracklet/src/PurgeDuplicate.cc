@@ -18,6 +18,7 @@
 
 #include <unordered_set>
 #include <algorithm>
+#include <numeric>
 
 using namespace std;
 using namespace trklet;
@@ -119,7 +120,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
     std::vector<bool> trackBinInfo;
     // Vector to store the relative rank of the track candidate for merging, based on seed type
     std::vector<int> seedRank;
-    std::vector<int> seedRankIdx;
 
     // Stubs on every track
     std::vector<std::vector<const Stub*>> inputstublistsall;
@@ -165,7 +165,8 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               // Best Rank:           L1L2 > L3L4 > D3D4 > D1D2 > L2L3 > L2D1 > L5L6 > L1D1
               // Rank-Informed Guess: L1L2 > L3L4 > L1D1 > L2L3 > L2D1 > D1D2 > L5L6 > D3D4
               unsigned int curSeed = aTrack->seedIndex();
-              std::vector<int> ranks{1, 5, 2, 7, 4, 3, 8, 6};
+              //std::vector<int> ranks{1, 5, 2, 7, 4, 3, 8, 6};
+              std::vector<int> ranks{1, 4, 2, 3, 6, 8, 7, 5};
               if (curSeed < ranks.size()) {
                 seedRank.push_back(ranks[curSeed]);
               } else if (settings_.extended()) {
@@ -192,12 +193,31 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         if (inputtracklets_.empty())
           continue;
         const unsigned int numStublists = inputstublists_.size();
+        std::vector<int> seedRankIdx(numStublists);
         
-        //Creating seedRankIdx
-        for (int i = 0; i < (int)numStublists; i++) {
-          seedRankIdx.push_back(i);
-        }
-        std::sort(seedRankIdx.begin(), seedRankIdx.end(), [&](int a, int b){return seedRank[a] < seedRank[b];});
+        std::iota(seedRankIdx.begin(), seedRankIdx.end(), 0); 
+
+        //std::cout << "The number of tracklets in this bin is " << numStublists << std::endl;
+        //std::cout << "The size of seedRankIdx is " << seedRankIdx.size() << std::endl; 
+        //std::cout << "The final element of seedRankIdx is (should be 1 less than its size) " << seedRankIdx[-1] << std::endl;
+
+        //for (int i = 0; i < (int)seedRankIdx.size(); i++) {
+          //std::cout << "The index is " << seedRankIdx[i] << std::endl;
+          //std::cout << "The seed rank is " << seedRank[i] << std::endl;
+        //}
+
+        std::sort(seedRankIdx.begin(), seedRankIdx.end(), [&seedRank](int a, int b){ 
+            if (seedRank[a] == seedRank[b]) { 
+              return a < b;
+            }
+            return seedRank[a] < seedRank[b];
+        });
+
+        //for (int i = 0; i < (int)seedRankIdx.size(); i++) {
+          //std::cout << "The new index is " << seedRankIdx[i] << std::endl;
+          //std::cout << "The new seed rank is " << seedRank[seedRankIdx[i]] << std::endl;
+        //}
+
         for (int i = 0; i < (int)numStublists; i++) { 
           sortedinputstublists_.push_back(inputstublists_[seedRankIdx[i]]);
           sortedinputstubidslists_.push_back(inputstubidslists_[seedRankIdx[i]]);
@@ -225,11 +245,13 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         unsigned int CM = 0;
         for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
           // Create a flag to check if itrk is a duplicate track
+          //std::cout << "The current number of CM modules is " << CM << std::endl;
           bool dupTrk = false;
           //Check the tracks before it, if it's a duplicate, mark the flag true
           if (mergedTrack[seedRankIdx[itrk]]) {
               dupTrk = true;
           }
+          //std::cout << "If mergedTrack of track " << seedRankIdx[itrk] << " is " << mergedTrack[seedRankIdx[itrk]] << " then dupTrk is " << dupTrk << std::endl;
           // If itrk is not a duplicate, or if it is a duplicate, but was not the merged track, increment CM, to keep track of how many tracks are being assigned to comparison modules. 
           // If itrk is a duplicate and it is the merged track, then continue
           if ((dupTrk == false)) {
@@ -237,6 +259,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           } else if ((dupTrk == true)) {
             continue;
           }
+          //std::cout << "The new number of CM modules is " << CM << std::endl;
           // If the number of tracks able to be compared is more than the number of comparison modules, continue
           if (CM > settings_.numTracksComparedPerBin()) {
             continue;
@@ -390,12 +413,12 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
 
         // If the track isn't a duplicate, and if it's in more than one bin, and it is not in the proper rinv or phi bin, then mark it so it won't be sent to output
         for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
-          if (noMerge[itrk] == false) {
-            if (((findOverlapRinvBins(inputtracklets_[itrk]).size() > 1) &&
-                 (findRinvBin(inputtracklets_[itrk]) != bin)) ||
-                ((findOverlapPhiBins(inputtracklets_[itrk]).size() > 1) &&
-                 findPhiBin(inputtracklets_[itrk]) != phiBin)) {
-              trackInfo[itrk].second = true;
+          if (noMerge[seedRankIdx[itrk]] == false) {
+            if (((findOverlapRinvBins(inputtracklets_[seedRankIdx[itrk]]).size() > 1) &&
+                 (findRinvBin(inputtracklets_[seedRankIdx[itrk]]) != bin)) ||
+                ((findOverlapPhiBins(inputtracklets_[seedRankIdx[itrk]]).size() > 1) &&
+                 findPhiBin(inputtracklets_[seedRankIdx[itrk]]) != phiBin)) {
+              trackInfo[seedRankIdx[itrk]].second = true;
             }
           }
         }
@@ -404,13 +427,13 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
   
 
         for (unsigned int ktrk = 0; ktrk < numStublists; ktrk++) {
-          if ((trackInfo[ktrk].second != true) && (trackBinInfo[ktrk] != true)) {
-            prefTracks.push_back(ktrk);
-            prefTrackFit.push_back(trackInfo[ktrk].first);
-            inputtrackletsall.push_back(inputtracklets_[ktrk]);
-            inputstublistsall.push_back(inputstublists_[ktrk]);
-            inputstubidslistsall.push_back(inputstubidslists_[ktrk]);
-            mergedstubidslistsall.push_back(mergedstubidslists_[ktrk]);
+          if ((trackInfo[seedRankIdx[ktrk]].second != true) && (trackBinInfo[seedRankIdx[ktrk]] != true)) {
+            prefTracks.push_back(seedRankIdx[ktrk]);
+            prefTrackFit.push_back(trackInfo[seedRankIdx[ktrk]].first);
+            inputtrackletsall.push_back(inputtracklets_[seedRankIdx[ktrk]]);
+            inputstublistsall.push_back(sortedinputstublists_[ktrk]);
+            inputstubidslistsall.push_back(inputstubidslists_[seedRankIdx[ktrk]]);
+            mergedstubidslistsall.push_back(sortedmergedstubidslists_[ktrk]);
           }
         }
 
