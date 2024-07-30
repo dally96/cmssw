@@ -158,7 +158,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               std::vector<std::pair<int, int>> stubidslist = inputtrackfits_[i]->getStubidslist(j);
               inputstubidslists_.push_back(stubidslist);
               mergedstubidslists_.push_back(stubidslist);
-              comparestubidslists_.push_back(stubidslist); 
 
               // Encoding: L1L2=0, L2L3=1, L3L4=2, L5L6=3, D1D2=4, D3D4=5, L1D1=6, L2D1=7
               // Best Guess:          L1L2 > L1D1 > L2L3 > L2D1 > D1D2 > L3L4 > L5L6 > D3D4
@@ -201,10 +200,11 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         //std::cout << "The size of seedRankIdx is " << seedRankIdx.size() << std::endl; 
         //std::cout << "The final element of seedRankIdx is (should be 1 less than its size) " << seedRankIdx[-1] << std::endl;
 
-        //for (int i = 0; i < (int)seedRankIdx.size(); i++) {
-          //std::cout << "The index is " << seedRankIdx[i] << std::endl;
-          //std::cout << "The seed rank is " << seedRank[i] << std::endl;
-        //}
+        for (int i = 0; i < (int)seedRankIdx.size(); i++) {
+          std::cout << "The index is " << seedRankIdx[i] << std::endl;
+          std::cout << "The seed rank is " << seedRank[i] << std::endl;
+          std::cout << "For this track the stubs are located: (" << inputstubidslists_[i].first << ", " << inputstubidslists_[i].second << ")" << std::endl; 
+        }
 
         std::sort(seedRankIdx.begin(), seedRankIdx.end(), [&seedRank](int a, int b){ 
             if (seedRank[a] == seedRank[b]) { 
@@ -213,10 +213,12 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             return seedRank[a] < seedRank[b];
         });
 
-        //for (int i = 0; i < (int)seedRankIdx.size(); i++) {
-          //std::cout << "The new index is " << seedRankIdx[i] << std::endl;
-          //std::cout << "The new seed rank is " << seedRank[seedRankIdx[i]] << std::endl;
-        //}
+
+        if (settings_.inventStubs()) {
+          for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
+            inputstublists_[itrk] = getInventedSeedingStub(iSector, inputtracklets_[itrk], inputstublists_[itrk]);
+          }
+        }
 
         for (int i = 0; i < (int)numStublists; i++) { 
           sortedinputstublists_.push_back(inputstublists_[seedRankIdx[i]]);
@@ -225,11 +227,13 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           sortedmergedstubidslists_.push_back(mergedstubidslists_[seedRankIdx[i]]);
         }  
 
-        if (settings_.inventStubs()) {
-          for (unsigned int itrk = 0; itrk < numStublists; itrk++) {
-            inputstublists_[itrk] = getInventedSeedingStub(iSector, inputtracklets_[itrk], inputstublists_[itrk]);
-          }
+        for (int i = 0; i < (int)seedRankIdx.size(); i++) {
+          std::cout << "The new index is " << seedRankIdx[i] << std::endl;
+          std::cout << "The new seed rank is " << seedRank[seedRankIdx[i]] << std::endl;
+          std::cout << "The stubs of the ordered track are: (" << sortedinputstubidslists_[i].first << ", " << sortedinputstubidslists_[i].second << ")" << std::endl;
+          std::cout << "Make sure they match to the stubs inputstublists: (" << inputstubidslists_[seedRankIdx[i]].first << ", " << inputstubidslists_[seedRankIdx[i]].second << ")" << std::endl;
         }
+
 
         // Initialize all-false 2D array of tracks being duplicates to other tracks
         std::vector<std::vector<bool>> dupMap(numStublists, std::vector<bool>(numStublists, false));  // Ends up symmetric
@@ -349,7 +353,9 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 preftrk = jtrk;
                 rejetrk = itrk;
               }
-
+              std::cout << "preftrk is track " << seedRankIdx[preftrk] << " and rejetrk is " << seedRankIndx[rejetrk] << std::endl;
+              std::cout << "The stubs of preftrack are (" << sortedinputstubidslists_[preftrk].first << ", " << sortedinputstubidslists_[preftrk].second << ")" << std::endl;
+              std::cout << "And the stubs of rejetrk are (" << sortedinputstubidslists_[rejetrk].first << ", " << sortedinputstubidslists_[rejetrk].second << ")" << std::endl;
               // If the preffered track is in more than one bin, but not in the proper rinv or phi bin, then mark as true
               if (((findOverlapRinvBins(sortedinputtracklets_[itrk]).size() > 1) &&
                    (findRinvBin(sortedinputtracklets_[itrk]) != bin)) ||
@@ -393,7 +399,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 }
                 // Overwrite stubidslist of preferred track with merged list
                 sortedmergedstubidslists_[preftrk] = newStubidsList;
-                comparestubidslists_[preftrk] = newStubidsList;
+                std::cout << " The merged stubs of preftrk are (" << sortedmergedstubidslists_[preftrk].first << ", " << sortedmergedstubidslists_[preftrk].second << ")" << std::endl;
 
                 // Mark that rejected track has been merged into another track
                 trackInfo[seedRankIdx[jtrk]].second = true;
@@ -450,7 +456,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         sortedinputstubidslists_.clear();
         mergedstubidslists_.clear();
         sortedmergedstubidslists_.clear();
-        comparestubidslists_.clear();
       }
     }
 
