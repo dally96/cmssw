@@ -418,7 +418,10 @@ void L1TrackNtuplePlot(TString type,
   // ----------------------------------------------------------------------------------------------------------------
   // for efficiencies
 
+  float ptBins[17] = {0, 1, 2, 3, 4, 5, 6, 7, 8 ,9, 10, 15, 25, 40, 60, 80, 100};
+
   TH1F* h_tp_pt = new TH1F("tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+  TH1F* h_tp_pt_rebin = new TH1F("tp_pt_rebin", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 16, ptBins);
   TH1F* h_tp_pt_L = new TH1F("tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_LC = new TH1F("tp_pt_LC", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_tp_pt_H = new TH1F("tp_pt_H", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 92, 8.0, 100.0);
@@ -428,9 +431,11 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_tp_eta_23 = new TH1F("tp_eta_23", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
   TH1F* h_tp_eta_35 = new TH1F("tp_eta_35", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
   TH1F* h_tp_eta_5 = new TH1F("tp_eta_5", ";Tracking particle #eta; Tracking particles / 0.1", 50, -2.5, 2.5);
-
+  
   TH1F* h_match_tp_pt =
       new TH1F("match_tp_pt", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 100, 0, 100.0);
+  TH1F* h_match_tp_pt_rebin =
+      new TH1F("match_tp_pt_rebin", ";Tracking particle p_{T} [GeV]; Tracking particles / 1.0 GeV", 16, ptBins);
   TH1F* h_match_tp_pt_L =
       new TH1F("match_tp_pt_L", ";Tracking particle p_{T} [GeV]; Tracking particles / 0.1 GeV", 80, 0, 8.0);
   TH1F* h_match_tp_pt_LC =
@@ -1277,6 +1282,7 @@ void L1TrackNtuplePlot(TString type,
       }
 
       h_tp_pt->Fill(tp_pt->at(it));
+      h_tp_pt_rebin->Fill(tp_pt->at(it));
       if (tp_pt->at(it) < 8.0)
         h_tp_pt_L->Fill(tp_pt->at(it));
       else
@@ -1435,6 +1441,7 @@ void L1TrackNtuplePlot(TString type,
 
       // fill matched track histograms
       h_match_tp_pt->Fill(tp_pt->at(it));
+      h_match_tp_pt_rebin->Fill(tp_pt->at(it));
       if (tp_pt->at(it) < 8.0)
         h_match_tp_pt_L->Fill(tp_pt->at(it));
       else
@@ -2918,10 +2925,12 @@ void L1TrackNtuplePlot(TString type,
   // calculate the efficiency
   h_match_tp_pt->Sumw2();
   h_tp_pt->Sumw2();
-  TH1F* h_eff_pt = (TH1F*)h_match_tp_pt->Clone();
+  h_match_tp_pt_rebin->Sumw2();
+  h_tp_pt_rebin->Sumw2();
+  TH1F* h_eff_pt = (TH1F*)h_match_tp_pt_rebin->Clone();
   h_eff_pt->SetName("eff_pt");
   h_eff_pt->GetYaxis()->SetTitle("Efficiency");
-  h_eff_pt->Divide(h_match_tp_pt, h_tp_pt, 1.0, 1.0, "B");
+  h_eff_pt->Divide(h_match_tp_pt_rebin, h_tp_pt_rebin, 1.0, 1.0, "B");
 
   h_match_tp_pt_L->Sumw2();
   h_tp_pt_L->Sumw2();

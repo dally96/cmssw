@@ -15,8 +15,8 @@ process = cms.Process("L1TrackNtuple")
 ############################################################
 
 # D88 was used for CMSSW_12_6 datasets, and D98 recommended for more recent ones.
-#GEOMETRY = "D88"
-GEOMETRY = "D98"
+GEOMETRY = "D88"
+#GEOMETRY = "D98"
 
 # Set L1 tracking algorithm:
 # 'HYBRID' (baseline, 4par fit) or 'HYBRID_DISPLACED' (extended, 5par fit).
@@ -106,7 +106,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 # Use skipEvents to select particular single events for test vectors
 #process.source.skipEvents = cms.untracked.uint32(11)
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string('L1TrkNtuple.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('081324_16MergingCM_NoSorting_NoNewCM_100Events.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
@@ -119,14 +119,14 @@ process.load('L1Trigger.TrackerTFP.ProducerES_cff')
 process.load('L1Trigger.TrackerTFP.ProducerLayerEncoding_cff')
 
 # remake stubs?
-#from L1Trigger.TrackTrigger.TTStubAlgorithmRegister_cfi import *
-#process.load("SimTracker.TrackTriggerAssociation.TrackTriggerAssociator_cff")
+from L1Trigger.TrackTrigger.TTStubAlgorithmRegister_cfi import *
+process.load("SimTracker.TrackTriggerAssociation.TrackTriggerAssociator_cff")
 
-#from SimTracker.TrackTriggerAssociation.TTClusterAssociation_cfi import *
-#TTClusterAssociatorFromPixelDigis.digiSimLinks = cms.InputTag("simSiPixelDigis","Tracker")
+from SimTracker.TrackTriggerAssociation.TTClusterAssociation_cfi import *
+TTClusterAssociatorFromPixelDigis.digiSimLinks = cms.InputTag("simSiPixelDigis","Tracker")
 
-#process.TTClusterStub = cms.Path(process.TrackTriggerClustersStubs)
-#process.TTClusterStubTruth = cms.Path(process.TrackTriggerAssociatorClustersStubs)
+process.TTClusterStub = cms.Path(process.TrackTriggerClustersStubs)
+process.TTClusterStubTruth = cms.Path(process.TrackTriggerAssociatorClustersStubs)
 
 
 # DTC emulation
@@ -141,7 +141,7 @@ process.load('L1Trigger.TrackerDTC.ProducerED_cff')
 
 process.dtc = cms.Path(process.TrackerDTCProducer)#*process.TrackerDTCAnalyzer)
 # Throw error if reading MC produced with different stub window sizes.
-process.TrackerDTCProducer.CheckHistory = True
+#process.TrackerDTCProducer.CheckHistory = True
 
 ############################################################
 # L1 tracking
