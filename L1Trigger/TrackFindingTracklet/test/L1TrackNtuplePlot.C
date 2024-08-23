@@ -712,6 +712,7 @@ void L1TrackNtuplePlot(TString type,
   // total track rates
 
   TH1F* h_trk_all_vspt = new TH1F("trk_all_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
+  TH1F* h_trk_all_vseta = new TH1F("trk_all_vseta", ";Track p_{T} [GeV]; ", 50, -2.5, 2.5);
   TH1F* h_trk_loose_vspt = new TH1F("trk_loose_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_genuine_vspt = new TH1F("trk_genuine_vspt", ";Track p_{T} [GeV]; ", 50, 0, 25);
   TH1F* h_trk_notloose_vspt = new TH1F(
@@ -722,6 +723,11 @@ void L1TrackNtuplePlot(TString type,
                                         50,
                                         0,
                                         25);  //where a TP is genuinely matched to more than one L1 track
+  TH1F* h_trk_duplicate_vseta = new TH1F("trk_duplicate_vseta",
+                                        ";Track #eta [GeV]; ",
+                                        50,
+                                        -2.5,
+                                        2.5);  //where a TP is genuinely matched to more than one L1 track
   TH1F* h_tp_vspt = new TH1F("tp_vspt", ";TP p_{T} [GeV]; ", 50, 0, 25);
 
   // ----------------------------------------------------------------------------------------------------------------
@@ -1161,6 +1167,7 @@ void L1TrackNtuplePlot(TString type,
         ntrk_pt2++;
         ntrkevt_pt2++;
         h_trk_all_vspt->Fill(trk_pt->at(it));
+        h_trk_all_vseta->Fill(trk_eta->at(it));
         if (trk_genuine->at(it) == 1) {
           ntrkevt_genuine_pt2++;
           h_trk_genuine_vspt->Fill(trk_pt->at(it));
@@ -1263,6 +1270,7 @@ void L1TrackNtuplePlot(TString type,
           if (tp_nmatch->at(it) > 1) {
             for (int inm = 1; inm < tp_nmatch->at(it); inm++)
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
+              h_trk_duplicate_vseta->Fill(matchtrk_eta->at(it));
           }
         }
         if (tp_pt->at(it) > 3.0)
@@ -3429,11 +3437,13 @@ void L1TrackNtuplePlot(TString type,
   // "fake rates"
 
   h_trk_all_vspt->Sumw2();
+  h_trk_all_vseta->Sumw2();
   h_trk_loose_vspt->Sumw2();
   h_trk_genuine_vspt->Sumw2();
   h_trk_notloose_vspt->Sumw2();
   h_trk_notgenuine_vspt->Sumw2();
   h_trk_duplicate_vspt->Sumw2();
+  h_trk_duplicate_vseta->Sumw2();
   h_tp_vspt->Sumw2();
 
   // fraction of not genuine tracks
@@ -3465,6 +3475,16 @@ void L1TrackNtuplePlot(TString type,
   h_duplicatefrac_pt->Write();
   h_duplicatefrac_pt->Draw();
   c.SaveAs(DIR + type + "_duplicatefrac.pdf");
+
+  // fraction of DUPLICATE tracks (genuine and not matched)
+  TH1F* h_duplicatefrac_eta =  (TH1F*)h_trk_duplicate_vseta->Clone();
+  h_duplicatefrac_eta->SetName("duplicatefrac_eta");
+  h_duplicatefrac_eta->GetYaxis()->SetTitle("Duplicate fraction");
+  h_duplicatefrac_eta->Divide(h_trk_duplicate_vseta, h_trk_all_vseta, 1.0, 1.0, "B");
+
+  h_duplicatefrac_eta->Write();
+  h_duplicatefrac_eta->Draw();
+  c.SaveAs(DIR + type + "_duplicatefrac_eta.pdf");
 
   // ---------------------------------------------------------------------------------------------------------
   // total track rates vs pt

@@ -239,6 +239,11 @@ private:
   std::vector<int>* m_matchtrk_injet_highpt;
   std::vector<int>* m_matchtrk_injet_vhighpt;
 
+  // *L1 track* properties if m_tp_nmatch > 0 for all possible matchtrk
+  std::vector<std::vector<int>>* m_matchtrkall_seed;
+  std::vector<std::vector<int>>* m_matchtrkall_lhits;
+  std::vector<std::vector<int>>* m_matchtrkall_dhits;
+
   // ALL stubs
   std::vector<float>* m_allstub_x;
   std::vector<float>* m_allstub_y;
@@ -413,6 +418,10 @@ void L1TrackNtupleMaker::endJob() {
   delete m_matchtrk_injet;
   delete m_matchtrk_injet_highpt;
   delete m_matchtrk_injet_vhighpt;
+ 
+  delete m_matchtrkall_seed;
+  delete m_matchtrkall_lhits;
+  delete m_matchtrkall_dhits; 
 
   delete m_allstub_x;
   delete m_allstub_y;
@@ -535,6 +544,10 @@ void L1TrackNtupleMaker::beginJob() {
   m_matchtrk_injet_highpt = new std::vector<int>;
   m_matchtrk_injet_vhighpt = new std::vector<int>;
 
+  m_matchtrkall_seed = new std::vector<std::vector<int>>; 
+  m_matchtrkall_lhits = new std::vector<std::vector<int>>;
+  m_matchtrkall_dhits = new std::vector<std::vector<int>>;
+
   m_allstub_x = new std::vector<float>;
   m_allstub_y = new std::vector<float>;
   m_allstub_z = new std::vector<float>;
@@ -655,6 +668,9 @@ void L1TrackNtupleMaker::beginJob() {
     eventTree->Branch("matchtrk_injet_highpt", &m_matchtrk_injet_highpt);
     eventTree->Branch("matchtrk_injet_vhighpt", &m_matchtrk_injet_vhighpt);
   }
+  eventTree->Branch("matchtrkall_seed", &m_matchtrkall_seed);
+  eventTree->Branch("matchtrkall_lhits", &m_matchtrkall_lhits);
+  eventTree->Branch("matchtrkall_dhits", &m_matchtrkall_dhits);
 
   if (SaveStubs) {
     eventTree->Branch("allstub_x", &m_allstub_x);
@@ -792,6 +808,10 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
   m_matchtrk_injet->clear();
   m_matchtrk_injet_highpt->clear();
   m_matchtrk_injet_vhighpt->clear();
+
+  m_matchtrkall_seed->clear();
+  m_matchtrkall_lhits->clear();
+  m_matchtrkall_dhits->clear();
 
   if (SaveStubs) {
     m_allstub_x->clear();
@@ -1491,6 +1511,10 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
 
     // ----------------------------------------------------------------------------------------------
     // look for L1 tracks matched to the tracking particle
+    
+    std::vector<int> tmp_matchtrkall_dhits;
+    std::vector<int> tmp_matchtrkall_lhits;
+    std::vector<int> tmp_matchtrkall_seed;
 
     std::vector<edm::Ptr<TTTrack<Ref_Phase2TrackerDigi_> > > matchedTracks =
         MCTruthTTTrackHandle->findTTTrackPtrs(tp_ptr);
@@ -1498,6 +1522,12 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     int nMatch = 0;
     int i_track = -1;
     float i_chi2dof = 99999;
+
+    if (matchedTracks.empty()) {
+      tmp_matchtrkall_dhits.push_back(999);
+      tmp_matchtrkall_lhits.push_back(999);
+      tmp_matchtrkall_seed.push_back(999);
+    }
 
     if (!matchedTracks.empty()) {
       if (DebugMode && (matchedTracks.size() > 1))
@@ -1567,6 +1597,9 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
         float dmatch_eta = 999;
         float dmatch_phi = 999;
         int match_id = 999;
+        int tmp_seed = 999;
+        int tmp_lhits = 999;
+        int tmp_dhits = 999;
 
         edm::Ptr<TrackingParticle> my_tp = MCTruthTTTrackHandle->findTrackingParticlePtr(matchedTracks.at(it));
         dmatch_pt = std::abs(my_tp->p4().pt() - tmp_tp_pt);
@@ -1579,13 +1612,40 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
         // ensure that track is uniquely matched to the TP we are looking at!
         if (dmatch_pt < 0.1 && dmatch_eta < 0.1 && dmatch_phi < 0.1 && tmp_tp_pdgid == match_id && tmp_trk_genuine) {
           nMatch++;
+          tmp_seed = (int)matchedTracks.at(it)->trackSeedType();
+
+          tmp_lhits = 0;
+          tmp_dhits = 0;
+
+          std::vector<edm::Ref<edmNew::DetSetVector<TTStub<Ref_Phase2TrackerDigi_> >, TTStub<Ref_Phase2TrackerDigi_> > >
+          stubRefs = matchedTracks.at(it)->getStubRefs();
+          int tmp_nstub = stubRefs.size();
+
+          for (int is = 0; is < tmp_nstub; is++) {
+            DetId detIdStub = theTrackerGeom->idToDet((stubRefs.at(is)->clusterRef(0))->getDetId())->geographicalId();
+            int layer = -999999;
+            if (detIdStub.subdetId() == StripSubdetector::TOB) {
+              layer = static_cast<int>(tTopo->layer(detIdStub));
+              tmp_lhits += pow(10, layer - 1);
+            } else if (detIdStub.subdetId() == StripSubdetector::TID) {
+              layer = static_cast<int>(tTopo->layer(detIdStub));
+              tmp_dhits += pow(10, layer - 1);
+            }
+          }
+
           if (i_track < 0 || tmp_trk_chi2dof < i_chi2dof) {
             i_track = it;
             i_chi2dof = tmp_trk_chi2dof;
           }
         }
+        tmp_matchtrkall_seed.push_back(tmp_seed);
+        tmp_matchtrkall_lhits.push_back(tmp_lhits);
+        tmp_matchtrkall_dhits.push_back(tmp_dhits);
 
       }  // end loop over matched L1 tracks
+      m_matchtrkall_dhits->push_back(tmp_matchtrkall_dhits);
+      m_matchtrkall_lhits->push_back(tmp_matchtrkall_lhits);
+      m_matchtrkall_seed->push_back(tmp_matchtrkall_seed);
 
     }  // end has at least 1 matched L1 track
     // ----------------------------------------------------------------------------------------------
@@ -1704,6 +1764,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
     m_matchtrk_chi2_dof->push_back(tmp_matchtrk_chi2_dof);
     m_matchtrk_chi2rphi_dof->push_back(tmp_matchtrk_chi2rphi_dof);
     m_matchtrk_chi2rz_dof->push_back(tmp_matchtrk_chi2rz_dof);
+  
 
     // ----------------------------------------------------------------------------------------------
     // for tracking in jets
