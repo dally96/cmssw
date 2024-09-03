@@ -59,7 +59,10 @@ namespace trklet {
     // sort the tracklets into the correct bin by comparing the overlap rinv bin(s) the tracklets are in to the current bin
     bool isTrackInBin(const std::vector<unsigned int>& vec, unsigned int num) const;
     // makes CompareBest comaprison into a function to make code more readable
-    void doCompareBest(const std::vector<std::pair<int, int>>& stubsTrk, const std::vector<const Stub*>& fullStubslistsTrk, int layStubidsTrk[], unsigned int itrk);
+    void doCompareBest(const std::vector<std::pair<int, int>>& stubsTrk,
+                       const std::vector<const Stub*>& fullStubslistsTrk,
+                       int layStubidsTrk[],
+                       unsigned int itrk) const;
 
     std::vector<Track*> inputtracks_;
     std::vector<std::vector<const Stub*>> inputstublists_;
