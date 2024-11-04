@@ -133,14 +133,12 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
 
     for (unsigned int bin = 0; bin < settings_.rinvBins().size() - 1; bin++) {
       for (unsigned int phiBin = 0; phiBin < settings_.phiBins().size() - 1; phiBin++) {
-        //std::cout << "We're in bin " << 2 * bin + phiBin << std::endl;
         // Get vectors from TrackFit and save them
         // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
         // inputstublists: L1Stubs for that track
         // inputstubidslists: Stub stubIDs for that 3rack
         // mergedstubidslists: the same as inputstubidslists, but will be used during duplicate removal
         for (unsigned int i = 0; i < inputtrackfits_.size(); i++) {
-          //std::cout << "The number of tracks in this bin is " << inputtrackfits_[i]->nStublists() << std::endl;
           if (inputtrackfits_[i]->nStublists() == 0)
             continue;
           if (inputtrackfits_[i]->nStublists() != inputtrackfits_[i]->nTracks())
@@ -190,7 +188,7 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         if (inputtracklets_.empty())
           continue;
         const unsigned int numStublists = inputstublists_.size();
-        std::cout << "The number of tracks is " << numStublists << std::endl;
+        std::cout << "The number of tracks in this bin before comparison is " << numStublists << std::endl;
         std::vector<int> seedRankIdx(numStublists);
 
         std::iota(seedRankIdx.begin(), seedRankIdx.end(), 0);
@@ -203,15 +201,15 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
           return seedRank[a] < seedRank[b];
         });
 
-        //std::vector<std::pair<int, int>> numhits_seedrank;
+        std::vector<std::pair<int, int>> numhits_seedrank;
 
-        //for (int i = 0; i < (int)numStublists; i++) { 
-        //  numhits_seedrank.emplace_back((int)inputstublists_[i].size(), seedRank[i]);
+        for (int i = 0; i < (int)numStublists; i++) { 
+          numhits_seedrank.emplace_back((int)inputstublists_[i].size(), seedRank[i]);
+        }
+
+        //for (const auto&  elem : seedRankIdx) {
+        //  std::cout << "Track " << elem << " Num hits, seedrank: " << "(" << inputstublists_[elem].size() << ", " << seedRank[elem] << ")" << std::endl;
         //}
-
-        ////for (const auto&  elem : numhits_seedrank) {
-        ////  std::cout << "Num hits, seedrank: " << "(" << elem.first << ", " << elem.second << ")" << std::endl;
-        ////}
     
         //std::stable_sort(seedRankIdx.begin(), seedRankIdx.end(), [&numhits_seedrank](int a, int b) {
         //  return numhits_seedrank[a].second < numhits_seedrank[b].second;
@@ -230,6 +228,11 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             inputstublists_[itrk] = getInventedSeedingStub(iSector, inputtracklets_[itrk], inputstublists_[itrk]);
           }
         }
+
+        //for (const auto& elem : seedRankIdx) {
+        //  std::cout << "Sorted Num hits, seedrank: " << "(" << inputstublists_[elem].size() << ", " << numhits_seedrank[elem].second << ")" << std::endl;
+        //}
+
 
         for (int i = 0; i < (int)numStublists; i++) {
           sortedinputstublists_.push_back(inputstublists_[seedRankIdx[i]]);
@@ -338,13 +341,16 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
               //dupMap[itrk][jtrk] = true;
               //dupMap[jtrk][itrk] = true;
               //if (seedRank[itrk] < seedRank[jtrk]) {
-              if (seedRank[seedRankIdx[itrk]] < seedRank[seedRankIdx[jtrk]]) {
+              if (seedRank[seedRankIdx[itrk]] <= seedRank[seedRankIdx[jtrk]]) {
                 mergedTrack[seedRankIdx[jtrk]] = true;
                 //mergedTrack[jtrk] = true;
               }
             }
           }
         }
+        std::cout << "The number of CM used is " << CM << std::endl;
+      
+
 
         for (unsigned int itrk = 0; itrk < numStublists - 1; itrk++) {
           for (unsigned int jtrk = itrk + 1; jtrk < numStublists; jtrk++) {
