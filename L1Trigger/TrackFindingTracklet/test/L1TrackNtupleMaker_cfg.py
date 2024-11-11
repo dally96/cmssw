@@ -58,7 +58,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 # input and output
 ############################################################
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(500))
 
 #--- To use MCsamples scripts, defining functions get*data*() for easy MC access,
 #--- follow instructions in https://github.com/cms-L1TK/MCsamples
@@ -109,7 +109,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 #process.source.skipEvents = cms.untracked.uint32(11)
 
 #process.TFileService = cms.Service("TFileService", fileName = cms.string('093024_32MergingCM_nHitSorted_seedRankSorted_SkippingCM_1000Events_1Bin.root'), closeFileFast = cms.untracked.bool(True))
-process.TFileService = cms.Service("TFileService", fileName = cms.string('110424_32MergingCM_seedRankSorted_SkippingCM_1000Events_1Bin.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('111124_9999MergingCM_seedRankSorted_SkippingCM_500Events_1Bin.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
