@@ -521,6 +521,14 @@ void L1TrackNtuplePlot(TString type,
   //Double_t pt_binsExtended[21] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,40,70,100};
   // ----------------------------------------------
 
+
+  const int nRANGEz0 = 40;
+  TString z0range[nRANGEz0] = {"-10--9.5", "-9.5--9", "-9--8.5", "-8.5--8", "-8--7.5", "-7.5--7", "-7--6.5", "-6.5--6", "-6--5.5", "-5.5--5",  
+                             "-5--4.5", "-4.5--4", "-4--3.5", "-3.5--3", "-3--2.5", "-2.5--2", "-2--1.5", "-1.5--1", "-1--0.5", "-0.5-0",  
+                             "0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", 
+                             "5-5.5", "5.5-6",  "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"};
+
+
   const int nRANGE = 20;
   TString ptrange[nRANGE] = {"0-5",   "5-10",  "10-15", "15-20", "20-25", "25-30", "30-35", "35-40", "40-45", "45-50",
                              "50-55", "55-60", "60-65", "65-70", "70-75", "75-80", "80-85", "85-90", "90-95", "95-100"};
@@ -937,6 +945,8 @@ void L1TrackNtuplePlot(TString type,
   TH1F* h_resVsPt_ptRel_I[nRANGE];
   TH1F* h_resVsPt_ptRel_F[nRANGE];
 
+  TH1F* h_resVsZ0_z0[nRANGEz0];
+
   TH1F* h_resVsRInv_pt[nRANGE];
 
   TH1F* h_resVsPt_z0[nRANGE];
@@ -962,6 +972,11 @@ void L1TrackNtuplePlot(TString type,
         new TH1F("resVsRInv_phi_" + rinvrange[i], ";#phi residual (L1 - sim) [rad]; L1 tracks", 100, -0.005, 0.005);
     h_resVsRInv_rInv[i] = 
         new TH1F("resVsRInv_rInv_" + rinvrange[i], ";rInv residual (L1 - sim) [cm^{-1}]; L1 tracks", 100, -0.0005, 0.0005);
+  }
+
+  for (int i = 0; i < nRANGEz0; i++) { 
+    h_resVsZ0_z0[i] = 
+        new TH1F("resVsZ0_z0_" + z0range[i], ";z_{0} residual (L1 - sim) [cm]; L1 tracks", 100, -1, 1);
   }
 
 
@@ -1918,6 +1933,13 @@ void L1TrackNtuplePlot(TString type,
           h_resVsRInv_rInv[im]->Fill(((0.01 * c_speed * bfield) / matchtrk_pt->at(it)) - ((0.01 * c_speed * bfield) / tp_pt->at(it)));     
         }
       }
+
+    
+      for (int im = 0; im < nRANGEz0; im++) {
+        if ((tp_z0->at(it) > ((float)im * 0.5 - 10)) && (tp_z0->at(it) < ((float)(im + 1) * 0.5 - 10))) { 
+          h_resVsZ0_z0[im]->Fill(matchtrk_z0->at(it) - tp_z0->at(it));
+        }
+      }
       
       for (int im = 0; im < nRANGE; im++) {
         if ((tp_pt->at(it) > (float)im * 5.0) && (tp_pt->at(it) < (float)(im + 1) * 5.0)) {
@@ -2016,7 +2038,7 @@ void L1TrackNtuplePlot(TString type,
             }
           }
 
-          if (matchtrk_d0->at(it) < 999) {
+          if (std::abs(matchtrk_d0->at(it)) < 999) {
             h_resVsEta_d0[im]->Fill(matchtrk_d0->at(it) - tp_d0->at(it));
             h_absResVsEta_d0[im]->Fill(std::abs(matchtrk_d0->at(it) - tp_d0->at(it)));
           }
@@ -2125,6 +2147,8 @@ void L1TrackNtuplePlot(TString type,
 
   TH1F* h2_resVsPt_d0 = new TH1F("resVsPt2_d0", ";Tracking particle p_{T} [GeV]; d_{0} resolution [cm]", 20, 0, 100);
 
+  TH1F* h2_resVsZ0_z0 = new TH1F("resVsZ02_z0", ";Tracking particle z_{0} [cm]; z_{0} resolution [cm]", 40, -10, 10);
+
   TH1F* h2_resVsPt_pt_68 =
       new TH1F("resVsPt2_pt_68", ";Tracking particle p_{T} [GeV]; p_{T} resolution [GeV]", 20, 0, 100);
   TH1F* h2_resVsPt_ptRel_68 =
@@ -2208,6 +2232,12 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsRInv_rInv->SetBinContent(i + 1, h_resVsRInv_rInv[i]->GetRMS());
     h2_resVsRInv_rInv->SetBinError(i + 1, h_resVsRInv_rInv[i]->GetRMSError());
   }
+
+  for (int i = 0; i < nRANGEz0; i++) { 
+    h2_resVsZ0_z0->SetBinContent(i + 1, h_resVsZ0_z0[i]->GetRMS());
+    h2_resVsZ0_z0->SetBinError(i + 1, h_resVsZ0_z0[i]->GetRMSError());
+  }
+
 
   for (int i = 0; i < nRANGE; i++) {
     // set bin content and error
@@ -2800,6 +2830,8 @@ void L1TrackNtuplePlot(TString type,
     h_resVsRInv_phi[i]->SetMinimum(0);
     h_resVsRInv_rInv[i]->SetMinimum(0);
   }
+  
+  h2_resVsZ0_z0->SetMinimum(0);
 
   h2_resVsPt_pt_C->SetMinimum(0);
   h2_resVsPt_pt_I->SetMinimum(0);
@@ -3033,6 +3065,10 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsRInv_rInv->Draw("p");
   c.SaveAs(DIR + type + "_resVsRInv_rInv.pdf");
 
+  h2_resVsZ0_z0->SetMarkerStyle(20);
+  h2_resVsZ0_z0->Draw("p");
+  c.SaveAs(DIR + type + "_resVsZ0_z0.pdf");
+
   for (int i = 0; i < nRANGE; i++) { 
     h_resVsRInv_pt[i]->SetMarkerStyle(20);
     h_resVsRInv_pt[i]->Draw("p");
@@ -3058,6 +3094,11 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_z0_90->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_z0_90.pdf");
 
+  h2_resVsPt_z0->SetMinimum(0);
+  h2_resVsPt_z0->SetMarkerStyle(20);
+  h2_resVsPt_z0->Draw("p");
+  c.SaveAs(DIR + type + "_resVsPt_z0.pdf");
+
   h2_resVsPt_phi_90->SetMinimum(0);
   h2_resVsPt_phi_90->SetMarkerStyle(20);
   h2_resVsPt_phi_90->Draw("p");
@@ -3067,6 +3108,11 @@ void L1TrackNtuplePlot(TString type,
   h2_resVsPt_eta_90->SetMarkerStyle(20);
   h2_resVsPt_eta_90->Draw("p");
   c.SaveAs(DIR + type + "_resVsPt_eta_90.pdf");
+
+  h2_resVsPt_d0->SetMinimum(0);
+  h2_resVsPt_d0->SetMarkerStyle(20);
+  h2_resVsPt_d0->Draw("p");
+  c.SaveAs(DIR + type + "_resVsPt_d0.pdf");
 
   /*
   h2_resVsPt_phi_90->SetMinimum(0);
@@ -3096,6 +3142,8 @@ void L1TrackNtuplePlot(TString type,
     h2_resVsRInv_phi->Write();
     h2_resVsRInv_rInv->Write();
 
+    h2_resVsZ0_z0->Write();
+
     h2_resVsPt_pt->Write();
     h2_resVsPt_pt_C->Write();
     h2_resVsPt_pt_I->Write();
@@ -3113,6 +3161,7 @@ void L1TrackNtuplePlot(TString type,
 
     h2_resVsPt_d0->Write();
 
+    h2_resVsPt_z0->Write();
     h2_resVsPt_z0_C->Write();
     h2_resVsPt_z0_I->Write();
     h2_resVsPt_z0_F->Write();

@@ -133,7 +133,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
 
     for (unsigned int bin = 0; bin < settings_.rinvBins().size() - 1; bin++) {
       for (unsigned int phiBin = 0; phiBin < settings_.phiBins().size() - 1; phiBin++) {
-        std::cout << "We are in bin " << 2 * bin + phiBin << std::endl;
         // Get vectors from TrackFit and save them
         // inputtracklets: Tracklet objects from the FitTrack (not actually fit yet)
         // inputstublists: L1Stubs for that track
@@ -189,7 +188,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
         if (inputtracklets_.empty())
           continue;
         const unsigned int numStublists = inputstublists_.size();
-        std::cout << "The number of tracks in this bin before comparison is " << numStublists << std::endl;
         std::vector<int> seedRankIdx(numStublists);
 
         std::iota(seedRankIdx.begin(), seedRankIdx.end(), 0);
@@ -349,7 +347,6 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
             }
           }
         }
-        std::cout << "The number of CM used is " << CM << std::endl;
       
 
 
