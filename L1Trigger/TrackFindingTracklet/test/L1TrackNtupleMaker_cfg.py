@@ -15,8 +15,8 @@ process = cms.Process("L1TrackNtuple")
 ############################################################
 
 # D88 used for CMSSW_12_6 datasets, and D98 recommended for more recent ones.
-GEOMETRY = "D88"
-#GEOMETRY = "D98"
+#GEOMETRY = "D88"
+GEOMETRY = "D98"
 
 # Set L1 tracking algorithm:
 # 'HYBRID' (baseline, 4par fit) or 'HYBRID_DISPLACED' (extended, 5par fit).
@@ -86,7 +86,7 @@ if GEOMETRY == "D88":
 
 elif GEOMETRY == "D98":
 
-  inputMC = ["/store/relval/CMSSW_14_0_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_133X_mcRun4_realistic_v1_2026D98PU200-v1/2590000/0743fe7e-cda0-45d9-a226-b2c618826730.root"]
+  inputMC = ["/store/relval/CMSSW_14_0_0_pre2/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_133X_mcRun4_realistic_v1_STD_2026D98_PU200_RV229-v1/2580000/0b2b0b0b-f312-48a8-9d46-ccbadc69bbfd.root"] 
   #inputMC = ["/store/relval/CMSSW_14_0_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/133X_mcRun4_realistic_v1_2026D98noPU-v1/2590000/1870d216-b207-40be-9ee4-a453ce17ec94.root"]
 
 else:
@@ -109,7 +109,7 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(*inp
 #process.source.skipEvents = cms.untracked.uint32(11)
 
 #process.TFileService = cms.Service("TFileService", fileName = cms.string('093024_32MergingCM_nHitSorted_seedRankSorted_SkippingCM_1000Events_1Bin.root'), closeFileFast = cms.untracked.bool(True))
-process.TFileService = cms.Service("TFileService", fileName = cms.string('111124_9999MergingCM_seedRankSorted_SkippingCM_500Events_1Bin.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('120324_Merging_OldSeedRank_32CM_1Bin_100Events_D98.root'), closeFileFast = cms.untracked.bool(True))
 process.Timing = cms.Service("Timing", summaryOnly = cms.untracked.bool(True))
 
 
