@@ -1063,7 +1063,7 @@ void L1TrackNtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup
       float tmp_trk_phi = iterL1Track->momentum().phi();
       float tmp_trk_z0 = iterL1Track->z0();  //cm
       float tmp_trk_tanL = iterL1Track->tanL();
-      int tmp_trk_charge = (int)TMath::Sign(1,iterL1Track->rInv());
+      int tmp_trk_charge = (int)TMath::Sign(1, iterL1Track->rInv());
       bool usingNewKF = hphSetup->useNewKF();
       if (usingNewKF) {
         // Skip crazy tracks to avoid crash (as NewKF applies no cuts to kill them).
