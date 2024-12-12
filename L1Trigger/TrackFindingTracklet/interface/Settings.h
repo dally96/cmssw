@@ -449,7 +449,7 @@ namespace trklet {
 
     double benddecode(int ibend, int layerdisk, bool isPSmodule) const {
       if (layerdisk >= N_LAYER && (!isPSmodule))
-        layerdisk += (N_LAYER - 1);
+        layerdisk += N_DISK;
       double bend = benddecode_[layerdisk][ibend];
       assert(bend < 99.0);
       return bend;
@@ -1085,7 +1085,7 @@ namespace trklet {
     //Overlap size for the overlap phi bins in DR
     double phiOverlapSize_{M_PI / 360};
     //The maximum number of tracks that are compared to all the other tracks per rinv bin
-    int numTracksComparedPerBin_{32};
+    int numTracksComparedPerBin_{9999};
 
     double sensorSpacing_2S_{0.18};
   };
