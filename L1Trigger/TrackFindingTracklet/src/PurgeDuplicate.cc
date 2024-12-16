@@ -333,6 +333,42 @@ void PurgeDuplicate::execute(std::vector<Track>& outputtracks, unsigned int iSec
                 trackBinInfo[seedRankIdx[preftrk]] = true;
                 trackBinInfo[seedRankIdx[rejetrk]] = true;
               } else {
+                // Get a merged stub list
+                std::vector<const Stub*> newStubList;
+                std::vector<const Stub*> stubsTrk1 = sortedinputstublists_[preftrk];
+                std::vector<const Stub*> stubsTrk2 = sortedinputstublists_[rejetrk];
+                std::vector<unsigned int> stubsTrk1indices;
+                std::vector<unsigned int> stubsTrk2indices;
+                for (unsigned int stub1it = 0; stub1it < stubsTrk1.size(); stub1it++) {
+                  stubsTrk1indices.push_back(stubsTrk1[stub1it]->l1tstub()->uniqueIndex());
+                }
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  stubsTrk2indices.push_back(stubsTrk2[stub2it]->l1tstub()->uniqueIndex());
+                }
+                newStubList = stubsTrk1;
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
+                      stubsTrk1indices.end()) {
+                    newStubList.push_back(stubsTrk2[stub2it]);
+                  }
+                }
+                //   Overwrite stublist of preferred track with merged list
+                sortedinputstublists_[preftrk] = newStubList;
+
+                std::vector<std::pair<int, int>> newStubidsList;
+                std::vector<std::pair<int, int>> stubidsTrk1 = sortedmergedstubidslists_[preftrk];
+                std::vector<std::pair<int, int>> stubidsTrk2 = sortedmergedstubidslists_[rejetrk];
+                newStubidsList = stubidsTrk1;
+
+                for (unsigned int stub2it = 0; stub2it < stubsTrk2.size(); stub2it++) {
+                  if (find(stubsTrk1indices.begin(), stubsTrk1indices.end(), stubsTrk2indices[stub2it]) ==
+                      stubsTrk1indices.end()) {
+                    newStubidsList.push_back(stubidsTrk2[stub2it]);
+                  }
+                }
+                // Overwrite stubidslist of preferred track with merged list
+                sortedmergedstubidslists_[preftrk] = newStubidsList;
+
                 // Mark that rejected track has been merged into another track
                 trackInfo[seedRankIdx[jtrk]].second = true;
               }
