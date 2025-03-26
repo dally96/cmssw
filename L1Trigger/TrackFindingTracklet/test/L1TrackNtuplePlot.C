@@ -125,6 +125,8 @@ void L1TrackNtuplePlot(TString type,
   int ntp_pt2 = 0;
   int ntp_pt3 = 0;
   int ntp_pt10 = 0;
+  int ntrk_genuine_pt2 = 0;
+  int ntp_nmatch = 0;
 
   // ----------------------------------------------------------------------------------------------------------------
   // read ntuples
@@ -1155,6 +1157,7 @@ void L1TrackNtuplePlot(TString type,
         ntrkevt_pt2++;
         h_trk_all_vspt->Fill(trk_pt->at(it));
         if (trk_genuine->at(it) == 1) {
+          ntrk_genuine_pt2++;
           ntrkevt_genuine_pt2++;
           h_trk_genuine_vspt->Fill(trk_pt->at(it));
         } else
@@ -1255,6 +1258,7 @@ void L1TrackNtuplePlot(TString type,
           // duplicate rate
           if (tp_nmatch->at(it) > 1) {
             for (int inm = 1; inm < tp_nmatch->at(it); inm++)
+              ntp_nmatch++;
               h_trk_duplicate_vspt->Fill(matchtrk_pt->at(it));
           }
         }
@@ -3692,6 +3696,16 @@ void L1TrackNtuplePlot(TString type,
   cout << "# tracks/event (pt > " << std::max(TP_minPt, 2.0f) << ") = " << (float)ntrk_pt2 / nevt << endl;
   cout << "# tracks/event (pt > 3.0) = " << (float)ntrk_pt3 / nevt << endl;
   cout << "# tracks/event (pt > 10.0) = " << (float)ntrk_pt10 / nevt << endl;
+
+  // fake track rate
+  if (ntrk_genuine_pt2 > 0) {
+    cout << "Percentage fake tracks (pt > " << std::max(TP_minPt, 2.0f)
+         << ") = " << 100. * (1. - float(ntrk_genuine_pt2) / float(ntrk_pt2)) << "%" << endl;
+    cout << "Percentage duplicate tracks (pt > " << std::max(TP_minPt, 2.0f)
+         << ")= " << 100. * float(ntp_nmatch) / float(ntrk_pt2) << "%" << endl
+         << endl;
+  }
+
 }
 
 void SetPlotStyle() {
